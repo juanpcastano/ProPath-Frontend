@@ -1,0 +1,156 @@
+.mainContainer {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabList {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+  gap: 30px;
+}
+
+.tab {
+  padding-top: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+
+.tab:hover {
+  opacity: (0.9);
+}
+
+.activeTab {
+  background: linear-gradient(to bottom, #51ffcb, #0bd397);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.span {
+  margin: 0px 20px;
+  color: #b1b1b1;
+}
+
+.decorator {
+  width: 100%;
+  height: 5px;
+  background-color: #51ffcb;
+  border-radius: 5px 5px 0 0;
+  transform: scaleX(0);
+
+  transform-origin: center;
+  transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1),
+    background 0.3s ease;
+}
+
+.decoratorActive {
+  transform: scaleX(1);
+}
+
+.formGroup {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333b69;
+}
+
+.button {
+  width: max-content;
+}
+
+.editButton {
+  padding: 8px;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(to bottom, #51ffcb, #0bd397);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  top: -40px;
+}
+
+.formLayout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.profileContainer {
+  display: flex;
+  gap: 60px;
+}
+
+.avatarContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.avatar {
+  aspect-ratio: 1/1;
+  min-width: 150px;
+  max-width: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.formContainer {
+  flex: 1;
+}
+
+.idContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.idContainer .input {
+  flex: 1;
+}
+
+.idContainer .select {
+  width: auto;
+}
+
+.ButtonsContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .formLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .profileContainer {
+    flex-direction: column;
+  }
+}

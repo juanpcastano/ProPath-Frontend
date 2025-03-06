@@ -1,0 +1,204 @@
+.loginContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #F9F9F9;
+    overflow: hidden;
+  }
+  .noarrows {
+    /* Para Chrome, Safari, Edge, Opera */
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+    margin: 0;
+  }
+  
+  /* Para Firefox */
+  .noarrows::-webkit-outer-spin-button,
+  .noarrows::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Blobs decorativos */
+  .blob {
+    position: absolute;
+    width: 430px;
+    height: 430px;
+    border-radius: 100px;
+    transition: all 1s ease;
+  }
+  
+  @keyframes rotateTopLeft {
+    from {
+        transform: rotate(518deg);
+    }
+    to {
+        transform: rotate(158deg); 
+    }
+}
+
+@keyframes rotateTopRight {
+    from {
+        transform: rotate(684deg);
+    }
+    to {
+        transform: rotate(324deg);
+    }
+}
+
+@keyframes rotateBottomLeft {
+    from {
+        transform: rotate(700deg);
+    }
+    to {
+        transform: rotate(340deg);
+    }
+}
+
+@keyframes rotateBottomRight {
+    from {
+        transform: rotate(655deg);
+    }
+    to {
+        transform: rotate(295deg); 
+    }
+}
+
+/* Aplicar animaciones a los blobs según su posición */
+.topLeft {
+    top: -170px;
+    left: -100px;
+    transform: rotateZ(158deg);
+    animation: rotateTopLeft 1s ease-in-out;
+}
+
+.topRight {
+    top: -90px;
+    right: -170px;
+    transform: rotateZ(324deg);
+    animation: rotateTopRight 1s ease-in-out;
+}
+
+.bottomLeft {
+    bottom: -100px;
+    left: -100px;
+    transform: rotateZ(340deg);
+    animation: rotateBottomLeft 1s ease-in-out;
+}
+
+.bottomRight {
+    bottom: -170px;
+    right: -40px;
+    transform: rotateZ(295deg);
+    animation: rotateBottomRight 1s ease-in-out;
+}
+  
+  /* Contenedor del formulario */
+  .loginFormContainer {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    z-index: 1;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .smbtandforgotcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 0.5rem;
+  }
+  .formRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .formRow .formGroup {
+    flex: 1;
+  }
+  
+  .error{
+    color: rgb(247, 36, 117);
+    font-weight: 500;
+  }
+  
+  
+  input[type="date"].input {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .link {
+    color: #333b69;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+  }
+  
+  .link:hover {
+    color: #24ff96;
+  }
+  
+  /* Media queries para responsividad */
+
+  @media (max-width: 1400px) {
+    .loginFormContainer {
+      box-sizing: border-box;
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  
+    .blob {
+      width: 350px;
+      height: 350px;
+    }
+  }
+  @media (max-width: 840px) {
+    .blob {
+      width: 300px;
+      height: 300px;
+    }
+  }
+  
+  @media (max-width: 700px) {
+    .blob {
+      width: 260px;
+      height: 260px;
+    }
+  }
+  @media (max-width: 500px) {
+    .loginFormContainer {
+      box-sizing: border-box;
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  
+    .blob {
+      width: 240px;
+      height: 240px;
+    }
+  }
+  
