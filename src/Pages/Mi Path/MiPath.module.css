@@ -4,31 +4,76 @@
     justify-content: start;
     flex-direction: column;
     align-items: center;
-    
+    gap: 10px;
 }
 
 .mainContainer {
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
     background-color: var(--content-bg);
     padding: 30px;
     border-radius: 20px;
     position: relative;
+    margin-bottom: 20px;
 }
+
+form .button{
+    align-self: center;
+    width: 20%;
+    min-width: fit-content;
+}
+
 .button{
     width: fit-content;
-    margin: 2rem;
+}
+
+.button.inactive{
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+.inactive p{
+    color: var(--text-inactive);
+}
+
+p.info{
+    font-size: 1.24rem;
+    margin: 0;
+    text-align: center;
 }
 
 .text{
-    padding: 10px;
     margin: 0;
     color: white;
-    font-weight: 1000;
     font-size: 1rem;
 }
 
+.noMargin{
+    margin-top: 0px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    width: 100%; /* Ensure the form group takes full width */
+    min-width: 30%;
+  }
+
+.formRow {
+    display: flex;
+    flex: 1;
+    gap: 1rem;
+    width: 100%;
+}
+
+.activityInputDate {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 50%; /* Force minimum width */
+  }
 /* .activityContainer{
     display: flex;
 } */
