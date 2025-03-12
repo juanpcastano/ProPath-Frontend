@@ -20,15 +20,18 @@ const Login = () => {
   const [Error, setError] = useState("");
   const login = async (credentials: credentials) => {
     
-    if ((import.meta.env.VITE_ENVIROMENT = "mockup")) {
+    if ((import.meta.env.VITE_ENVIROMENT == "mockup")) {
       console.log(`Logeándose como ${import.meta.env.VITE_MOCKUP_ROLE}`);
       
-      if (import.meta.env.VITE_MOCKUP_ROLE = "pro"){
+      if (import.meta.env.VITE_MOCKUP_ROLE == "pro"){
         dispatch(createUser(MockupProUserState));
-      } else if (import.meta.env.VITE_MOCKUP_ROLE = "coach"){
+        
+      } else if (import.meta.env.VITE_MOCKUP_ROLE == "coach"){
         dispatch(createUser(MockupCoachUserState));
-      } else if (import.meta.env.VITE_MOCKUP_ROLE = "admin"){
+
+      } else if (import.meta.env.VITE_MOCKUP_ROLE == "admin"){
         dispatch(createUser(MockupAdminUserState));
+
       }
       navigate(PrivateRoutes.common.HOME.route);
     } else {
@@ -71,16 +74,16 @@ const Login = () => {
     <div className={styles.loginContainer}>
       {/* Elementos decorativos */}
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.topLeft}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.topLeft}`}
       ></div>
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.topRight}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.topRight}`}
       ></div>
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.bottomLeft}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.bottomLeft}`}
       ></div>
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.bottomRight}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.bottomRight}`}
       ></div>
 
       {/* Formulario */}
@@ -114,7 +117,7 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="dark-gradient-green">
+          <button type="submit" className="dark-gradient-primary">
             Iniciar sesión
           </button>
           <div className={styles.smbtandforgotcontainer}>

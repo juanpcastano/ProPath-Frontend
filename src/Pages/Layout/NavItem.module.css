@@ -7,14 +7,14 @@
 }
 
 .labelActive {
-  background: linear-gradient(to bottom, #51ffcb, #0bd397);
+  background: var(--dark-gradient-primary);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .labelInactive {
-  color: #b1b1b1;
+  color: var(--text-inactive);
 }
 
 .decorator {
@@ -30,19 +30,19 @@
 }
 
 .decoratorActive {
-  background: linear-gradient(to bottom, #51ffcb, #50e7ba);
+  background: var(--dark-gradient-primary);
   transform: scaleX(1);
 }
 
 .activeIcon {
-  background: linear-gradient(to bottom, #51ffcb, #0bd397);
+  background: var(--dark-gradient-primary);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .inactiveIcon {
-  color: #b1b1b1;
+  color: var(--text-inactive);
 }
 
 .navItem {

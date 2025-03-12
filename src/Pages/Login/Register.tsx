@@ -60,16 +60,16 @@ const Register = () => {
     <div className={styles.loginContainer}>
       {/* Elementos decorativos */}
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.topLeft}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.topLeft}`}
       ></div>
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.topRight}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.topRight}`}
       ></div>
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.bottomLeft}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.bottomLeft}`}
       ></div>
       <div
-        className={`light-gradient-green ${styles.blob} ${styles.bottomRight}`}
+        className={`light-gradient-primary ${styles.blob} ${styles.bottomRight}`}
       ></div>
 
       {/* Formulario */}
@@ -209,7 +209,7 @@ const Register = () => {
           </div>
 
 
-          <button type="submit" className="dark-gradient-green">
+          <button type="submit" className="dark-gradient-primary">
             Registrarme
           </button>
           <div className={styles.smbtandforgotcontainer}>

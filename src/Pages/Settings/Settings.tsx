@@ -257,11 +257,11 @@ export default function ProfileSettings({ tab = "" }: { tab?: string }) {
             onClick={() => {
               logout();
             }}
-            className={`${styles.button} dark-gradient-red `}
+            className={`${styles.button} dark-gradient-secondary `}
           >
             Cerrar Sesión
           </button>
-          <button className={`${styles.button} dark-gradient-green `}>
+          <button className={`${styles.button} dark-gradient-primary `}>
             Guardar
           </button>
         </div>

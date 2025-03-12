@@ -2,7 +2,7 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-color: var(--content-bg);
   padding: 30px;
   border-radius: 20px;
   position: relative;
@@ -17,7 +17,7 @@
 
 .tabList {
   display: flex;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--hr-color);
   margin-bottom: 24px;
   gap: 30px;
 }
@@ -31,25 +31,28 @@
   transition: all 0.25s ease;
 }
 
-.tab:hover {
-  opacity: (0.9);
+.tab:hover span {
+  transform: translateY(-3px);
 }
 
-.activeTab {
-  background: linear-gradient(to bottom, #51ffcb, #0bd397);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.tab:active span {
+  transform: translateY(-1px);
+}
+
+.activeTab span {
+  color: var(--primary-high);
 }
 
 .span {
   margin: 0px 20px;
-  color: #b1b1b1;
+  color: var(--text-inactive);
+  transition: all 0.25s ease;
 }
 
 .decorator {
   width: 100%;
   height: 5px;
-  background-color: #51ffcb;
+  background-color: var(--primary-high);
   border-radius: 5px 5px 0 0;
   transform: scaleX(0);
 
@@ -67,13 +70,7 @@
   width: 100%;
 }
 
-.label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333b69;
-}
+
 
 .button {
   width: max-content;
@@ -83,7 +80,7 @@
   padding: 8px;
   width: 30px;
   height: 30px;
-  background: linear-gradient(to bottom, #51ffcb, #0bd397);
+  background: var(--dark-gradient-primary);
   color: white;
   border: none;
   border-radius: 50%;

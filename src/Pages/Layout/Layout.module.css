@@ -10,7 +10,7 @@
 
 .contentBackground{
     grid-column-start: 2;
-    background: linear-gradient(to bottom, #F9F9F9,#F9F9F9,#F2FFF8);
+    background: var(--bg);
     padding: 30px 40px
 }
 

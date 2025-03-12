@@ -46,7 +46,7 @@ const MiPath = () => {
   if (!userState.pathId) {
     return (
       <>
-        <div className={styles.container}>
+        <div className={`${styles.container} ${styles.mainContainer} `}>
           <p className={styles.label}>
             Parece ser que no tienes un path registrado, crea uno y añade
             actividades
@@ -55,7 +55,7 @@ const MiPath = () => {
             onClick={() => {
               crearPath();
             }}
-            className={`${styles.button} dark-gradient-green `}
+            className={`${styles.button} dark-gradient-primary `}
           >
             <p className={styles.text}>Crear Path</p>
           </button>

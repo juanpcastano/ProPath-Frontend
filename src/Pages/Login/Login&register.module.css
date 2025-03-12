@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    background-color: #F9F9F9;
+    background-color: var(--bg);
     overflow: hidden;
   }
   .noarrows {
@@ -152,17 +152,15 @@
   }
 
   .link {
-    color: #333b69;
+    color: var(--text-link);
     font-weight: 500;
     font-size: 0.875rem;
     transition: color 0.2s;
   }
   
   .link:hover {
-    color: #24ff96;
+    color: var(--secondary-high);
   }
-  
-  /* Media queries para responsividad */
 
   @media (max-width: 1400px) {
     .loginFormContainer {
