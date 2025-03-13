@@ -5,7 +5,7 @@ import { AppStore } from "../../Redux/store";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../Redux/States/user";
 import styles from "./MiPath.module.css";
-
+import { generateUUID } from "../../services/uuidGenerator";
 import { Activity, Path } from "../../models/path.model";
 
 const MiPath = () => {
@@ -24,17 +24,7 @@ const MiPath = () => {
   const today = new Date().toISOString().split("T")[0];
   const [totalHours, setTotalHours] = useState(0)
   const [minHours, _] = useState(import.meta.env.VITE_MIN_HOURS|36)
-
-  function generateUUID() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
+  
   const crearPath = () => {
     let pathId = generateUUID();
 
@@ -73,7 +63,7 @@ const MiPath = () => {
       <>
         <div className={styles.mainContainer}>
           <div className={styles.title}>
-            <h1>{path.name}</h1>
+            <h1 className={styles.noMargin}>{path.name}</h1>
             <p>Horas Totales: {totalHours}/{minHours}</p>
           </div>
           <button
