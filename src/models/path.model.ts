@@ -7,7 +7,8 @@ export interface Activity{
     finalDate: Date;
     budget: number;
     state: string;
-    pathId: number;
+    pathId: string;
+    comments?: Comment[];
 }
 
 export interface Path{
@@ -18,4 +19,13 @@ export interface Path{
     totalHours: number;
     totalBudget: number;
     activities: Activity[];
+    coachComment?:Comment;
+    adminComment?:Comment;
+}
+
+export interface Comment{
+    id: string;
+    authorName: string;
+    message: string;
+    date: Date;
 }

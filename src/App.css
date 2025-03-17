@@ -93,6 +93,21 @@ input {
   border-radius: 15px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  
+  font-family: inherit;
+}
+
+textarea {
+  resize: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 160px;
+  padding: 1rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 select {
     appearance: none;
@@ -110,11 +125,14 @@ select {
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
     color: var(--text-link-clear);
-  }
-  select:focus {
-    box-shadow: 0 0 0 2px var(--primary-clear);
-  }
+}
+select:focus {
+  box-shadow: 0 0 0 2px var(--primary-clear);
+}
 input:focus {
+  box-shadow: 0 0 0 2px var(--primary-clear);
+}
+textarea:focus {
   box-shadow: 0 0 0 2px var(--primary-clear);
 }
 

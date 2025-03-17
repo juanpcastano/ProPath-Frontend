@@ -6,6 +6,7 @@ import Api from "../../api/Api"; // Asegúrate de que la ruta sea correcta
 import { useDispatch } from "react-redux";
 import { resetUser, updateUser } from "../../Redux/States/user";
 import { ApiCallLogout } from "../../services/authService";
+import { resetPath } from "../../Redux/States/path";
 
 export default function ProfileSettings({ tab = "" }: { tab?: string }) {
   const [activeTab, setActiveTab] = useState(tab ? tab : "preferences");
@@ -19,6 +20,7 @@ export default function ProfileSettings({ tab = "" }: { tab?: string }) {
     try {
       ApiCallLogout();
       dispatch(resetUser());
+      dispatch(resetPath());
     } catch (error) {
       console.log(error)
     }
