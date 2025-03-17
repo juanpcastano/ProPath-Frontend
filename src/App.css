@@ -151,8 +151,4 @@ button {
 button:hover {
   opacity: 0.6;
 }
-@media (max-width: 600px) {
-  .material-symbols-outlined{
-    font-size: 50px !important;
-  }
-}
+

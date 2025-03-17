@@ -16,22 +16,44 @@ const MiPath = () => {
   const [activities, setActivities] = useState<Activity[]>(
     pathData?.activities
   );
+
   const today = new Date().toISOString().split("T")[0];
   const [totalHours, setTotalHours] = useState(0);
   const [minHours, _] = useState(import.meta.env.VITE_MIN_HOURS | 36);
   const [initialDate, setInitialDate] = useState(today);
+  const [editingInitialDate, setEditingInitialDate] = useState(today);
+  const [editingActivity, setEditingActivity] = useState("");
 
   const sendPath = () => {};
+  const handleDelete = (id: string) => {
+    setActivities(activities.filter((activity) => activity.id !== id));
+    dispatch(
+      updatePath({
+        activities: activities.filter((activity) => activity.id !== id),
+      })
+    );
+  };
+
+  const handleSaveEdit = (updatedActivity: Activity) => {
+    console.log(updatedActivity)
+    setActivities(activities.map(activity => 
+      activity.id == updatedActivity.id ? updatedActivity : activity
+    ));
+    dispatch(updatePath({ activities: activities.map(activity => 
+      activity.id == updatedActivity.id ? updatedActivity : activity
+    )}));
+    setEditingActivity("");
+  };
 
   const addActivity = (activity: Activity) => {
     setActivities([...activities, activity]);
-    console.log(activities);
   };
 
   useEffect(() => {
     setTotalHours(
       activities.reduce((sum, activity) => sum + activity.hours, 0)
     );
+    dispatch(updatePath({ activities: activities }));
   }, [activities]);
 
   if (pathData == emptyPathState) {
@@ -49,7 +71,7 @@ const MiPath = () => {
                   updatePath({
                     name: formData.get("name") as string,
                     description: formData.get("description") as string,
-                    state: "propuesta"
+                    state: "propuesta",
                   })
                 );
                 e.currentTarget.reset();
@@ -121,20 +143,186 @@ const MiPath = () => {
           </button>
         </div>
 
-        {activities.map((Activity, _) => {
-          return (
-            <div className={`${styles.mainContainer} ${styles.noMarginTop}`}>
-              <h2 className={`${styles.noMarginTop}`}>{Activity.name}</h2>
-              <p>{Activity.description}</p>
-              <p>{"Horas Necesarias: " + Activity.hours}</p>
-              <p>{"Presupuesto: $" + Activity.budget}</p>
-              <p>{"Fecha De Inicio: " + new Date(Activity.initialDate).toLocaleDateString()}</p>
-              <p>{"Fecha De Finalización: " + new Date(Activity.finalDate).toLocaleDateString()}</p>
-              <p className={styles.noMarginBot}>
-                <strong>{"Estado: " + Activity.state}</strong>
-              </p>
-            </div>
-          );
+        {activities.map((activity, _) => {
+          if (editingActivity != activity.id) {
+            return (
+              <div className={`${styles.mainContainer}`}>
+                <div className={styles.separator}>
+                  <div className={styles.infoContainer}>
+                    <h2 className={`${styles.noMarginTop}`}>{activity.name}</h2>
+                    <p>{activity.description}</p>
+                    <p>{"Horas Necesarias: " + activity.hours}</p>
+                    <p>{"Presupuesto: $" + activity.budget}</p>
+                    <p>
+                      {"Fecha De Inicio: " +
+                        new Date(activity.initialDate).toLocaleDateString()}
+                    </p>
+                    <p>
+                      {"Fecha De Finalización: " +
+                        new Date(activity.finalDate).toLocaleDateString()}
+                    </p>
+                    <p className={styles.noMarginBot}>
+                      <strong>{"Estado: " + activity.state}</strong>
+                    </p>
+                  </div>
+                  <div className={styles.buttonsContainer}>
+                    <link
+                      rel="stylesheet"
+                      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+                    />
+                    <span
+                      className={`material-symbols-outlined ${styles.deleteButton} ${styles.button}`}
+                      onClick={() => handleDelete(activity.id)}
+                    >
+                      delete
+                    </span>
+                    <span
+                      className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
+                      onClick={() => {
+                        setEditingActivity(activity.id);
+                      }}
+                    >
+                      edit
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          } else {
+            return (
+              <>
+                <div
+                  className={`${styles.activityform} ${styles.mainContainer}`}
+                >
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.currentTarget);
+                      const updatedActivity: Activity = {
+                        id: activity.id,
+                        name: formData.get("name") as string,
+                        description: formData.get("description") as string,
+                        hours: Number(formData.get("hours")),
+                        initialDate: new Date(
+                          formData.get("initialDate") as string
+                        ),
+                        finalDate: new Date(
+                          formData.get("finalDate") as string
+                        ),
+                        budget: Number(formData.get("budget")),
+                        state: "Pendiente",
+                        pathId: pathData.id,
+                      };
+                      handleSaveEdit(updatedActivity);
+                      e.currentTarget.reset();
+                    }}
+                  >
+                    <div className={styles.formGroup}>
+                      <label htmlFor="name">Nombre:</label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        autoComplete="off"
+                        defaultValue={activity.name}
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label htmlFor="description">Descripción:</label>
+                      <textarea
+                        id="description"
+                        name="description"
+                        required
+                        autoComplete="off"
+                        defaultValue={activity.description}
+                      />
+                    </div>
+
+                    <div className={styles.formRow}>
+                      <div className={styles.formGroup}>
+                        <label htmlFor="initialDate">Fecha Inicial:</label>
+                        <input
+                          className={styles.activityInputDate}
+                          type="date"
+                          id="initialDate"
+                          name="initialDate"
+                          required
+                          defaultValue={
+                            new Date(activity.initialDate)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                          onChange={(e) =>
+                            setEditingInitialDate(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label htmlFor="finalDate">Fecha Final:</label>
+                        <input
+                          className={styles.activityInputDate}
+                          type="date"
+                          id="finalDate"
+                          name="finalDate"
+                          min={editingInitialDate}
+                          defaultValue={
+                            new Date(activity.finalDate)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className={styles.formRow}>
+                      <div className={styles.formGroup}>
+                        <label htmlFor="hours">Horas:</label>
+                        <input
+                          type="number"
+                          id="hours"
+                          name="hours"
+                          min="0"
+                          defaultValue={activity.hours}
+                          required
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label htmlFor="budget">Presupuesto:</label>
+                        <input
+                          type="number"
+                          id="budget"
+                          name="budget"
+                          min="0"
+                          defaultValue={activity.budget}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className={`${styles.formGroup}`}>
+                      <div className={styles.editButtons}>
+                        <button
+                          type="submit"
+                          className={`${styles.button} dark-gradient-primary`}
+                        >
+                          Guardar
+                        </button>
+                        <button
+                          className={`${styles.button} dark-gradient-secondary`}
+                          onClick={()=>{setEditingActivity("")}}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </>
+            );
+          }
         })}
         <div className={`${styles.activityform} ${styles.mainContainer}`}>
           <h2 className={styles.noMarginTop}>Añadir Actividad</h2>
@@ -187,7 +375,6 @@ const MiPath = () => {
                   id="initialDate"
                   name="initialDate"
                   required
-                  min={today}
                   defaultValue={today}
                   onChange={(e) => setInitialDate(e.target.value)}
                 />
@@ -222,16 +409,6 @@ const MiPath = () => {
                 />
               </div>
             </div>
-
-            {/* <div className={styles.formGroup}>
-              <label htmlFor="state">Estado:</label>
-              <select id="state" name="state" required>
-                <option value="pendiente">Pendiente</option>
-                <option value="en_progreso">En Progreso</option>
-                <option value="completada">Completada</option>
-              </select>
-            </div> */}
-
             <div className={styles.formGroup}>
               <button
                 type="submit"

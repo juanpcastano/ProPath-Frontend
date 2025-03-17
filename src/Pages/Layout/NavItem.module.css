@@ -62,6 +62,8 @@
   transform: translateY(-2.5px)
 }
 
+
+
 a {
   text-decoration: none;
 }
@@ -87,5 +89,9 @@ a {
   
   .navItem:active {
     transform: scale(0.95)
+  }
+
+  .navItemIcon{
+    font-size: 50px !important;
   }
 }
