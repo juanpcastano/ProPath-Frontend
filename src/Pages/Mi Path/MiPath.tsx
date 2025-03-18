@@ -19,6 +19,7 @@ const MiPath = () => {
 
   const today = new Date().toISOString().split("T")[0];
   const [totalHours, setTotalHours] = useState(0);
+  const [totalBudget, setTotalBudget] = useState(0);
   const [minHours, _] = useState(import.meta.env.VITE_MIN_HOURS | 36);
   const [initialDate, setInitialDate] = useState(today);
   const [editingInitialDate, setEditingInitialDate] = useState(today);
@@ -35,13 +36,19 @@ const MiPath = () => {
   };
 
   const handleSaveEdit = (updatedActivity: Activity) => {
-    console.log(updatedActivity)
-    setActivities(activities.map(activity => 
-      activity.id == updatedActivity.id ? updatedActivity : activity
-    ));
-    dispatch(updatePath({ activities: activities.map(activity => 
-      activity.id == updatedActivity.id ? updatedActivity : activity
-    )}));
+    console.log(updatedActivity);
+    setActivities(
+      activities.map((activity) =>
+        activity.id == updatedActivity.id ? updatedActivity : activity
+      )
+    );
+    dispatch(
+      updatePath({
+        activities: activities.map((activity) =>
+          activity.id == updatedActivity.id ? updatedActivity : activity
+        ),
+      })
+    );
     setEditingActivity("");
   };
 
@@ -52,6 +59,9 @@ const MiPath = () => {
   useEffect(() => {
     setTotalHours(
       activities.reduce((sum, activity) => sum + activity.hours, 0)
+    );
+    setTotalBudget(
+      activities.reduce((sum, activity) => sum + activity.budget, 0)
     );
     dispatch(updatePath({ activities: activities }));
   }, [activities]);
@@ -126,6 +136,7 @@ const MiPath = () => {
             <p>
               Horas Totales: {totalHours}/{minHours}
             </p>
+            <p>Presupuesto Total: ${totalBudget}</p>
           </div>
           <button
             onClick={() => {
@@ -186,6 +197,24 @@ const MiPath = () => {
                     </span>
                   </div>
                 </div>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                  }}
+                >
+                  <textarea
+                    name="comment"
+                    id="comment"
+                    placeholder="Añade un comentario..."
+                  ></textarea>
+                </form>
+                <button
+                  type="submit"
+                  className={`dark-gradient-primary ${styles.submitCommentButton} ${styles.button}`}
+                >
+                  subir
+                </button>
               </div>
             );
           } else {
@@ -312,7 +341,9 @@ const MiPath = () => {
                         </button>
                         <button
                           className={`${styles.button} dark-gradient-secondary`}
-                          onClick={()=>{setEditingActivity("")}}
+                          onClick={() => {
+                            setEditingActivity("");
+                          }}
                         >
                           Cancelar
                         </button>
