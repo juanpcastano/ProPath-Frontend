@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { updateUser } from "../../Redux/States/user";
 import styles from "./MiPath.module.css";
 import { generateUUID } from "../../services/uuidGenerator";
-import { Activity } from "../../models/path.model";
+import { Activity, Comment } from "../../models/path.model";
 import { emptyPathState, updatePath } from "../../Redux/States/path";
 
 const MiPath = () => {
@@ -14,7 +14,7 @@ const MiPath = () => {
   const userData = useSelector((store: AppStore) => store.user);
   const dispatch = useDispatch();
   const [activities, setActivities] = useState<Activity[]>(
-    pathData?.activities
+    pathData?.activities || []
   );
 
   const today = new Date().toISOString().split("T")[0];
@@ -56,6 +56,33 @@ const MiPath = () => {
     setActivities([...activities, activity]);
   };
 
+  const handleCommentSubmit = (activityId: string, commentMessage: string) => {
+    if (!commentMessage.trim()) return;
+
+    const updatedActivities = activities.map((activity) => {
+      if (activity.id === activityId) {
+        const newComment: Comment = {
+          id: generateUUID(),
+          authorName: userData.name,
+          message: commentMessage,
+          date: new Date(),
+        };
+        const updatedComments = activity.comments
+          ? [...activity.comments, newComment]
+          : [newComment];
+
+        return {
+          ...activity,
+          comments: updatedComments,
+        };
+      }
+      return activity;
+    });
+
+    setActivities(updatedActivities);
+    dispatch(updatePath({ activities: updatedActivities }));
+  };
+
   useEffect(() => {
     setTotalHours(
       activities.reduce((sum, activity) => sum + activity.hours, 0)
@@ -66,7 +93,7 @@ const MiPath = () => {
     dispatch(updatePath({ activities: activities }));
   }, [activities]);
 
-  if (pathData == emptyPathState) {
+  if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {
     if (!userData.pathId) {
       return (
         <>
@@ -133,6 +160,7 @@ const MiPath = () => {
         <div className={styles.mainContainer}>
           <div className={styles.title}>
             <h1 className={styles.noMarginTop}>{pathData.name}</h1>
+            <p className={styles.description}>{pathData.description}</p>
             <p>
               Horas Totales: {totalHours}/{minHours}
             </p>
@@ -157,7 +185,7 @@ const MiPath = () => {
         {activities.map((activity, _) => {
           if (editingActivity != activity.id) {
             return (
-              <div className={`${styles.mainContainer}`}>
+              <div className={`${styles.mainContainer}`} key={activity.id}>
                 <div className={styles.separator}>
                   <div className={styles.infoContainer}>
                     <h2 className={`${styles.noMarginTop}`}>{activity.name}</h2>
@@ -197,24 +225,49 @@ const MiPath = () => {
                     </span>
                   </div>
                 </div>
+                {activity.comments && activity.comments.length > 0 && (
+                  <div className={styles.commentsContainer}>
+                    {activity.comments.map((comment) => (
+                      <>
+                        <hr
+                          className={`${styles.noMarginTop} ${styles.noMarginBot}`}
+                        />
+                        <div key={comment.id} className={styles.comment}>
+                          <p>
+                            <strong>{comment.authorName}</strong>:{" "}
+                            {comment.message}
+                          </p>
+                          <small>
+                            {new Date(comment.date).toLocaleString()}
+                          </small>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                )}
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     const formData = new FormData(e.currentTarget);
+                    const commentMessage = formData.get("comment") as string;
+                    handleCommentSubmit(activity.id, commentMessage);
+                    e.currentTarget.reset();
                   }}
                 >
                   <textarea
                     name="comment"
                     id="comment"
                     placeholder="Añade un comentario..."
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        const commentMessage = e.currentTarget.value;
+                        handleCommentSubmit(activity.id, commentMessage);
+                        e.currentTarget.value = "";
+                      }
+                    }}
                   ></textarea>
                 </form>
-                <button
-                  type="submit"
-                  className={`dark-gradient-primary ${styles.submitCommentButton} ${styles.button}`}
-                >
-                  subir
-                </button>
               </div>
             );
           } else {
@@ -222,6 +275,7 @@ const MiPath = () => {
               <>
                 <div
                   className={`${styles.activityform} ${styles.mainContainer}`}
+                  key={`editing-${activity.id}`}
                 >
                   <form
                     onSubmit={(e) => {
@@ -241,6 +295,7 @@ const MiPath = () => {
                         budget: Number(formData.get("budget")),
                         state: "Pendiente",
                         pathId: pathData.id,
+                        comments: activity.comments,
                       };
                       handleSaveEdit(updatedActivity);
                       e.currentTarget.reset();
@@ -371,6 +426,7 @@ const MiPath = () => {
                 budget: Number(formData.get("budget")),
                 state: "Pendiente",
                 pathId: pathData.id,
+                comments: [],
               };
               addActivity(newActivity);
               e.currentTarget.reset();

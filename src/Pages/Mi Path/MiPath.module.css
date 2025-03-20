@@ -26,6 +26,18 @@
     margin-bottom: 20px;
 }
 
+.commentsContainer{
+    margin-bottom: 20px;
+}
+
+.comment{
+    margin-bottom: 20px;
+}
+.description{
+    color: var(--text-ultralight);
+    font-weight: 600;
+}
+
 .editButtons{
     display: flex;
     gap: 10px;
