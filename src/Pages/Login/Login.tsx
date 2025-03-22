@@ -122,11 +122,11 @@ const Login = () => {
           </button>
           <div className={styles.smbtandforgotcontainer}>
             <Link to="" className={styles.link}>
-              Olvidé mi contraseña
+              Restablecer Contraseña
             </Link>
-            <Link to="/register" className={styles.link}>
+            {/* <Link to="/register" className={styles.link}>
               Aún no tengo cuenta
-            </Link>
+            </Link> */}
             {Error && <p className={styles.error}>{Error}</p>}
           </div>
         </form>

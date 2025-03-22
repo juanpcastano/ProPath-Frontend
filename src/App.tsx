@@ -9,7 +9,8 @@ import { Suspense, lazy } from "react";
 import Loading from "./Components/Loading/Loading";
 import Register from "./Pages/Login/Register";
 import Home from "./Pages/Home/Home";
-import MiPath from "./Pages/Mi Path/MiPath";
+import Path from "./Pages/Path/Path";
+import MyOrganization from "./Pages/My Organization/MyOrganization";
 
 const NotFound = lazy(() => import("./Pages/Not found/NotFound"));
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
@@ -35,7 +36,8 @@ function App() {
                 <Route element={<Layout />}>
                   {/* Rutas comunes */}
                   <Route path={PrivateRoutes.common.HOME.route} element={<Home/>} />
-                  <Route path={PrivateRoutes.common.MI_PATH.route} element={<MiPath/>} />
+                  <Route path={PrivateRoutes.common.MI_PATH.route} element={<Path/>} />
+                  <Route path={PrivateRoutes.common.MY_ORGANIZATION.route} element={<MyOrganization/>} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route} element={<Settings />} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route+"/profile"} element={<Settings tab="profile" />} />
                   

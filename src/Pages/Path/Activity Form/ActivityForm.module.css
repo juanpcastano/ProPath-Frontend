@@ -1,0 +1,47 @@
+.mainContainer {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: var(--content-bg);
+    padding: 30px;
+    padding-bottom: 20px;
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.noMarginTop{
+    margin-top: 0px;
+}
+
+.noMarginBot{
+    margin-bottom: 0px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    width: 100%; /* Ensure the form group takes full width */
+    min-width: 30%;
+  }
+
+.formRow {
+    display: flex;
+    flex: 1;
+    gap: 1rem;
+    width: 100%;
+}
+
+.activityInputDate {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 50%; /* Force minimum width */
+}
+
+form .button{
+    align-self: center;
+    width: 20%;
+    min-width: fit-content;
+}

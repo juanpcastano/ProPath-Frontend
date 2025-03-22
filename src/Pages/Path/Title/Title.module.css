@@ -1,0 +1,48 @@
+.mainContainer {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: var(--content-bg);
+    padding: 30px;
+    padding-bottom: 20px;
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.noMarginTop{
+    margin-top: 0px;
+}
+
+.noMarginBot{
+    margin-bottom: 0px;
+}
+
+.description{
+    color: var(--text-ultralight);
+    font-weight: 600;
+}
+
+form .button{
+    align-self: center;
+    width: 20%;
+    min-width: fit-content;
+}
+
+.button{
+    width: fit-content;
+}
+
+.button.inactive{
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+.inactive p{
+    color: var(--text-inactive);
+}
+
+.text{
+    margin: 0;
+    color: white;
+    font-size: 1rem;
+}
