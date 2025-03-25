@@ -64,3 +64,8 @@
   .decoratorActive {
     transform: scale(1) ;
   }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+  }

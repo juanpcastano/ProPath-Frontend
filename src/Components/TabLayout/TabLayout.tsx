@@ -9,9 +9,10 @@ interface tab {
 interface TabLayoutProps {
   tabs: tab[];
   initialActiveTab: string;
+  footer: ReactElement
 }
 
-const TabLayout = ({ tabs, initialActiveTab }: TabLayoutProps) => {
+const TabLayout = ({ tabs, initialActiveTab, footer }: TabLayoutProps) => {
   const [activeTab, setActiveTab] = useState(initialActiveTab);
   return (
     <div className={styles.mainContainer}>
@@ -36,9 +37,10 @@ const TabLayout = ({ tabs, initialActiveTab }: TabLayoutProps) => {
           })}
         </div>
 
-        <div className="content">
+        <div className={styles.content}>
           {tabs.find(tab => tab.name === activeTab)?.content}
         </div>
+        {footer}
       </div>
     </div>
   );

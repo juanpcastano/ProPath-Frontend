@@ -2,14 +2,18 @@ import { useState, useRef } from "react";
 import styles from "./Settings.module.css";
 import { useSelector } from "react-redux";
 import { AppStore } from "../../Redux/store";
-import Api from "../../api/Api"; // Asegúrate de que la ruta sea correcta
+import Api from "../../api/Api";
 import { useDispatch } from "react-redux";
 import { resetUser, updateUser } from "../../Redux/States/user";
 import { ApiCallLogout } from "../../services/authService";
 import { resetPath } from "../../Redux/States/path";
+import TabLayout from "../../Components/TabLayout/TabLayout";
 
-export default function ProfileSettings({ tab = "" }: { tab?: string }) {
-  const [activeTab, setActiveTab] = useState(tab ? tab : "preferences");
+export default function ProfileSettings({
+  tab = "Preferences",
+}: {
+  tab?: string;
+}) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -22,7 +26,7 @@ export default function ProfileSettings({ tab = "" }: { tab?: string }) {
       dispatch(resetUser());
       dispatch(resetPath());
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   const handleFileChange = async (
@@ -67,6 +71,21 @@ export default function ProfileSettings({ tab = "" }: { tab?: string }) {
       fileInputRef.current.click();
     }
   };
+  const buttons = () => (
+    <div className={styles.ButtonsContainer}>
+      <button
+        onClick={() => {
+          logout();
+        }}
+        className={`${styles.button} dark-gradient-secondary `}
+      >
+        Cerrar Sesión
+      </button>
+      <button className={`${styles.button} dark-gradient-primary `}>
+        Guardar
+      </button>
+    </div>
+  );
 
   const renderPreferences = () => (
     <div>
@@ -194,9 +213,7 @@ export default function ProfileSettings({ tab = "" }: { tab?: string }) {
                 id="birthdate"
                 type="date"
                 defaultValue={
-                  new Date(userData.birthDate)
-                    .toISOString()
-                    .split("T")[0]
+                  new Date(userData.birthDate).toISOString().split("T")[0]
                 }
               />
             </div>
@@ -219,56 +236,21 @@ export default function ProfileSettings({ tab = "" }: { tab?: string }) {
       </div>
     );
   };
-
+  const tabs = [
+    {
+      name: "Preferences",
+      content: renderPreferences(),
+    },
+    {
+      name: "Profile",
+      content: renderProfile(),
+    },
+  ];
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.container}>
-        <div className={styles.tabList}>
-          <div
-            className={`${styles.tab} ${
-              activeTab === "preferences" ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab("preferences")}
-          >
-            <span className={styles.span}>Preferencias</span>
-            <div
-              className={`${styles.decorator} ${
-                activeTab === "preferences" ? styles.decoratorActive : ""
-              }`}
-            ></div>
-          </div>
-          <div
-            className={`${styles.tab} ${
-              activeTab === "profile" ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab("profile")}
-          >
-            <span className={styles.span}>Mi Perfil</span>
-            <div
-              className={`${styles.decorator} ${
-                activeTab === "profile" ? styles.decoratorActive : ""
-              }`}
-            ></div>
-          </div>
-        </div>
-        <div className={styles.content}>
-          {activeTab === "preferences" ? renderPreferences() : renderProfile()}
-        </div>
-        <div className={styles.ButtonsContainer}>
-          <button
-            onClick={() => {
-              logout();
-            }}
-            className={`${styles.button} dark-gradient-secondary `}
-          >
-            Cerrar Sesión
-          </button>
-          <button className={`${styles.button} dark-gradient-primary `}>
-            Guardar
-          </button>
-        </div>
-      </div>
-    </div>
+    <>
+    <TabLayout tabs={tabs} initialActiveTab={tab} footer={buttons()}/>
+    </>
+    
   );
 }
 
