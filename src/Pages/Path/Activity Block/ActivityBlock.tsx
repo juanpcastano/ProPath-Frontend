@@ -6,6 +6,7 @@ interface ActivityProps {
   editingActivity: string;
   activity: Activity;
   pathId: string,
+  actionable: boolean,
   handleDelete: (id: string) => void;
   handleSetEditingActivity: (id: string) => void;
   handleCommentSubmit: (id: string, comment: string) => void
@@ -16,6 +17,7 @@ const ActivityBlock = ({
   editingActivity,
   activity,
   pathId,
+  actionable,
   handleDelete,
   handleCommentSubmit,
   handleSetEditingActivity,
@@ -44,7 +46,7 @@ const ActivityBlock = ({
               <strong>{"Estado: " + activity.state}</strong>
             </p>
           </div>
-          <div className={styles.buttonsContainer}>
+          {actionable && <div className={styles.buttonsContainer}>
             <link
               rel="stylesheet"
               href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
@@ -63,7 +65,7 @@ const ActivityBlock = ({
             >
               edit
             </span>
-          </div>
+          </div>}
         </div>
         {activity.comments && activity.comments.length > 0 && (
           <div className={styles.commentsContainer}>

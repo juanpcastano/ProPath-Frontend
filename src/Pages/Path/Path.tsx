@@ -25,25 +25,35 @@ const Path = () => {
   const pathState = useSelector((store: AppStore) => store.path);
 
   const [pathData, setPathData] = useState(pathState);
+  const [isMyPath, setIsMyPath] = useState<boolean>(true);
 
   useEffect(() => {
     if (id) {
-      setLoading(true)
+      setLoading(true);
       ApiCallPath(id)
         .then((resp) => {
           console.log(resp);
           setPathData(resp);
+          setIsMyPath(false);
           setLoading(false);
         })
         .catch(() => {
           setPathData(emptyPathState);
           setLoading(false);
+          setIsMyPath(false);
         });
     } else {
       setPathData(pathState);
       setLoading(false);
+      setIsMyPath(true);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (!id) {
+      setPathData(pathState);
+    }
+  }, [pathState]);
 
   const userData = useSelector((store: AppStore) => store.user);
   const dispatch = useDispatch();
@@ -144,8 +154,8 @@ const Path = () => {
 
   if (loading) {
     console.log(loading);
-    
-    return <Loading/>;
+
+    return <Loading />;
   } else if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {
     if (!userData.pathId) {
       return <InitialForm />;
@@ -172,9 +182,10 @@ const Path = () => {
           handleUnsendPath={HandleUnsendPath}
         />
 
-        {activities.map((activity, _) => {
+        {activities.map((activity, key) => {
           return (
             <ActivityBlock
+              key={key}
               editingActivity={editingActivity}
               activity={activity}
               pathId={pathData.id}
@@ -182,6 +193,7 @@ const Path = () => {
               handleCommentSubmit={handleCommentSubmit}
               handleSetEditingActivity={handleSetEditingActivity}
               handleSaveEdit={handleSaveEdit}
+              actionable={isMyPath && pathData.state == "R"}
             />
           );
         })}
