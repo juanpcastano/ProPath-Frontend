@@ -1,0 +1,66 @@
+.mainContainer {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    background-color: var(--content-bg);
+    padding: 30px;
+    border-radius: 20px;
+    position: relative;
+  }
+
+  .container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tabList {
+    display: flex;
+    border-bottom: 1px solid var(--hr-color);
+    margin-bottom: 24px;
+    gap: 30px;
+  }
+  
+  .tab {
+    padding-top: 12px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.25s ease;
+  }
+  
+  .tab:hover span {
+    transform: translateY(-3px);
+  }
+  
+  .tab:active span {
+    transform: translateY(-6px);
+  }
+  
+  .activeTab span {
+    color: var(--primary-high);
+  }
+  
+  .span {
+    margin: 0px 20px;
+    color: var(--text-inactive);
+    transition: all 0.25s ease;
+  }
+  
+  .decorator {
+    width: 100%;
+    height: 5px;
+    background-color: var(--primary-high);
+    border-radius: 5px 5px 0 0;
+    transform: scale(0);
+  
+    transform-origin: center;
+    transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1),
+      background 0.3s ease;
+  }
+  
+  .decoratorActive {
+    transform: scale(1) ;
+  }
