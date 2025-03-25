@@ -7,7 +7,7 @@ export const PrivateRoutes = {
 
   common: {
     HOME: { icon: "home", label: "Panel Principal", route: "/home" },
-    MI_PATH: { icon: "road", label: "Mi Path", route: "/mypath" },
+    MY_PATH: { icon: "road", label: "Mi Path", route: "/mypath" },
     MY_ORGANIZATION: { icon: "corporate_fare", label: "Mi Organización", route: "/myorganization" },
   },
 

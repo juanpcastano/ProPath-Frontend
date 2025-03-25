@@ -19,7 +19,7 @@ const InitialForm = () => {
               updatePath({
                 name: formData.get("name") as string,
                 description: formData.get("description") as string,
-                state: "propuesta",
+                state: "R",
               })
             );
             e.currentTarget.reset();

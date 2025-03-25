@@ -11,9 +11,40 @@ import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
 import ActivityForm from "./Activity Form/ActivityForm";
+import { useLocation } from "react-router-dom";
+import { ApiCallPath } from "../../services/apiPathService";
+import Loading from "../../Components/Loading/Loading";
 
 const Path = () => {
-  const pathData = useSelector((store: AppStore) => store.path);
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+  const [loading, setLoading] = useState(true);
+
+  const pathState = useSelector((store: AppStore) => store.path);
+
+  const [pathData, setPathData] = useState(pathState);
+
+  useEffect(() => {
+    if (id) {
+      setLoading(true)
+      ApiCallPath(id)
+        .then((resp) => {
+          console.log(resp);
+          setPathData(resp);
+          setLoading(false);
+        })
+        .catch(() => {
+          setPathData(emptyPathState);
+          setLoading(false);
+        });
+    } else {
+      setPathData(pathState);
+      setLoading(false);
+    }
+  }, [id]);
+
   const userData = useSelector((store: AppStore) => store.user);
   const dispatch = useDispatch();
   const [activities, setActivities] = useState<Activity[]>(
@@ -25,7 +56,20 @@ const Path = () => {
   const [minHours, _] = useState(import.meta.env.VITE_MIN_HOURS | 36);
   const [editingActivity, setEditingActivity] = useState("");
 
-  const sendPath = () => {};
+  const HandleSendPath = () => {
+    dispatch(
+      updatePath({
+        state: "M",
+      })
+    );
+  };
+  const HandleUnsendPath = () => {
+    dispatch(
+      updatePath({
+        state: "R",
+      })
+    );
+  };
 
   const handleDelete = (id: string) => {
     setActivities(activities.filter((activity) => activity.id !== id));
@@ -98,13 +142,21 @@ const Path = () => {
     dispatch(updatePath({ activities: activities }));
   }, [activities]);
 
-  if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {
+  if (loading) {
+    console.log(loading);
+    
+    return <Loading/>;
+  } else if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {
     if (!userData.pathId) {
       return <InitialForm />;
     } else {
-      <div className={`${styles.mainContainer} `}>
-        <h1>Ocurrió un error al encontrar la información de tu path</h1>
-      </div>;
+      return (
+        <div className={`${styles.mainContainer} `}>
+          <p className={styles.info}>
+            Ocurrió un error al encontrar la información de este path
+          </p>
+        </div>
+      );
     }
   } else {
     return (
@@ -112,29 +164,34 @@ const Path = () => {
         <Title
           name={pathData.name}
           description={pathData.description}
+          state={pathData.state}
           minHours={minHours}
           totalBudget={totalBudget}
           totalHours={totalHours}
-          handleSendPath={sendPath}
+          handleSendPath={HandleSendPath}
+          handleUnsendPath={HandleUnsendPath}
         />
 
         {activities.map((activity, _) => {
-          return (<ActivityBlock 
-            editingActivity={editingActivity}
-            activity={activity}
-            pathId={pathData.id}
-            handleDelete={handleDelete}
-            handleCommentSubmit={handleCommentSubmit}
-            handleSetEditingActivity={handleSetEditingActivity}
-            handleSaveEdit={handleSaveEdit}
-          />)
+          return (
+            <ActivityBlock
+              editingActivity={editingActivity}
+              activity={activity}
+              pathId={pathData.id}
+              handleDelete={handleDelete}
+              handleCommentSubmit={handleCommentSubmit}
+              handleSetEditingActivity={handleSetEditingActivity}
+              handleSaveEdit={handleSaveEdit}
+            />
+          );
         })}
 
-        <ActivityForm
-        pathId={pathData.id}
-        HandleAddActivity={HandleAddActivity}
-        />
-
+        {pathData.state == "R" && (
+          <ActivityForm
+            pathId={pathData.id}
+            HandleAddActivity={HandleAddActivity}
+          />
+        )}
       </>
     );
   }

@@ -36,8 +36,9 @@ function App() {
                 <Route element={<Layout />}>
                   {/* Rutas comunes */}
                   <Route path={PrivateRoutes.common.HOME.route} element={<Home/>} />
-                  <Route path={PrivateRoutes.common.MI_PATH.route} element={<Path/>} />
+                  <Route path={PrivateRoutes.common.MY_PATH.route} element={<Path/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route} element={<MyOrganization/>} />
+                  <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/path"} element={<Path/>} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route} element={<Settings />} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route+"/profile"} element={<Settings tab="profile" />} />
                   
