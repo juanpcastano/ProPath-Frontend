@@ -6,9 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "./Login&register.module.css";
 import { AxiosError } from "axios";
-
-import { MockupProUserState, MockupCoachUserState, MockupAdminUserState } from "../../Redux/States/user";
 import { PrivateRoutes } from "../../models/routes";
+
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -19,22 +18,7 @@ const Login = () => {
   });
   const [Error, setError] = useState("");
   const login = async (credentials: credentials) => {
-    
-    if ((import.meta.env.VITE_ENVIROMENT == "mockup")) {
-      console.log(`Logeándose como ${import.meta.env.VITE_MOCKUP_ROLE}`);
-      
-      if (import.meta.env.VITE_MOCKUP_ROLE == "pro"){
-        dispatch(createUser(MockupProUserState));
-        
-      } else if (import.meta.env.VITE_MOCKUP_ROLE == "coach"){
-        dispatch(createUser(MockupCoachUserState));
 
-      } else if (import.meta.env.VITE_MOCKUP_ROLE == "admin"){
-        dispatch(createUser(MockupAdminUserState));
-
-      }
-      navigate(PrivateRoutes.common.HOME.route);
-    } else {
       try {
         const result = await ApiCallLogin(credentials);
   
@@ -47,7 +31,7 @@ const Login = () => {
           return;
         }
         dispatch(createUser(result.user));
-        navigate("/history");
+        navigate(PrivateRoutes.common.HOME.route);
       } catch (error) {
         let AxiosErr = error as AxiosError;
         console.log((AxiosErr.response?.data as { message: string }).message);
@@ -55,7 +39,7 @@ const Login = () => {
         console.log(error);
       }
 
-    }
+    
   };
 
   const handleSubmit = (e: React.FormEvent) => {
