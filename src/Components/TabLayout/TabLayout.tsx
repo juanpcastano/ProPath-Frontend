@@ -9,7 +9,7 @@ interface tab {
 interface TabLayoutProps {
   tabs: tab[];
   initialActiveTab: string;
-  footer: ReactElement
+  footer?: ReactElement
 }
 
 const TabLayout = ({ tabs, initialActiveTab, footer }: TabLayoutProps) => {

@@ -14,7 +14,7 @@
   padding-bottom: 10px;
   text-align: left;
   border-bottom: 2px solid #e6eff5;
-  color: #4165a2;
+  color: var(--text-light);
 }
 
 .table td {

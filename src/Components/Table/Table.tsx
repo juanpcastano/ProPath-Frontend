@@ -10,7 +10,7 @@ const Table = ({
   data: any[];
   headers: string[];
   keys: string[];
-  pathLink: string;
+  pathLink?: string;
 }) => {
   return (
     <div className={styles.mainContainer}>
@@ -28,7 +28,7 @@ const Table = ({
               {keys.map((key: string) => {
                 return <td>{item[key]}</td>;
               })}
-              {keys.includes("id") && (
+              {keys.includes("id") && !!pathLink && (
                 <td className={styles.actions}>
                   <Link to={pathLink + "/" + item.id}>
                     <button className={styles.detailsButton}>
