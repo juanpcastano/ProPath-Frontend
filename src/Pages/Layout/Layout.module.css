@@ -11,7 +11,9 @@
 .contentBackground{
     grid-column-start: 2;
     background: var(--bg);
-    padding: 30px 40px
+    padding: 30px 40px;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 @media (max-width:1000px) {

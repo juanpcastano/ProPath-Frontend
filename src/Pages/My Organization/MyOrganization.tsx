@@ -25,18 +25,20 @@ const MyOrganization = () => {
   const headers = [
     "Nombre",
     "Email",
-    "Rol"
+    "Rol",
+    "grupo"
   ]
   const keys = [
     "name",
     "email",
-    "role"
+    "role",
+    "group"
   ]
 
   const tabs = [
     {
       name: "Miembros",
-      content: <>{loading ? Loading : <Table data={users} headers={headers} keys={keys}/>}</>,
+      content: <>{loading ? Loading : <Table data={users} headers={headers} keys={keys} pathLink="/user"/>}</>,
     },
     { name: "Grupos", content: <></> },
   ];

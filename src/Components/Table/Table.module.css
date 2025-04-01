@@ -3,42 +3,60 @@
   width: 100%;
   background-color: #fff;
   border-radius: 20px;
+  overflow-x: auto; /* Permite scroll horizontal en pantallas pequeñas */
 }
 
 .table {
   width: 100%;
+  table-layout: auto;
   border-collapse: collapse;
+  min-width: 600px; /* Evita que las columnas se compriman demasiado */
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 .table th {
-  padding-bottom: 10px;
   text-align: left;
   border-bottom: 2px solid #e6eff5;
   color: var(--text-light);
 }
 
 .table td {
-  padding: 10px 0px;
   border-bottom: 1px solid #e6eff5;
 }
 
 .actions {
-  text-align: center;
+  text-align: end;
 }
 
 .detailsButton {
   padding: 5px 10px;
-  border: 1px solid #22c48b;
+  border: 1px solid var(--primary-high);
   border-radius: 15px;
   background: none;
-  color: #22c48b;
+  color: var(--primary-high);
   cursor: pointer;
-  margin-right: 10px;
-  margin-bottom: 5px;
-  text-wrap: nowrap;
-  width: min-content;
 }
 
 .detailsButton {
   margin-right: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .table th,
+  .table td {
+    padding: 5px;
+    max-width: 150px;
+  }
+
+  .detailsButton {
+    padding: 5px;
+  }
 }

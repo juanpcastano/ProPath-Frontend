@@ -20,6 +20,7 @@ const Table = ({
             {headers.map((header) => {
               return <th>{header}</th>;
             })}
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -28,7 +29,7 @@ const Table = ({
               {keys.map((key: string) => {
                 return <td>{item[key]}</td>;
               })}
-              {keys.includes("id") && !!pathLink && (
+              {item.id && !!pathLink && (
                 <td className={styles.actions}>
                   <Link to={pathLink + "/" + item.id}>
                     <button className={styles.detailsButton}>

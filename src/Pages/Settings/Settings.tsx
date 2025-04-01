@@ -170,7 +170,7 @@ export default function ProfileSettings({
                   defaultValue={userData.id}
                 />
                 <select
-                  className={styles.select}
+                  className={`${styles.select} ${styles.idTypeSelect}`}
                   defaultValue={userData.idType}
                 >
                   <option value="CC">C.C.</option>

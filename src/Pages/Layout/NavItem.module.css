@@ -62,7 +62,10 @@
   transform: translateY(-2.5px)
 }
 
-
+.navItemIcon{
+  font-family: 'Material Symbols Outlined';
+  font-size: 1.5rem;
+}
 
 a {
   text-decoration: none;
@@ -75,9 +78,10 @@ a {
   .navItem {
     flex-direction: column-reverse;
     padding: 0;
+    height: 100%;
   }
   .decorator {
-    width: 200%;
+    width: 120%;
     height: 10px;
     border-radius: 15px 15px 0% 0%;
     margin-right: 0px;
@@ -92,6 +96,10 @@ a {
   }
 
   .navItemIcon{
-    font-size: 50px !important;
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 40px;
   }
 }

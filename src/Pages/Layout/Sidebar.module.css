@@ -7,11 +7,13 @@
   align-items: center;
   overflow: hidden;
   background-color: var(--layout-bg);
+  z-index: 100;
 }
 
 @media (max-width:600px) {
   .navItemsContainer{
     width: 100%;
+    height: fit-content;
     position: fixed;
     bottom: 0;
     display: flex;

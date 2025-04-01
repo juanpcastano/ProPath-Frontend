@@ -49,6 +49,18 @@
   transition: all 0.25s ease;
 }
 
+.select{
+  margin-top: 10px;
+}
+
+.input{
+  margin-top: 10px
+}
+
+.idTypeSelect{
+  min-width: 80px;
+}
+
 .decorator {
   width: 100%;
   height: 5px;
@@ -96,7 +108,6 @@
 }
 
 .content {
-  flex: 1;
   overflow-y: auto;
 }
 
@@ -140,9 +151,19 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 2 0px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
+
+  .avatarContainer {
+    align-self: center;
+    margin-bottom: -70px;
+  }
+
+  .formGroup {
+    margin-bottom: 0px;
+  }
   .formLayout {
     grid-template-columns: 1fr;
   }
