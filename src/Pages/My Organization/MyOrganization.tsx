@@ -38,8 +38,8 @@ const MyOrganization = () => {
   const tabs = [
     {
       name: "Miembros",
-      content: <>{loading ? Loading : <Table data={users} headers={headers} keys={keys} pathLink="/user"/>}</>,
-    },
+      content: <>{loading ? Loading : <Table data={users} headers={headers} keys={keys} pathLink="user"/>}</>,
+    },  
     { name: "Grupos", content: <></> },
   ];
   return <TabLayout tabs={tabs} initialActiveTab="Miembros" />;
