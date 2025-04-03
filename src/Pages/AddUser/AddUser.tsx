@@ -4,18 +4,16 @@ import { ApiCallAddUser } from "../../services/apiUserService";
 import styles from "./AddUser.module.css";
 
 const AddUser = () => {
-
-  const [error, setError] = useState()
+  const [error, setError] = useState();
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-
         const user: UserInfo = {
           id: formData.get("id") as string,
-          name: formData.get("id") as string,
+          name: formData.get("name") as string,
           idType: formData.get("id") as string,
           birthDate: formData.get("id") as string,
           city: formData.get("id") as string,
@@ -25,6 +23,7 @@ const AddUser = () => {
           profilePictureUrl: formData.get("id") as string,
           role: formData.get("id") as string,
         };
+        console.log(user)
         ApiCallAddUser(user)
           .then((res) => {
             console.log(res);
@@ -36,6 +35,7 @@ const AddUser = () => {
       }}
     >
       <div className={styles.mainContainer}>
+        <h1>Añadir Nuevo Usuario</h1>
         <div className={styles.formContainer}>
           <div className={styles.formLayout}>
             <div className={styles.formGroup}>
@@ -128,7 +128,9 @@ const AddUser = () => {
             >
               <p className={styles.text}>Añadir Usuario</p>
             </button>
-            {error && <p className={`${styles.text} ${styles.error}`}>{error}</p>}
+            {error && (
+              <p className={`${styles.text} ${styles.error}`}>{error}</p>
+            )}
           </div>
         </div>
       </div>
