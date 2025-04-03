@@ -14,19 +14,20 @@ const AddUser = () => {
         const user: UserInfo = {
           id: formData.get("id") as string,
           name: formData.get("name") as string,
-          idType: formData.get("id") as string,
-          birthDate: formData.get("id") as string,
-          city: formData.get("id") as string,
-          email: formData.get("id") as string,
-          country: formData.get("id") as string,
+          idType: formData.get("idType") as string,
+          birthDate: formData.get("birthdate") as string,
+          city: formData.get("city") as string,
+          email: formData.get("email") as string,
+          country: formData.get("country") as string,
           pathId: 0,
-          profilePictureUrl: formData.get("id") as string,
-          role: formData.get("id") as string,
+          profilePictureUrl: "", // Ajusta esto según necesites
+          role: formData.get("role") as string,
         };
-        console.log(user)
+        console.log(user);
         ApiCallAddUser(user)
           .then((res) => {
             console.log(res);
+            
           })
           .catch((err) => {
             setError(err.message);
@@ -45,6 +46,7 @@ const AddUser = () => {
               <input
                 className={styles.input}
                 id="name"
+                name="name"
                 autoComplete="off"
                 required
               />
@@ -58,10 +60,15 @@ const AddUser = () => {
                   className={styles.input}
                   type="number"
                   id="id"
+                  name="id"
                   autoComplete="off"
                   required
                 />
-                <select className={`${styles.select} ${styles.idTypeSelect}`}>
+                <select 
+                  className={`${styles.select} ${styles.idTypeSelect}`}
+                  id="idType"
+                  name="idType"
+                >
                   <option value="CC">C.C.</option>
                   <option value="CE">C.E.</option>
                 </select>
@@ -74,6 +81,7 @@ const AddUser = () => {
               <input
                 className={styles.input}
                 id="email"
+                name="email"
                 type="email"
                 autoComplete="off"
                 required
@@ -83,7 +91,7 @@ const AddUser = () => {
               <label className={styles.label} htmlFor="city">
                 Ciudad
               </label>
-              <select className={styles.select} id="city" required>
+              <select className={styles.select} id="city" name="city" required>
                 <option value="Bogotá">Bogotá</option>
                 <option value="Medellín">Medellín</option>
                 <option value="Cali">Cali</option>
@@ -97,6 +105,7 @@ const AddUser = () => {
               <input
                 className={styles.input}
                 id="birthdate"
+                name="birthdate"
                 type="date"
                 autoComplete="off"
                 required
@@ -106,7 +115,7 @@ const AddUser = () => {
               <label className={styles.label} htmlFor="country">
                 País
               </label>
-              <select className={styles.select} id="country" required>
+              <select className={styles.select} id="country" name="country" required>
                 <option value="Colombia">Colombia</option>
                 <option value="México">México</option>
                 <option value="Argentina">Argentina</option>
@@ -117,9 +126,9 @@ const AddUser = () => {
               <label className={styles.label} htmlFor="role">
                 Rol
               </label>
-              <select className={styles.select} id="role" required>
-                <option value="México">Profesional</option>
-                <option value="Colombia">Administrador</option>
+              <select className={styles.select} id="role" name="role" required>
+                <option value="Profesional">Profesional</option>
+                <option value="Administrador">Administrador</option>
               </select>
             </div>
             <button

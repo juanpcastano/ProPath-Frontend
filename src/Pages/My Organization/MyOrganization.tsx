@@ -63,7 +63,20 @@ const MyOrganization = () => {
         </>
       ),
     },
-    { name: "Grupos", content: <></> },
+    { name: "Grupos", content: <>
+    {userData.role == "A" && (
+                <div className={styles.addUserButtonContainer}>
+                  <button
+                    className={`dark-gradient-primary ${styles.addUserButton}`}
+                    onClick={()=>{navigate(PrivateRoutes.common.MY_ORGANIZATION.route+"/addUser")}}
+                  >
+                    Añadir un grupo
+                  </button>
+                </div>
+              )}
+    
+    
+    </> },
   ];
   return <TabLayout tabs={tabs} initialActiveTab="Miembros" />;
 };
