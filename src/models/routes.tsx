@@ -11,13 +11,10 @@ export const PrivateRoutes = {
     MY_ORGANIZATION: { icon: "corporate_fare", label: "Mi Organización", route: "/myorganization" },
   },
 
-  pro: {
+  P: {
     a: { icon: "a", label: "a", route: "#" },
   },
-  coach: {
-    a: { icon: "a", label: "a", route: "#" },
-  },
-  admin: {
+  A: {
     a: { icon: "a", label: "a", route: "#" },
   },
 

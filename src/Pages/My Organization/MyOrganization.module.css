@@ -1,0 +1,10 @@
+.addUserButton {
+    margin-bottom: 20px;
+    width: max-content;
+}
+
+.addUserButtonContainer{
+    width: 100%;
+    display: flex;
+    align-items: start;
+}
