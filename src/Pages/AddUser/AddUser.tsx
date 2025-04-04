@@ -2,10 +2,12 @@ import { useState } from "react";
 import { UserInfo } from "../../models/user.model";
 import { ApiCallAddUser } from "../../services/apiUserService";
 import styles from "./AddUser.module.css";
+import { useNavigate } from "react-router-dom";
+import { PrivateRoutes } from "../../models/routes";
 
 const AddUser = () => {
   const [error, setError] = useState();
-
+  const navigate = useNavigate();
   return (
     <form
       onSubmit={(e) => {
@@ -20,14 +22,15 @@ const AddUser = () => {
           email: formData.get("email") as string,
           country: formData.get("country") as string,
           pathId: 0,
-          profilePictureUrl: "", // Ajusta esto según necesites
+          profilePictureUrl: "", 
           role: formData.get("role") as string,
         };
         console.log(user);
         ApiCallAddUser(user)
           .then((res) => {
-            console.log(res);
-            
+            navigate(
+              PrivateRoutes.common.MY_ORGANIZATION.route + "/User/" + res.id
+            );
           })
           .catch((err) => {
             setError(err.message);
@@ -64,7 +67,7 @@ const AddUser = () => {
                   autoComplete="off"
                   required
                 />
-                <select 
+                <select
                   className={`${styles.select} ${styles.idTypeSelect}`}
                   id="idType"
                   name="idType"
@@ -115,7 +118,12 @@ const AddUser = () => {
               <label className={styles.label} htmlFor="country">
                 País
               </label>
-              <select className={styles.select} id="country" name="country" required>
+              <select
+                className={styles.select}
+                id="country"
+                name="country"
+                required
+              >
                 <option value="Colombia">Colombia</option>
                 <option value="México">México</option>
                 <option value="Argentina">Argentina</option>
@@ -131,16 +139,16 @@ const AddUser = () => {
                 <option value="Administrador">Administrador</option>
               </select>
             </div>
-            <button
-              type="submit"
-              className={`${styles.button} dark-gradient-primary `}
-            >
-              <p className={styles.text}>Añadir Usuario</p>
-            </button>
-            {error && (
-              <p className={`${styles.text} ${styles.error}`}>{error}</p>
-            )}
           </div>
+        </div>
+        <div className={styles.buttonContainer}>
+          <button
+            type="submit"
+            className={`${styles.button} dark-gradient-primary `}
+          >
+            <p className={styles.text}>Añadir Usuario</p>
+          </button>
+          {error && <p className={`${styles.text} ${styles.error}`}>{error}</p>}
         </div>
       </div>
     </form>

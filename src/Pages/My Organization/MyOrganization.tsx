@@ -14,7 +14,7 @@ const MyOrganization = () => {
   const [users, setUsers] = useState([]);
 
   const userData = useSelector((store: AppStore) => store.user);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -42,41 +42,55 @@ const MyOrganization = () => {
             Loading
           ) : (
             <>
-              {userData.role == "A" && (
-                <div className={styles.addUserButtonContainer}>
-                  <button
-                    className={`dark-gradient-primary ${styles.addUserButton}`}
-                    onClick={()=>{navigate(PrivateRoutes.common.MY_ORGANIZATION.route+"/addUser")}}
-                  >
-                    Añadir un usuario
-                  </button>
-                </div>
-              )}
               <Table
                 data={users}
                 headers={headers}
                 keys={keys}
                 pathLink="user"
               />
+              {userData.role == "A" && (
+                <>
+                  <div className={styles.addUserButtonContainer}>
+                    <button
+                      className={`dark-gradient-primary ${styles.addUserButton}`}
+                      onClick={() => {
+                        navigate(
+                          PrivateRoutes.common.MY_ORGANIZATION.route +
+                            "/addUser"
+                        );
+                      }}
+                    >
+                      Añadir un usuario
+                    </button>
+                  </div>
+                </>
+              )}
             </>
           )}
         </>
       ),
     },
-    { name: "Grupos", content: <>
-    {userData.role == "A" && (
-                <div className={styles.addUserButtonContainer}>
-                  <button
-                    className={`dark-gradient-primary ${styles.addUserButton}`}
-                    onClick={()=>{navigate(PrivateRoutes.common.MY_ORGANIZATION.route+"/addUser")}}
-                  >
-                    Añadir un grupo
-                  </button>
-                </div>
-              )}
-    
-    
-    </> },
+    {
+      name: "Grupos",
+      content: (
+        <>
+          {userData.role == "A" && (
+            <div className={styles.addUserButtonContainer}>
+              <button
+                className={`dark-gradient-primary ${styles.addUserButton}`}
+                onClick={() => {
+                  navigate(
+                    PrivateRoutes.common.MY_ORGANIZATION.route + "/addUser"
+                  );
+                }}
+              >
+                Añadir un grupo
+              </button>
+            </div>
+          )}
+        </>
+      ),
+    },
   ];
   return <TabLayout tabs={tabs} initialActiveTab="Miembros" />;
 };

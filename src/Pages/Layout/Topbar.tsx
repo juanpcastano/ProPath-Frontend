@@ -21,7 +21,7 @@ const Topbar = () => {
       <img
         src={
           userState.profilePictureUrl ||
-          "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ3ecoYCIXbBsczNsN0icdz3oUUQEivp59Ugghl0AQBSJskziDV"
+          "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
         }
         alt="Profile"
         onClick={() => {

@@ -1,7 +1,7 @@
 .mainContainer {
   box-sizing: border-box;
   width: 100%;
-  background-color: #fff;
+  background-color: var(--content-bg);
   border-radius: 20px;
   overflow-x: auto; /* Permite scroll horizontal en pantallas pequeñas */
 }

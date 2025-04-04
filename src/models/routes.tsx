@@ -12,10 +12,8 @@ export const PrivateRoutes = {
   },
 
   P: {
-    a: { icon: "a", label: "a", route: "#" },
   },
   A: {
-    a: { icon: "a", label: "a", route: "#" },
   },
 
   commonDown:{

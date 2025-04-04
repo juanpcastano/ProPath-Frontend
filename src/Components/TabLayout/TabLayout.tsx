@@ -18,9 +18,10 @@ const TabLayout = ({ tabs, initialActiveTab, footer }: TabLayoutProps) => {
     <div className={styles.mainContainer}>
       <div className={styles.container}>
         <div className={styles.tabList}>
-          {tabs.map((tab) => {
+          {tabs.map((tab, index) => {
             return (
-              <div
+              <div 
+                key={index}
                 className={`${styles.tab} ${
                   activeTab === tab.name ? styles.activeTab : ""
                 }`}

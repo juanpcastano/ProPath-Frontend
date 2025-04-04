@@ -1,0 +1,57 @@
+.mainContainer {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--content-bg);
+  border-radius: 20px;
+  padding: 20px;
+  padding-bottom: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.avatar {
+  aspect-ratio: 1/1;
+  min-width: 150px;
+  max-width: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ubication{
+  color: var(--text-ultralight);
+  margin: 0px ;
+}
+
+.section{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.groupsContainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.group{
+  box-sizing: border-box;
+  width: 75%;
+  background-color: var(--content-bg);
+  box-shadow: 2px 2px 8px 2px var(--primary-clear);
+  padding: 12px 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-ultralight);
+}
+
+.groupButton{
+  width: max-content;
+  margin: 0;
+}

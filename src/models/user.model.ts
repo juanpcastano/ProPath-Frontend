@@ -1,3 +1,8 @@
+export interface Group{
+    id: string
+    name: string
+}
+
 export interface UserInfo{
     id: string,
     idType: string,
@@ -8,5 +13,6 @@ export interface UserInfo{
     city: string,
     birthDate: string,
     profilePictureUrl: string,
-    pathId: number
+    pathId: number,
+    groups?: Group[],
 }

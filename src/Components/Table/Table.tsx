@@ -17,8 +17,8 @@ const Table = ({
       <table className={styles.table}>
         <thead>
           <tr>
-            {headers.map((header) => {
-              return <th>{header}</th>;
+            {headers.map((header, index) => {
+              return <th key={index}>{header}</th>;
             })}
             <th></th>
           </tr>
@@ -26,8 +26,8 @@ const Table = ({
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              {keys.map((key: string) => {
-                return <td>{item[key]}</td>;
+              {keys.map((key: string, index) => {
+                return <td key={index}>{item[key]}</td>;
               })}
               {item.id && !!pathLink && (
                 <td className={styles.actions}>
