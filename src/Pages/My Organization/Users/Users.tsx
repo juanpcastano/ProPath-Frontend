@@ -46,7 +46,7 @@ const Users = () => {
                 );
               }}
             >
-              Añadir un grupo
+              Añadir un usuarios
             </button>
           </div>
         </>
