@@ -42,7 +42,6 @@ function App() {
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route} element={<MyOrganization/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/pat/:id"} element={<Path/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/user/:id"} element={<User/>} />
-                  <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddUser"} element={<AddUser/>} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route} element={<Settings />} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route+"/profile"} element={<Settings tab="Profile" />} />
                   
@@ -54,6 +53,7 @@ function App() {
                   </Route>
                   <Route element={<RoleGuard role="admin" />}>
                     {/*rutas del rol C*/}
+                    <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddUser"} element={<AddUser/>} />
                   </Route>
                 </Route>
               </Route>

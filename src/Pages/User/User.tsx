@@ -55,7 +55,7 @@ const User = () => {
       <div className={styles.section}>
         {userData.groups?.length ? (
           <>
-            <h1>Grupos</h1>
+            <h1>Grupos</h1>{userData.role == "A"}
             <div className={styles.groupsContainer}>
               {userData.groups.map((group, index) => {
                 return (
