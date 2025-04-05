@@ -45,14 +45,9 @@ function App() {
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route} element={<Settings />} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route+"/profile"} element={<Settings tab="Profile" />} />
                   
-                  <Route element={<RoleGuard role="pro" />}>
-                    {/*rutas del rol A*/}
+                  <Route element={<RoleGuard role="P" />}>
                   </Route>
-                  <Route element={<RoleGuard role="coach" />}>
-                    {/*rutas del rol B*/}
-                  </Route>
-                  <Route element={<RoleGuard role="admin" />}>
-                    {/*rutas del rol C*/}
+                  <Route element={<RoleGuard role="A" />}>
                     <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddUser"} element={<AddUser/>} />
                   </Route>
                 </Route>

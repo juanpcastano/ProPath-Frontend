@@ -50,7 +50,7 @@ const Groups = () => {
           <button
             className={`dark-gradient-primary ${styles.addGroupButton}`}
             onClick={() => {
-              navigate(PrivateRoutes.common.MY_ORGANIZATION.route + "/addUser");
+              navigate(PrivateRoutes.common.MY_ORGANIZATION.route + "/addGroup");
             }}
           >
             Añadir un grupo

@@ -42,7 +42,7 @@ const Users = () => {
               className={`dark-gradient-primary ${styles.addUserButton}`}
               onClick={() => {
                 navigate(
-                  PrivateRoutes.common.MY_ORGANIZATION.route + "/addGroup"
+                  PrivateRoutes.common.MY_ORGANIZATION.route + "/addUser"
                 );
               }}
             >
