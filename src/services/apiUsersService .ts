@@ -90,7 +90,7 @@ export const ApiCallUsers = async () => {
     result.data = result.data.map((user:UserInfo)=>{
       return {
         ...user,
-        role: user.role == "A" ? "Administrador" : user.role == "P" 
+        role: user.role == "A" ? "Administrador" : user.role == "P" && "Profesional"
       }
     })
     return result.data;

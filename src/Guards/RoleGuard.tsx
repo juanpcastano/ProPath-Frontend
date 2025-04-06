@@ -10,7 +10,7 @@ interface RoleGuardProps {
 
 const RoleGuard = ({ role }: RoleGuardProps) => {
   const userState = useSelector((store: AppStore) => store.user);
-  
+  console.log(userState)
  
   if (Array.isArray(role)) {
     return role.includes(userState.role) 
