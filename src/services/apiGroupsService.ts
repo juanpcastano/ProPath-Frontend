@@ -12,7 +12,7 @@ export const ApiCallGroups = async () => {
   }
 
   try {
-    const result = await Api.get("/groups", {
+    const result = await Api.get("/users-management/groups", {
       headers: {
         "Content-Type": "application/json",
       },
