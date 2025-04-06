@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserInfo } from "../../models/user.model";
 
 export const EmptyUserState: UserInfo = {
-  id: 0,
+  id: "",
+  documentId: "",
   idType: "",
   name: "",
   profilePictureUrl: "",
@@ -11,13 +12,14 @@ export const EmptyUserState: UserInfo = {
   country: "",
   city: "",
   birthDate: "",
-  pathId: 0
+  // pathId: 0
 };
 
 
 
 export const MockupProUserState: UserInfo = {
-  id: 1111111111,
+  id: "1111111111",
+  documentId: "143511",
   idType: "CC",
   name: "Juan",
   profilePictureUrl: "https://pbs.twimg.com/media/FWmxrxvWQAQsU1c.jpg",
@@ -26,11 +28,12 @@ export const MockupProUserState: UserInfo = {
   country: "Colombia",
   city: "Cali",
   birthDate: "2023-05-15T10:30:00",
-  pathId: 0
+  // pathId: 0
 };
 
 export const MockupCoachUserState: UserInfo = {
-  id: 2222222222,
+  id: "2222222222",
+  documentId: "1435113",
   idType: "CC",
   name: "Carlos",
   profilePictureUrl: "https://images7.memedroid.com/images/UPLOADED693/5f47dfb3ee96f.jpeg",
@@ -39,11 +42,12 @@ export const MockupCoachUserState: UserInfo = {
   country: "Colombia",
   city: "Cali",
   birthDate: "2023-05-15T10:30:00",
-  pathId: 0
+  // pathId: 0
 };
 
 export const MockupAdminUserState: UserInfo = {
-  id: 3333333333,
+  id: "3333333333",
+  documentId: "1435114",
   idType: "CC",
   name: "Pablo",
   profilePictureUrl: "https://i.imgflip.com/4/5khfdn.jpg",
@@ -52,7 +56,7 @@ export const MockupAdminUserState: UserInfo = {
   country: "Colombia",
   city: "Cali",
   birthDate: "2023-05-15T10:30:00",
-  pathId: 0
+  // pathId: 0
 };
 
 export const persistLocalStoregeUser = (userInfo: UserInfo ) => {

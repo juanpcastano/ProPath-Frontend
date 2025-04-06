@@ -3,7 +3,7 @@ import styles from "./User.module.css";
 import { ApiCallUser } from "../../services/apiUserService";
 import { useEffect, useState } from "react";
 import Loading from "../../Components/Loading/Loading";
-import { UserInfo } from "../../models/user.model";
+import { UserGroup, UserInfo } from "../../models/user.model";
 import { PrivateRoutes } from "../../models/routes";
 
 const User = () => {
@@ -17,6 +17,7 @@ const User = () => {
   useEffect(() => {
     ApiCallUser(id as string)
       .then((res) => {
+        console.log(res);
         setUserData(res);
         setLoading(false);
       })
@@ -53,11 +54,12 @@ const User = () => {
         </strong>
       </div>
       <div className={styles.section}>
-        {userData.groups?.length ? (
+        {userData.userGroups?.length ? (
           <>
             <h1>Grupos</h1>{userData.role == "A"}
             <div className={styles.groupsContainer}>
-              {userData.groups.map((group, index) => {
+              {userData.userGroups.map((userGroup:UserGroup, index) => {
+                const group = userGroup.group;
                 return (
                   <div className={styles.group} key={index}>
                     <strong className={styles.groupTitle}>{group.name}</strong>

@@ -24,11 +24,10 @@ export const ApiCallUser = async (id: string) => {
   }
 
   try {
-    const result = await Api.post("/users", {
+    const result = await Api.get(`/users-management/users/${id}`, {
       headers: {
         "Content-Type": "application/json",
-      },
-      body: { id: id },
+      }
     });
     return result.data;
   } catch (err) {
