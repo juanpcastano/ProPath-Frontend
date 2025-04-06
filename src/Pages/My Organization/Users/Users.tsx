@@ -10,8 +10,8 @@ import { PrivateRoutes } from "../../../models/routes";
 import Error from "../../Error/Error";
 
 const Users = () => {
-  const headers = ["Nombre", "Email", "Rol", "grupo"];
-  const keys = ["name", "email", "role", "group"];
+  const headers = ["Nombre", "Email", "Rol"];
+  const keys = ["name", "email", "role"];
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
