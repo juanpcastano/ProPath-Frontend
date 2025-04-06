@@ -1,10 +1,12 @@
 export interface registerInfo{
-    id: number,
+    documentId: string,
     idType: string,
     name: string,
     email: string,
-    password: string,
+
     country: string,
     city: string,
     birthDate: string,
+    profilePictureUrl: string,
+    role: string
 }

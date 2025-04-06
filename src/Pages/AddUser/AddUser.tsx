@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { UserInfo } from "../../models/user.model";
 import { ApiCallAddUser } from "../../services/apiUserService";
 import styles from "./AddUser.module.css";
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes } from "../../models/routes";
+import { registerInfo } from "../../models/registerInfo";
 
 const AddUser = () => {
   const [error, setError] = useState();
@@ -13,23 +13,24 @@ const AddUser = () => {
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const user: UserInfo = {
-          id: formData.get("id") as string,
+      
+        const user: registerInfo = {
+          documentId: formData.get("id") as string,
           name: formData.get("name") as string,
           idType: formData.get("idType") as string,
           birthDate: formData.get("birthdate") as string,
           city: formData.get("city") as string,
           email: formData.get("email") as string,
           country: formData.get("country") as string,
-          pathId: 0,
           profilePictureUrl: "", 
           role: formData.get("role") as string,
         };
         console.log(user);
         ApiCallAddUser(user)
           .then((res) => {
+            console.log(res);
             navigate(
-              PrivateRoutes.common.MY_ORGANIZATION.route + "/User/" + res.id
+              PrivateRoutes.common.MY_ORGANIZATION.route + "/User/" + res.user.id
             );
           })
           .catch((err) => {
@@ -135,8 +136,8 @@ const AddUser = () => {
                 Rol
               </label>
               <select className={styles.select} id="role" name="role" required>
-                <option value="Profesional">Profesional</option>
-                <option value="Administrador">Administrador</option>
+                <option value="P">Profesional</option>
+                <option value="A">Administrador</option>
               </select>
             </div>
           </div>

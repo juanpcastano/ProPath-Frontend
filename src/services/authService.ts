@@ -38,7 +38,7 @@ export const ApiCallLogin = async (credentials: credentials) => {
 export const ApiCallRegister = async (registerInfo: registerInfo) => {
   try {
    
-    registerInfo.id = Number(registerInfo.id)    
+
     const result = await Api.post("/auth/register", registerInfo, {
       headers: {
         "Content-Type": "application/json",
