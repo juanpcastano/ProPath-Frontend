@@ -13,7 +13,7 @@ const AddUser = () => {
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-      
+
         const user: registerInfo = {
           documentId: formData.get("id") as string,
           name: formData.get("name") as string,
@@ -22,7 +22,7 @@ const AddUser = () => {
           city: formData.get("city") as string,
           email: formData.get("email") as string,
           country: formData.get("country") as string,
-          profilePictureUrl: "", 
+          profilePictureUrl: "",
           role: formData.get("role") as string,
         };
         console.log(user);
@@ -30,11 +30,13 @@ const AddUser = () => {
           .then((res) => {
             console.log(res);
             navigate(
-              PrivateRoutes.common.MY_ORGANIZATION.route + "/User/" + res.user.id
+              PrivateRoutes.common.MY_ORGANIZATION.route +
+                "/User/" +
+                res.user.id
             );
           })
           .catch((err) => {
-            setError(err.message);
+            setError(err.response?.data.message);
           });
         e.currentTarget.reset();
       }}

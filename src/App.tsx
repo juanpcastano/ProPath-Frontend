@@ -40,7 +40,7 @@ function App() {
                   <Route path={PrivateRoutes.common.HOME.route} element={<Home/>} />
                   <Route path={PrivateRoutes.common.MY_PATH.route} element={<Path/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route} element={<MyOrganization/>} />
-                  <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/pat/:id"} element={<Path/>} />
+                  <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/path/:id"} element={<Path/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/user/:id"} element={<User/>} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route} element={<Settings />} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route+"/profile"} element={<Settings tab="Profile" />} />
@@ -49,6 +49,7 @@ function App() {
                   </Route>
                   <Route element={<RoleGuard role="A" />}>
                     <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddUser"} element={<AddUser/>} />
+                    <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddGroup"} element={<AddUser/>} />
                   </Route>
                 </Route>
               </Route>

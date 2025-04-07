@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import Loading from "../../Components/Loading/Loading";
 import { UserGroup, UserInfo } from "../../models/user.model";
 import { PrivateRoutes } from "../../models/routes";
+import Error from "../Error/Error";
 
 const User = () => {
   const { id } = useParams();
 
   const [userData, setUserData] = useState<undefined | UserInfo>();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -22,20 +23,13 @@ const User = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err);
+        setError(err.response?.data.message);
+        setLoading(false);  
       });
   }, []);
 
-  if (loading) {
-    return <Loading />;
-  }
-  if (error) {
-    return (
-      <div className={styles.mainContainer}>
-        <h2 className={styles.error}></h2>
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
+  if (error) return <Error error={error}/>
   if (!userData) return <div>No se encontraron datos del usuario</div>;
   return (
     <div className={styles.mainContainer}>

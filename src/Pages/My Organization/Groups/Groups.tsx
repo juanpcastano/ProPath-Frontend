@@ -22,7 +22,8 @@ const Groups = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err);
+        setError(err.response?.data.message);
+        setLoading(false);
       });
   }, []);
 

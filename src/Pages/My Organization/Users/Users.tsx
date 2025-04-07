@@ -27,7 +27,8 @@ const Users = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err);
+        setError(err.response?.data.message);
+        setLoading(false);  
       });
   }, []);
   if (loading) return <Loading/>
