@@ -160,10 +160,7 @@
     align-self: center;
     margin-bottom: -70px;
   }
-
-  .formGroup {
-    margin-bottom: 0px;
-  }
+  
   .formLayout {
     grid-template-columns: 1fr;
   }
