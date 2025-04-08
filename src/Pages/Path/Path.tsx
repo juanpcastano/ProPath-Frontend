@@ -194,6 +194,7 @@ const Path = () => {
           totalHours={totalHours}
           handleSendPath={HandleSendPath}
           handleUnsendPath={HandleUnsendPath}
+          actionable={isMyPath && pathData.state == "R"}
         />
 
         {activities.map((activity, key) => {

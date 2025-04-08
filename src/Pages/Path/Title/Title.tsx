@@ -12,6 +12,7 @@ interface TitleProps {
   totalBudget: number;
   handleSendPath: () => void;
   handleUnsendPath: () => void;
+  actionable: boolean;
 }
 
 const Title = ({
@@ -23,6 +24,7 @@ const Title = ({
   totalBudget,
   handleSendPath,
   handleUnsendPath,
+  actionable,
 }: TitleProps) => {
   const [editing, setEditing] = useState(false);
   const dispatch = useDispatch();
@@ -35,18 +37,23 @@ const Title = ({
               <h1 className={styles.noMarginTop}>{name}</h1>
               <p className={styles.description}>{description}</p>
             </div>
-            <link
-              rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-            />
-            <span
-              className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
-              onClick={() => {
-                setEditing(true);
-              }}
-            >
-              edit
-            </span>
+
+            {actionable && (
+              <>
+                <link
+                  rel="stylesheet"
+                  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+                />
+                <span
+                  className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
+                  onClick={() => {
+                    setEditing(true);
+                  }}
+                >
+                  edit
+                </span>
+              </>
+            )}
           </div>
         ) : (
           <>
@@ -61,7 +68,7 @@ const Title = ({
                     state: "R",
                   })
                 );
-                setEditing(false)
+                setEditing(false);
                 e.currentTarget.reset();
               }}
             >
@@ -93,7 +100,9 @@ const Title = ({
                   </button>
                   <button
                     className={`${styles.button} dark-gradient-secondary`}
-                    onClick={() => {setEditing(false)}}
+                    onClick={() => {
+                      setEditing(false);
+                    }}
                   >
                     <p className={styles.text}>Cancelar</p>
                   </button>
@@ -112,6 +121,7 @@ const Title = ({
       {state == "R" && (
         <button
           onClick={() => {
+            setEditing(false);
             handleSendPath();
           }}
           className={`${styles.button} ${
