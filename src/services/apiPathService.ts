@@ -141,3 +141,23 @@ export const ApiCallPath = async (id: string) => {
     throw err;
   }
 };
+
+export const ApiCallAddPath = async () => {
+
+  
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+  }
+
+  try {
+    const result = await Api.post("/path-managment/paths", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};

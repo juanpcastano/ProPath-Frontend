@@ -13,6 +13,7 @@ import Path from "./Pages/Path/Path";
 import MyOrganization from "./Pages/My Organization/MyOrganization";
 import User from "./Pages/User/User";
 import AddUser from "./Pages/AddUser/AddUser";
+import MyPaths from "./Pages/MyPaths/MyPaths";
 
 const NotFound = lazy(() => import("./Pages/Not found/NotFound"));
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
@@ -38,7 +39,7 @@ function App() {
                 <Route element={<Layout />}>
                   {/* Rutas comunes */}
                   <Route path={PrivateRoutes.common.HOME.route} element={<Home/>} />
-                  <Route path={PrivateRoutes.common.MY_PATH.route} element={<Path/>} />
+                  <Route path={PrivateRoutes.common.MY_PATH.route} element={<MyPaths/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route} element={<MyOrganization/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/path/:id"} element={<Path/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/user/:id"} element={<User/>} />

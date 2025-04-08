@@ -37,7 +37,7 @@ const User = () => {
         <img
           src={
             userData.profilePictureUrl ||
-            "https://www.svgrepo.com/show/497407/profile-circle.svg"
+            "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
           }
           alt="Profile"
           className={styles.avatar}
