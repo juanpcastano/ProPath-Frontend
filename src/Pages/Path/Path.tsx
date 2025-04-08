@@ -84,7 +84,9 @@ const Path = () => {
     );
   };
 
-  const handleDelete = (id: string) => {
+  
+
+  const handleDeleteActivity = (id: string) => {
     setActivities(activities.filter((activity) => activity.id !== id));
     dispatch(
       updatePath({
@@ -97,7 +99,7 @@ const Path = () => {
     setEditingActivity(id);
   };
 
-  const handleSaveEdit = (updatedActivity: Activity) => {
+  const handleSaveEditActivity = (updatedActivity: Activity) => {
     console.log(updatedActivity);
     setActivities(
       activities.map((activity) =>
@@ -201,10 +203,10 @@ const Path = () => {
               editingActivity={editingActivity}
               activity={activity}
               pathId={pathData.id}
-              handleDelete={handleDelete}
+              handleDelete={handleDeleteActivity}
               handleCommentSubmit={handleCommentSubmit}
               handleSetEditingActivity={handleSetEditingActivity}
-              handleSaveEdit={handleSaveEdit}
+              handleSaveEdit={handleSaveEditActivity}
               actionable={isMyPath && pathData.state == "R"}
             />
           );
