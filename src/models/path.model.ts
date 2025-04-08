@@ -19,8 +19,6 @@ export interface Path{
     totalHours: number;
     totalBudget: number;
     activities: Activity[];
-    coachComment?:Comment;
-    adminComment?:Comment;
 }
 
 export interface Comment{

@@ -1,7 +1,7 @@
 import { ReactElement, useState } from "react";
 import styles from "./TabLayout.module.css";
 
-interface tab {
+export interface tab {
   name: string;
   content: ReactElement
 }

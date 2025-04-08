@@ -5,10 +5,11 @@ import styles from "./ActivityForm.module.css";
 
 interface ActivityFormProps {
   pathId: string;
+  availableHours: number;
   HandleAddActivity: (activity: Activity) => void;
 }
 
-const ActivityForm = ({ pathId, HandleAddActivity }: ActivityFormProps) => {
+const ActivityForm = ({ pathId, HandleAddActivity, availableHours }: ActivityFormProps) => {
   const today = new Date().toISOString().split("T")[0];
   const [initialDate, setInitialDate] = useState(today);
   return (
@@ -84,7 +85,7 @@ const ActivityForm = ({ pathId, HandleAddActivity }: ActivityFormProps) => {
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="hours">Horas:</label>
-            <input type="number" id="hours" name="hours" min="0" required />
+            <input type="number" id="hours" name="hours" min="0" max={availableHours} required />
           </div>
 
           <div className={styles.formGroup}>

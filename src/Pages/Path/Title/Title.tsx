@@ -5,7 +5,7 @@ interface TitleProps {
   description: string;
   state: string;
   totalHours: number;
-  minHours: number;
+  maxHours: number;
   totalBudget: number;
   handleSendPath: () => void;
   handleUnsendPath: () => void;
@@ -16,7 +16,7 @@ const Title = ({
   description,
   state,
   totalHours,
-  minHours,
+  maxHours,
   totalBudget,
   handleSendPath,
   handleUnsendPath,
@@ -27,7 +27,7 @@ const Title = ({
         <h1 className={styles.noMarginTop}>{name}</h1>
         <p className={styles.description}>{description}</p>
         <p>
-          Horas Totales: {totalHours}/{minHours}
+          Horas Totales: {totalHours}/{maxHours}
         </p>
         <p>Presupuesto Total: ${totalBudget}</p>
       </div>
@@ -38,13 +38,13 @@ const Title = ({
             handleSendPath();
           }}
           className={`${styles.button} ${
-            totalHours >= minHours ? "dark-gradient-primary" : styles.inactive
+            totalHours >= maxHours ? "dark-gradient-primary" : styles.inactive
           }`}
         >
           <p className={styles.text}>
-            {totalHours >= minHours
+            {totalHours >= maxHours
               ? "Enviar path a mi coach"
-              : "Completa el mínimo de horas"}
+              : "Completa las horas necesarias"}
           </p>
         </button>
       )}

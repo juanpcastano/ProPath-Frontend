@@ -11,33 +11,35 @@ import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
 import ActivityForm from "./Activity Form/ActivityForm";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ApiCallPath } from "../../services/apiPathService";
 import Loading from "../../Components/Loading/Loading";
+import Error from "../Error/Error";
 
 const Path = () => {
-  const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
-  const id = queryParams.get("id");
-  const [loading, setLoading] = useState(true);
-
+  const { id } = useParams();
   const pathState = useSelector((store: AppStore) => store.path);
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [pathData, setPathData] = useState(pathState);
   const [isMyPath, setIsMyPath] = useState<boolean>(true);
+
+  useEffect(() => {
+    console.log(id);
+  }, []);
 
   useEffect(() => {
     if (id) {
       setLoading(true);
       ApiCallPath(id)
         .then((resp) => {
-          console.log(resp);
           setPathData(resp);
           setIsMyPath(false);
           setLoading(false);
         })
-        .catch(() => {
+        .catch((err) => {
+          setError(err.response?.data.message);
           setPathData(emptyPathState);
           setLoading(false);
           setIsMyPath(false);
@@ -63,7 +65,8 @@ const Path = () => {
 
   const [totalHours, setTotalHours] = useState(0);
   const [totalBudget, setTotalBudget] = useState(0);
-  const [minHours, _] = useState(import.meta.env.VITE_MIN_HOURS | 36);
+  const [maxHours, _] = useState(import.meta.env.VITE_PATH_HOURS | 32);
+  const [availableHours, setAvailableHours] = useState(import.meta.env.VITE_PATH_HOURS | 32);
   const [editingActivity, setEditingActivity] = useState("");
 
   const HandleSendPath = () => {
@@ -152,12 +155,20 @@ const Path = () => {
     dispatch(updatePath({ activities: activities }));
   }, [activities]);
 
-  if (loading) {
-    console.log(loading);
+  useEffect(()=>{
+    console.log(availableHours)
+  },[availableHours])
 
-    return <Loading />;
-  } else if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {
-    if (!userData.pathId) {
+
+  useEffect(()=>{
+    console.log(totalHours)
+    setAvailableHours(maxHours - totalHours)
+  },[totalHours])
+  
+  if (loading) return <Loading />;
+  if (error) return <Error error={error} />;
+  if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {
+    if (isMyPath) {
       return <InitialForm />;
     } else {
       return (
@@ -168,14 +179,15 @@ const Path = () => {
         </div>
       );
     }
-  } else {
+  } else if (error) return <Error error={error} />;
+  else {
     return (
       <>
         <Title
           name={pathData.name}
           description={pathData.description}
           state={pathData.state}
-          minHours={minHours}
+          maxHours={maxHours}
           totalBudget={totalBudget}
           totalHours={totalHours}
           handleSendPath={HandleSendPath}
@@ -202,6 +214,7 @@ const Path = () => {
           <ActivityForm
             pathId={pathData.id}
             HandleAddActivity={HandleAddActivity}
+            availableHours={availableHours}
           />
         )}
       </>
