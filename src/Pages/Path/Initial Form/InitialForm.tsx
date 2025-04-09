@@ -3,6 +3,7 @@ import styles from "./InitialForm.module.css";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../../Redux/States/user";
 import { updatePath } from "../../../Redux/States/path";
+import { ApiCallAddPath } from "../../../services/apiPathService";
 
 const InitialForm = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,10 @@ const InitialForm = () => {
                 state: "R",
               })
             );
+            ApiCallAddPath({
+              name: formData.get("name") as string,
+              description: formData.get("description") as string,
+            });
             e.currentTarget.reset();
           }}
         >

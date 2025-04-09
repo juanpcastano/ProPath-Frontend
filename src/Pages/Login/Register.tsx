@@ -14,12 +14,15 @@ const Register = () => {
   const [formData, setFormData] = useState({
     id: 0,
     idType: "",
+    documentId: "",
+    role: "",
     name: "",
     email: "",
     password: "",
     country: "",
     city: "",
     birthDate: "",
+    profilePictureUrl: ""
   });
 
   const idTypes = [

@@ -26,10 +26,6 @@ const Path = () => {
   const [isMyPath, setIsMyPath] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log(id);
-  }, []);
-
-  useEffect(() => {
     if (id) {
       setLoading(true);
       ApiCallPath(id)
@@ -100,7 +96,6 @@ const Path = () => {
   };
 
   const handleSaveEditActivity = (updatedActivity: Activity) => {
-    console.log(updatedActivity);
     setActivities(
       activities.map((activity) =>
         activity.id == updatedActivity.id ? updatedActivity : activity
@@ -158,12 +153,6 @@ const Path = () => {
   }, [activities]);
 
   useEffect(()=>{
-    console.log(availableHours)
-  },[availableHours])
-
-
-  useEffect(()=>{
-    console.log(totalHours)
     setAvailableHours(maxHours - totalHours)
   },[totalHours])
   

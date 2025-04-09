@@ -25,10 +25,8 @@ const AddUser = () => {
           profilePictureUrl: "",
           role: formData.get("role") as string,
         };
-        console.log(user);
         ApiCallAddUser(user)
           .then((res) => {
-            console.log(res);
             navigate(
               PrivateRoutes.common.MY_ORGANIZATION.route +
                 "/User/" +

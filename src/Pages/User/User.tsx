@@ -18,7 +18,6 @@ const User = () => {
   useEffect(() => {
     ApiCallUser(id as string)
       .then((res) => {
-        console.log(res);
         setUserData(res);
         setLoading(false);
       })
