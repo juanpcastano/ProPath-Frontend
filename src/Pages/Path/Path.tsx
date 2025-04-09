@@ -12,7 +12,7 @@ import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
 import ActivityForm from "./Activity Form/ActivityForm";
 import { useParams } from "react-router-dom";
-import { ApiCallPath } from "../../services/apiPathService";
+import { ApiCallGetPath, ApiCallGetUserPaths } from "../../services/apiPathService";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
 
@@ -28,19 +28,28 @@ const Path = () => {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      ApiCallPath(id)
+      setIsMyPath(false);
+      ApiCallGetPath(id)
         .then((resp) => {
           setPathData(resp);
-          setIsMyPath(false);
           setLoading(false);
         })
         .catch((err) => {
           setError(err.response?.data.message);
           setPathData(emptyPathState);
           setLoading(false);
-          setIsMyPath(false);
         });
     } else {
+      ApiCallGetUserPaths(userData.id).then((resp) => {
+        setPathData(resp[0]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err.response?.data.message);
+        setPathData(emptyPathState);
+        setLoading(false);
+      });
       setPathData(pathState);
       setLoading(false);
       setIsMyPath(true);
@@ -51,7 +60,7 @@ const Path = () => {
     if (!id) {
       setPathData(pathState);
     }
-  }, [pathState]);
+  }, [pathState, id]);
 
   const userData = useSelector((store: AppStore) => store.user);
   const dispatch = useDispatch();
@@ -62,7 +71,9 @@ const Path = () => {
   const [totalHours, setTotalHours] = useState(0);
   const [totalBudget, setTotalBudget] = useState(0);
   const [maxHours, _] = useState(import.meta.env.VITE_PATH_HOURS | 32);
-  const [availableHours, setAvailableHours] = useState(import.meta.env.VITE_PATH_HOURS | 32);
+  const [availableHours, setAvailableHours] = useState(
+    import.meta.env.VITE_PATH_HOURS | 32
+  );
   const [editingActivity, setEditingActivity] = useState("");
 
   const HandleSendPath = () => {
@@ -79,8 +90,6 @@ const Path = () => {
       })
     );
   };
-
-  
 
   const handleDeleteActivity = (id: string) => {
     setActivities(activities.filter((activity) => activity.id !== id));
@@ -152,10 +161,10 @@ const Path = () => {
     dispatch(updatePath({ activities: activities }));
   }, [activities]);
 
-  useEffect(()=>{
-    setAvailableHours(maxHours - totalHours)
-  },[totalHours])
-  
+  useEffect(() => {
+    setAvailableHours(maxHours - totalHours);
+  }, [totalHours]);
+
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
   if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {

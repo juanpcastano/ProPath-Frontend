@@ -1,6 +1,6 @@
 import Api from "../api/Api";
 
-export const ApiCallPath = async (id: string) => {
+export const ApiCallGetPath = async (id: string) => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
     if (id == "1") {
       return {
@@ -130,7 +130,25 @@ export const ApiCallPath = async (id: string) => {
   }
 
   try {
-    const result = await Api.get("/Path/" + id, {
+    const result = await Api.get("/path-management/paths/" + id, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export const ApiCallGetUserPaths = async (userId: string) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    
+  }
+
+  try {
+    const result = await Api.get(`/path-management/users/${userId}/paths`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -151,12 +169,14 @@ export const ApiCallAddPath = async (path: {
   }
 
   try {
-    const result = await Api.post("/path-managment/paths", path, {
+    const result = await Api.post("/path-management/paths", path, {
       headers: {
         "Content-Type": "application/json",
       },
     });
+    console.log(result.data);
     return result.data;
+    
   } catch (err) {
     console.error("Error:", err);
     throw err;
