@@ -124,6 +124,7 @@ const Title = ({
             setEditing(false);
             handleSendPath();
           }}
+          disabled={totalHours < maxHours}
           className={`${styles.button} ${
             totalHours >= maxHours ? "dark-gradient-primary" : styles.inactive
           }`}

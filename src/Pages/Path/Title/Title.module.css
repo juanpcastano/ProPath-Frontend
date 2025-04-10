@@ -80,6 +80,7 @@ span.button:active{
 
 .inactive p{
     color: var(--text-inactive);
+
 }
 
 .text{
