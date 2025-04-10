@@ -182,3 +182,28 @@ export const ApiCallAddPath = async (path: {
     throw err;
   }
 };
+
+export const ApiCallUpdatePath = async (path: {
+  id: string;
+  name: string;
+  description: string;
+}) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+  }
+
+  try {
+    const result = await Api.put("/path-management/paths/"+path.id, path, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+    });
+    console.log(result.data);
+    return result.data;
+    
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+}
