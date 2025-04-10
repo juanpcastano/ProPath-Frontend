@@ -45,9 +45,12 @@ const Path = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
-        setError(err.response?.data.message);
-        setPathData(emptyPathState);
+        if(err.response?.status === 400){
+          setPathData(emptyPathState);
+        }else{
+          console.log(err);
+          setError(err.response?.data.message);
+        }
         setLoading(false);
       });
       setPathData(pathState);
