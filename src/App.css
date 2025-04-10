@@ -11,6 +11,7 @@
   --primary-high: #FD5800;
   --primary-palid: #FA7E3D;
   --primary-clear:#F9BB9B;
+  --primary-light:#ffdcca;
 
   --secondary-low:#9F3C3C;
   --secondary-high: #F54B4B;
@@ -33,8 +34,10 @@
 
   --hr-color: #dfe0e4;
   --input-border: #dfe0e4;
+  --box-border: #dfe0e4;
 
-  --shadow: #e2e2e2
+  --shadow: #e2e2e2;
+  --shadow-primary:#ffcbae;
 }
 
 

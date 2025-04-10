@@ -1,24 +1,32 @@
 .mainContainer {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--content-bg);
+  padding: 30px;
+  padding-bottom: 20px;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0px 0px 8px 2px var(--shadow);
   margin-top: 20px;
-  margin-bottom: 20px;
 }
 
 .noMarginTop {
   margin-top: 0;
 }
 
-.suggestionsPrompt {
-  text-align: center;
-  padding: 30px 0;
+.noMarginBottom {
+  margin-bottom: 0;
 }
 
 .suggestionsPrompt p {
   margin-bottom: 20px;
   color: #555;
+}
+
+.suggestionsPrompt{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .loadingContainer {
@@ -27,32 +35,7 @@
 }
 
 .button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  color: #fff;
-  transition: all 0.3s ease;
-}
-
-.button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-.button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.error {
-  color: #d32f2f;
-  background-color: #ffebee;
-  padding: 10px;
-  border-radius: 4px;
-  margin: 10px 0;
+  width: max-content;
 }
 
 .suggestionsContainer {
@@ -63,8 +46,9 @@
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 15px;
-  background-color: #f5f9ff;
-  border-left: 4px solid #0288d1;
+  background-color: var(--content-bg);
+  box-shadow: 0px 0px 8px 2px var(--shadow);
+  border-left: 4px solid var(--primary-high);
 }
 
 .activitySuggestion {
@@ -72,16 +56,16 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  border: 1px solid var(--box-border);
+  border-radius: 12px;
   margin-bottom: 15px;
   transition: all 0.3s ease;
-  background-color: #fafafa;
+  background-color: var(--content-bg);
+  box-shadow: 0px 0px 8px 2px var(--shadow);
 }
 
 .activitySuggestion:hover {
-  border-color: #0288d1;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 8px 2px var(--shadow-primary);
 }
 
 .activityInfo {
@@ -90,12 +74,12 @@
 
 .activityInfo h4 {
   margin: 0 0 10px 0;
-  color: #333;
+  color: var(--text-light);
 }
 
 .activityInfo p {
   margin: 0 0 10px 0;
-  color: #555;
+  color: var(--text-ultralight);
 }
 
 .activityDetails {
@@ -110,8 +94,8 @@
   display: inline-block;
   padding: 4px 8px;
   border-radius: 4px;
-  background-color: #e3f2fd;
-  color: #0288d1;
+  background-color: var(--primary-light);
+  color: var(--primary-palid);
 }
 
 .activityActions {
@@ -122,14 +106,8 @@
 }
 
 .acceptButton, .rejectButton {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
   font-weight: 500;
-  min-width: 100px;
-  color: #fff;
-  transition: all 0.2s ease;
+  width: 100%;
 }
 
 .acceptButton {
@@ -146,12 +124,14 @@
   cursor: not-allowed;
 }
 
-.rejectButton {
-  background-color: #f44336;
+.closeButton{
+  align-self: center;
 }
 
-.rejectButton:hover {
-  background-color: #d32f2f;
+.closeButtonContainer{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 @keyframes fadeIn {

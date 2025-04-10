@@ -3,12 +3,13 @@ import { Activity } from "../../../models/path.model";
 import { ApiCallAISuggestions } from "../../../services/apiAISugestionsService";
 import styles from "./AISuggestions.module.css";
 import { generateUUID } from "../../../services/uuidGenerator";
+import Error from "../../Error/Error";
 
 interface AISuggestionsProps {
   pathName: string;
   pathDescription: string;
   availableHours: number;
-  pathId: string;  // Añadido pathId como prop
+  pathId: string;
   onAcceptSuggestion: (activity: Activity) => void;
 }
 
@@ -31,17 +32,19 @@ const AISuggestions = ({
   pathName,
   pathDescription,
   availableHours,
-  pathId,  // Añadido pathId como prop
+  pathId,
   onAcceptSuggestion,
 }: AISuggestionsProps) => {
   const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<SuggestionResponse | null>(null);
   const [error, setError] = useState("");
+  const [suggestions, setSuggestions] = useState<SuggestionResponse | null>(
+    null
+  );
 
   const handleGetSuggestions = async () => {
     setLoading(true);
     setError("");
-    
+
     try {
       const result = await ApiCallAISuggestions({
         name: pathName,
@@ -50,7 +53,9 @@ const AISuggestions = ({
       setSuggestions(result);
     } catch (err) {
       console.error("Error getting AI suggestions:", err);
-      setError("No se pudieron obtener sugerencias en este momento. Inténtelo de nuevo más tarde.");
+      setError(
+        "No se pudieron obtener sugerencias en este momento. Inténtelo de nuevo más tarde."
+      );
     } finally {
       setLoading(false);
     }
@@ -58,7 +63,9 @@ const AISuggestions = ({
 
   const handleAcceptSuggestion = (suggestionActivity: any) => {
     if (availableHours < suggestionActivity.hours) {
-      setError(`No hay suficientes horas disponibles. Esta actividad requiere ${suggestionActivity.hours} horas y solo tiene ${availableHours} horas disponibles.`);
+      setError(
+        `No hay suficientes horas disponibles. Esta actividad requiere ${suggestionActivity.hours} horas y solo tiene ${availableHours} horas disponibles.`
+      );
       return;
     }
 
@@ -71,13 +78,12 @@ const AISuggestions = ({
       finalDate: new Date(suggestionActivity.finalDate),
       budget: suggestionActivity.budget,
       state: "Pendiente",
-      pathId: pathId,  // Usando el pathId recibido como prop
+      pathId: pathId,
       comments: [],
     };
 
     onAcceptSuggestion(newActivity);
-    
-    // Remove the suggestion from the list
+
     if (suggestions) {
       setSuggestions({
         ...suggestions,
@@ -90,14 +96,17 @@ const AISuggestions = ({
 
   return (
     <div className={styles.mainContainer}>
-      <h2 className={styles.noMarginTop}>Sugerencias de IA</h2>
-      
+      <h2 className={`${styles.noMarginTop}`}>Sugerencias de IA</h2>
+
       {!suggestions && !loading && (
         <div className={styles.suggestionsPrompt}>
-          <p>Obtenga sugerencias de actividades basadas en el nombre y descripción de su path.</p>
-          <button 
-            onClick={handleGetSuggestions} 
-            className={`${styles.button} dark-gradient-primary`}
+          <p className={styles.noMarginTop}>
+            Obtenga sugerencias de actividades basadas en el nombre y
+            descripción de su path.
+          </p>
+          <button
+            onClick={handleGetSuggestions}
+            className={`${styles.button} ${styles.noMarginTop} dark-gradient-primary`}
             disabled={loading}
           >
             {loading ? "Generando..." : "Obtener Sugerencias"}
@@ -111,16 +120,24 @@ const AISuggestions = ({
         </div>
       )}
 
-      {error && <p className={styles.error}>{error}</p>}
+      {error && <Error error={error} />}
 
       {suggestions && !loading && (
         <div className={styles.suggestionsContainer}>
           <div className={styles.suggestionHeader}>
             <div>
-              <h3>Sugerencia de mejora para su path:</h3>
-              <p><strong>Nombre sugerido:</strong> {suggestions.name}</p>
-              <p><strong>Descripción sugerida:</strong> {suggestions.description}</p>
-              <p>{suggestions.validexplain}</p>
+              <h3 className={styles.noMarginTop}>
+                Sugerencia de mejora para su path:
+              </h3>
+              <p>
+                <strong>Nombre sugerido:</strong> {suggestions.name}
+              </p>
+              <p>
+                <strong>Descripción sugerida:</strong> {suggestions.description}
+              </p>
+              <p className={styles.noMarginBottom}>
+                {suggestions.validexplain}
+              </p>
             </div>
           </div>
 
@@ -128,54 +145,69 @@ const AISuggestions = ({
             <p>No hay más sugerencias disponibles.</p>
           ) : (
             <>
-              <h3>Actividades sugeridas:</h3>
-              {suggestions.activities.map((activity, index) => (
-                <div key={index} className={styles.activitySuggestion}>
-                  <div className={styles.activityInfo}>
-                    <h4>{activity.name}</h4>
-                    <p>{activity.description}</p>
-                    <div className={styles.activityDetails}>
-                      <span>Horas: {activity.hours}</span>
-                      <span>Presupuesto: ${activity.budget}</span>
-                      <span>Fecha inicial: {new Date(activity.initialDate).toLocaleDateString()}</span>
-                      <span>Fecha final: {new Date(activity.finalDate).toLocaleDateString()}</span>
+              <h2>Actividades sugeridas:</h2>
+              <div>
+                {suggestions.activities.map((activity, index) => (
+                  <div key={index} className={styles.activitySuggestion}>
+                    <div className={styles.activityInfo}>
+                      <h4>{activity.name}</h4>
+                      <p>{activity.description}</p>
+                      <div className={styles.activityDetails}>
+                        <span>Horas: {activity.hours}</span>
+                        <span>Presupuesto: ${activity.budget}</span>
+                        <span>
+                          Fecha inicial:{" "}
+                          {new Date(activity.initialDate).toLocaleDateString()}
+                        </span>
+                        <span>
+                          Fecha final:{" "}
+                          {new Date(activity.finalDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={styles.activityActions}>
+                      <button
+                        onClick={() => handleAcceptSuggestion(activity)}
+                        className={`${styles.acceptButton} dark-gradient-primary`}
+                        disabled={availableHours < activity.hours}
+                        title={
+                          availableHours < activity.hours
+                            ? `No hay suficientes horas disponibles`
+                            : ""
+                        }
+                      >
+                        Aceptar
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSuggestions({
+                            ...suggestions,
+                            activities: suggestions.activities.filter(
+                              (_, i) => i !== index
+                            ),
+                          });
+                        }}
+                        className={`${styles.rejectButton} dark-gradient-secondary`}
+                      >
+                        Rechazar
+                      </button>
                     </div>
                   </div>
-                  <div className={styles.activityActions}>
-                    <button
-                      onClick={() => handleAcceptSuggestion(activity)}
-                      className={`${styles.acceptButton} dark-gradient-primary`}
-                      disabled={availableHours < activity.hours}
-                      title={availableHours < activity.hours ? `No hay suficientes horas disponibles` : ""}
-                    >
-                      Aceptar
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSuggestions({
-                          ...suggestions,
-                          activities: suggestions.activities.filter((_, i) => i !== index)
-                        });
-                      }}
-                      className={`${styles.rejectButton} dark-gradient-secondary`}
-                    >
-                      Rechazar
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </>
           )}
-
-          <button
-            onClick={() => {
-              setSuggestions(null);
-              setError("");
-            }}
-            className={`${styles.button} dark-gradient-secondary`}
-          >
-            Cerrar Sugerencias
-          </button>
+          <div className={styles.closeButtonContainer}>
+            <button
+              onClick={() => {
+                setSuggestions(null);
+                setError("");
+              }}
+              className={`${styles.button} ${styles.closeButton} dark-gradient-secondary`}
+            >
+              Cerrar Sugerencias
+            </button>
+          </div>
         </div>
       )}
     </div>
