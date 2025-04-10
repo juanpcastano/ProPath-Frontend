@@ -1,6 +1,6 @@
 import Api from "../api/Api";
 
-export const ApiCallAISuggestions = async (path) => {
+export const ApiCallAISuggestions = async (path: any) => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
     // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
     return {
