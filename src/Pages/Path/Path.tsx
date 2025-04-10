@@ -223,7 +223,6 @@ const Path = () => {
               availableHours={availableHours}
             />
             
-            {/* Añadimos la sección de sugerencias de IA */}
             <AISuggestions
               pathId={pathData.id}
               pathName={pathData.name}
