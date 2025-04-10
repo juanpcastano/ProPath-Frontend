@@ -144,7 +144,7 @@ export const ApiCallGetPath = async (id: string) => {
 
 export const ApiCallGetUserPaths = async () => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    
+    return 
   }
 
   try {
