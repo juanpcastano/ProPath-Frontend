@@ -11,6 +11,7 @@ import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
 import ActivityForm from "./Activity Form/ActivityForm";
+import AISuggestions from "./AI Suggestions/AISuggestions";  // Importamos el componente AISuggestions
 import { useParams } from "react-router-dom";
 import { ApiCallGetPath, ApiCallGetUserPaths } from "../../services/apiPathService";
 import Loading from "../../Components/Loading/Loading";
@@ -215,11 +216,22 @@ const Path = () => {
         })}
 
         {pathData.state == "R" && (
-          <ActivityForm
-            pathId={pathData.id}
-            HandleAddActivity={HandleAddActivity}
-            availableHours={availableHours}
-          />
+          <>
+            <ActivityForm
+              pathId={pathData.id}
+              HandleAddActivity={HandleAddActivity}
+              availableHours={availableHours}
+            />
+            
+            {/* Añadimos la sección de sugerencias de IA */}
+            <AISuggestions
+              pathId={pathData.id}
+              pathName={pathData.name}
+              pathDescription={pathData.description}
+              availableHours={availableHours}
+              onAcceptSuggestion={HandleAddActivity}
+            />
+          </>
         )}
       </>
     );
