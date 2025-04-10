@@ -40,7 +40,7 @@ const Path = () => {
           setLoading(false);
         });
     } else {
-      ApiCallGetUserPaths(userData.id).then((resp) => {
+      ApiCallGetUserPaths().then((resp) => {
         setPathData(resp[0]);
         setLoading(false);
       })

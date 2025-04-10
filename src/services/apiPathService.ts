@@ -142,13 +142,13 @@ export const ApiCallGetPath = async (id: string) => {
   }
 };
 
-export const ApiCallGetUserPaths = async (userId: string) => {
+export const ApiCallGetUserPaths = async () => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
     
   }
 
   try {
-    const result = await Api.get(`/path-management/users/${userId}/paths`, {
+    const result = await Api.get(`/path-management/user/paths`, {
       headers: {
         "Content-Type": "application/json",
       },
