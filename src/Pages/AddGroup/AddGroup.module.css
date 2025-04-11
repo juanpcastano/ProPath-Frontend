@@ -43,12 +43,6 @@
   min-width: 80px;
 }
 
-.formLayout {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
 .buttonContainer {
   width: 100%;
   display: flex;

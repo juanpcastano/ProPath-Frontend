@@ -29,7 +29,7 @@ export interface groupMember {
 
 export interface group {
   name: string;
-  members: groupMember[];
+  description: string
 }
 
 export const ApiCallAddGroup = async (group: group) => {
@@ -41,6 +41,26 @@ export const ApiCallAddGroup = async (group: group) => {
 
   try {
     const result = await Api.post("/users-management/groups", group, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export const ApiCallGroup = async (id : string) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+
+    return [{ id: "1", name: "chambeadores", description: "Descripción de chambeadores" }];
+  }
+
+  try {
+    const result = await Api.get("/users-management/group/" + id, {
       headers: {
         "Content-Type": "application/json",
       },

@@ -15,6 +15,7 @@ import User from "./Pages/User/User";
 import AddUser from "./Pages/AddUser/AddUser";
 import MyPaths from "./Pages/MyPaths/MyPaths";
 import AddGroup from "./Pages/AddGroup/AddGroup";
+import Group from "./Pages/Group/Group";
 
 const NotFound = lazy(() => import("./Pages/Not found/NotFound"));
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
@@ -44,6 +45,7 @@ function App() {
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route} element={<MyOrganization/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/path/:id"} element={<Path/>} />
                   <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/user/:id"} element={<User/>} />
+                  <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/group/:id"} element={<Group/>} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route} element={<Settings />} />
                   <Route path={PrivateRoutes.commonDown.SETTINGS.route+"/profile"} element={<Settings tab="Profile" />} />
                   

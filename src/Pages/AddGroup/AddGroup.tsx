@@ -2,11 +2,11 @@ import { useState } from "react";
 import styles from "./AddGroup.module.css";
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes } from "../../models/routes";
-import { ApiCallAddGroup, groupMember } from "../../services/apiGroupsService";
+import { ApiCallAddGroup } from "../../services/apiGroupsService";
+import Error from "../Error/Error";
 
 const AddGroup = () => {
-  const [error, setError] = useState();
-  const [members, setMembers] = useState<groupMember[]>([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   return (
     <form
@@ -16,15 +16,14 @@ const AddGroup = () => {
 
         const groupInfo = {
           name: formData.get("name") as string,
-          members: members
+          description: formData.get("description") as string,
         };
         ApiCallAddGroup(groupInfo)
           .then((res) => {
             navigate(
-              PrivateRoutes.common.MY_ORGANIZATION.route +
-                "/Group/" +
-                res.id
+              PrivateRoutes.common.MY_ORGANIZATION.route + "/group/" + res.id
             );
+            console.log(res);
           })
           .catch((err) => {
             setError(err.response?.data.message);
@@ -48,18 +47,20 @@ const AddGroup = () => {
                 required
               />
             </div>
-            {/* <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="role">
-                Rol
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="description">
+                Descripción
               </label>
-              <select className={styles.select} id="role" name="role" required>
-                <option value="P">Profesional</option>
-                <option value="A">Administrador</option>
-              </select>
-            </div> */}
+              <textarea
+                className={styles.input}
+                id="description"
+                name="description"
+                autoComplete="off"
+                required
+              />
+            </div>
           </div>
         </div>
-        {members.map((member,index)=>{return<div className={styles.member}></div>})}
         <div className={styles.buttonContainer}>
           <button
             type="submit"
@@ -67,8 +68,8 @@ const AddGroup = () => {
           >
             <p className={styles.text}>Añadir Grupo</p>
           </button>
-          {error && <p className={`${styles.text} ${styles.error}`}>{error}</p>}
         </div>
+        <Error error={error} />
       </div>
     </form>
   );
