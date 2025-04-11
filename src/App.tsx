@@ -14,6 +14,7 @@ import MyOrganization from "./Pages/My Organization/MyOrganization";
 import User from "./Pages/User/User";
 import AddUser from "./Pages/AddUser/AddUser";
 import MyPaths from "./Pages/MyPaths/MyPaths";
+import AddGroup from "./Pages/AddGroup/AddGroup";
 
 const NotFound = lazy(() => import("./Pages/Not found/NotFound"));
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
@@ -50,7 +51,7 @@ function App() {
                   </Route>
                   <Route element={<RoleGuard role="A" />}>
                     <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddUser"} element={<AddUser/>} />
-                    <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddGroup"} element={<AddUser/>} />
+                    <Route path={PrivateRoutes.common.MY_ORGANIZATION.route + "/AddGroup"} element={<AddGroup/>} />
                   </Route>
                 </Route>
               </Route>

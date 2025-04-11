@@ -1,0 +1,94 @@
+.mainContainer {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--content-bg);
+  border-radius: 20px;
+  padding: 20px;
+}
+.formContainer {
+  flex: 1;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.input {
+  margin-top: 10px;
+}
+
+.select {
+  margin-top: 10px;
+}
+
+.text {
+  margin: 0;
+  color: white;
+  font-size: 1rem;
+}
+
+.error {
+  justify-self: center;
+  font-weight: bold;
+  color: crimson;
+}
+
+.button {
+  justify-self: center;
+  width: 20%;
+  min-width: fit-content;
+}
+.idTypeSelect {
+  min-width: 80px;
+}
+
+.formLayout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.idContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.idContainer .input {
+  flex: 1;
+}
+
+.idContainer .select {
+  width: auto;
+}
+
+.label {
+  margin-bottom: 10px;
+}
+@media (max-width: 1000px) {
+  .avatarContainer {
+    align-self: center;
+    margin-bottom: -70px;
+  }
+
+  .formGroup {
+    margin-bottom: 0px;
+  }
+  .formLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .profileContainer {
+    flex-direction: column;
+  }
+
+  .buttonContainer {
+    margin-top: 10px;
+  }
+}

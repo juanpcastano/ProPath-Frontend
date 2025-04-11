@@ -1,10 +1,11 @@
 import { useState } from "react";
 import styles from "./Title.module.css";
 import { useDispatch } from "react-redux";
-import { pathSlice, updatePath } from "../../../Redux/States/path";
+import { updatePath } from "../../../Redux/States/path";
 import { ApiCallUpdatePath } from "../../../services/apiPathService";
 
 interface TitleProps {
+  pathId: string;
   name: string;
   description: string;
   state: string;
@@ -17,6 +18,7 @@ interface TitleProps {
 }
 
 const Title = ({
+  pathId,
   name,
   description,
   state,
@@ -29,9 +31,6 @@ const Title = ({
 }: TitleProps) => {
   const [editing, setEditing] = useState(false);
   const dispatch = useDispatch();
-  function setError(message: any) {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <div className={styles.mainContainer}>
@@ -69,23 +68,22 @@ const Title = ({
                 dispatch(
                   updatePath({
                     name: formData.get("name") as string,
-                    description: formData.get("description") as string
+                    description: formData.get("description") as string,
                   })
                 );
                 const path = {
-                  // Pablo, hace que aqui se saque el id verdadero 100 real
-                  id: pathSlice.id,
+                  id: pathId,
                   name: formData.get("name") as string,
                   description: formData.get("description") as string,
                 };
                 setEditing(false);
-                        ApiCallUpdatePath(path)
-                          .then((res) => {
-                            console.log(res);
-                          })
-                          .catch((err) => {
-                            setError(err.response?.data.message);
-                          });
+                ApiCallUpdatePath(path)
+                  .then((res) => {
+                    console.log(res);
+                  })
+                  .catch((err) => {
+                    console.error("Err: ", err.response?.data.message);
+                  });
                 e.currentTarget.reset();
               }}
             >

@@ -27,6 +27,10 @@ const Groups = () => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(groups);
+  }, [groups]);
+
   if (loading) return <Loading />;
   if (error) return <Error error="Ocurrió un error"/>;
   if (!groups) return <Error error="No se encontraron grupos registrados"/>

@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
 import { ApiCallGetUserPaths } from "../../services/apiPathService";
-import { useSelector } from "react-redux";
-import { AppStore } from "../../Redux/store";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
 import Table from "../../Components/Table/Table";
 import { PrivateRoutes } from "../../models/routes";
 
 const PathHistory = () => {
-  const userData = useSelector((store: AppStore) => store.user);
   const [paths, setPaths] = useState([])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    ApiCallGetUserPaths(userData.id)
+    ApiCallGetUserPaths()
       .then((resp) => {
         setPaths(Object.values(resp));
         setLoading(false);
@@ -27,10 +24,7 @@ const PathHistory = () => {
       });
   }, []);
 
-  useEffect(() => {
-    console.log(paths);
-    
-  }, [paths]);
+  
   const headers = [
     "Título",
     "Descripción",

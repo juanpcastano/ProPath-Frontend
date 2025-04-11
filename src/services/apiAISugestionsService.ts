@@ -8,17 +8,17 @@ export const ApiCallAISuggestions = async (path: any) => {
             {
                 budget: 250000,
                 description: "Curso online sobre AWS Certified DevOps Engineer - Professional.",
-                finalDate: "2024-07-01",
+                finalDate: "2025-07-01",
                 hours: 8,
-                initialDate: "2024-06-01",
+                initialDate: "2025-06-01",
                 name: "Curso AWS DevOps Engineer"
             },
             {
                 budget: 0,
                 description: "Implementación de pipeline de CI/CD con Jenkins y despliegue en AWS.",
-                finalDate: "2024-08-01",
+                finalDate: "2025-08-01",
                 hours: 12,
-                initialDate: "2024-07-01",
+                initialDate: "2025-07-01",
                 name: "Implementación de CI/CD en AWS"
             },
         ],

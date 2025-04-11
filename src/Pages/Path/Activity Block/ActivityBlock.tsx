@@ -5,12 +5,12 @@ import styles from "./ActivityBlock.module.css";
 interface ActivityProps {
   editingActivity: string;
   activity: Activity;
-  pathId: string,
-  actionable: boolean,
+  pathId: string;
+  actionable: boolean;
   handleDelete: (id: string) => void;
   handleSetEditingActivity: (id: string) => void;
-  handleCommentSubmit: (id: string, comment: string) => void
-  handleSaveEdit: (updatedActivity: Activity) => void
+  handleCommentSubmit: (id: string, comment: string) => void;
+  handleSaveEdit: (updatedActivity: Activity) => void;
 }
 
 const ActivityBlock = ({
@@ -25,6 +25,17 @@ const ActivityBlock = ({
 }: ActivityProps) => {
   const today = new Date().toISOString().split("T")[0];
   const [editingInitialDate, setEditingInitialDate] = useState(today);
+  const [state, setState] = useState<string>(activity.state)
+
+  if (state == "E") {
+    setState("En Curso")
+  }
+  if (state == "P") {
+    setState("Pendiente")
+  }
+  if (state == "C") {
+    setState("En Curso")
+  }
   if (editingActivity != activity.id) {
     return (
       <div className={`${styles.mainContainer}`} key={activity.id}>
@@ -43,29 +54,31 @@ const ActivityBlock = ({
                 new Date(activity.finalDate).toLocaleDateString()}
             </p>
             <p className={styles.noMarginBot}>
-              <strong>{"Estado: " + activity.state}</strong>
+              <strong>{"Estado: " + state}</strong>
             </p>
           </div>
-          {actionable && <div className={styles.buttonsContainer}>
-            <link
-              rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-            />
-            <span
-              className={`material-symbols-outlined ${styles.deleteButton} ${styles.button}`}
-              onClick={() => handleDelete(activity.id)}
-            >
-              delete
-            </span>
-            <span
-              className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
-              onClick={() => {
-                handleSetEditingActivity(activity.id);
-              }}
-            >
-              edit
-            </span>
-          </div>}
+          {actionable && (
+            <div className={styles.buttonsContainer}>
+              <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+              />
+              <span
+                className={`material-symbols-outlined ${styles.deleteButton} ${styles.button}`}
+                onClick={() => handleDelete(activity.id)}
+              >
+                delete
+              </span>
+              <span
+                className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
+                onClick={() => {
+                  handleSetEditingActivity(activity.id);
+                }}
+              >
+                edit
+              </span>
+            </div>
+          )}
         </div>
         {activity.comments && activity.comments.length > 0 && (
           <div className={styles.commentsContainer}>
@@ -126,7 +139,7 @@ const ActivityBlock = ({
                 initialDate: new Date(formData.get("initialDate") as string),
                 finalDate: new Date(formData.get("finalDate") as string),
                 budget: Number(formData.get("budget")),
-                state: "Pendiente",
+                state: activity.state,
                 pathId: pathId,
                 comments: activity.comments,
               };

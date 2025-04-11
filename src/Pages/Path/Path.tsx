@@ -11,20 +11,31 @@ import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
 import ActivityForm from "./Activity Form/ActivityForm";
-import AISuggestions from "./AI Suggestions/AISuggestions";  // Importamos el componente AISuggestions
+import AISuggestions from "./AI Suggestions/AISuggestions"; // Importamos el componente AISuggestions
 import { useParams } from "react-router-dom";
-import { ApiCallGetPath, ApiCallGetUserPaths } from "../../services/apiPathService";
+import {
+  ApiCallAddActivity,
+  ApiCallDeleteActivity,
+  ApiCallEditActivity,
+  ApiCallGetPath,
+  ApiCallGetUserPaths,
+  ApiCallUpdatePath,
+} from "../../services/apiPathService";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
 
 const Path = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const pathState = useSelector((store: AppStore) => store.path);
+  const userData = useSelector((store: AppStore) => store.user);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [pathData, setPathData] = useState(pathState);
-  const [isMyPath, setIsMyPath] = useState<boolean>(true);
+  const [isMyPath, setIsMyPath] = useState<boolean>(!id);
+  const [pathData, setPathData] = useState(
+    isMyPath ? pathState : emptyPathState
+  );
 
   useEffect(() => {
     if (id) {
@@ -33,30 +44,29 @@ const Path = () => {
       ApiCallGetPath(id)
         .then((resp) => {
           setPathData(resp);
-          setLoading(false);
         })
         .catch((err) => {
           setError(err.response?.data.message);
           setPathData(emptyPathState);
+        })
+        .finally(() => {
           setLoading(false);
         });
     } else {
-      ApiCallGetUserPaths().then((resp) => {
-        setPathData(resp[0]);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if(err.response?.status === 400){
-          setPathData(emptyPathState);
-        }else{
-          console.log(err);
-          setError(err.response?.data.message);
-        }
-        setLoading(false);
-      });
-      setPathData(pathState);
-      setLoading(false);
-      setIsMyPath(true);
+      ApiCallGetUserPaths()
+        .then((resp) => {
+          if (resp[0]) dispatch(updatePath(resp[0]));
+        })
+        .catch((err) => {
+          if (err.response?.status === 400) {
+            setPathData(emptyPathState);
+          } else {
+            setError(err.response?.data.message);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [id]);
 
@@ -66,11 +76,11 @@ const Path = () => {
     }
   }, [pathState, id]);
 
-  const userData = useSelector((store: AppStore) => store.user);
-  const dispatch = useDispatch();
-  const [activities, setActivities] = useState<Activity[]>(
-    pathData?.activities || []
-  );
+  const [activities, setActivities] = useState<Activity[]>(pathData.activities);
+
+  useEffect(() => {
+    setActivities(pathData.activities);
+  }, [pathData]);
 
   const [totalHours, setTotalHours] = useState(0);
   const [totalBudget, setTotalBudget] = useState(0);
@@ -96,12 +106,18 @@ const Path = () => {
   };
 
   const handleDeleteActivity = (id: string) => {
-    setActivities(activities.filter((activity) => activity.id !== id));
-    dispatch(
-      updatePath({
-        activities: activities.filter((activity) => activity.id !== id),
+    ApiCallDeleteActivity(id)
+      .then(() => {
+        setActivities(activities.filter((activity) => activity.id !== id));
+        dispatch(
+          updatePath({
+            activities: activities.filter((activity) => activity.id !== id),
+          })
+        );
       })
-    );
+      .catch((err) => {
+        setError(err.response?.data.message);
+      });
   };
 
   const handleSetEditingActivity = (id: string) => {
@@ -109,23 +125,38 @@ const Path = () => {
   };
 
   const handleSaveEditActivity = (updatedActivity: Activity) => {
-    setActivities(
-      activities.map((activity) =>
-        activity.id == updatedActivity.id ? updatedActivity : activity
-      )
-    );
-    dispatch(
-      updatePath({
-        activities: activities.map((activity) =>
-          activity.id == updatedActivity.id ? updatedActivity : activity
-        ),
+    ApiCallEditActivity(updatedActivity.id, updatedActivity)
+      .then(() => {
+        setActivities(
+          activities.map((activity) =>
+            activity.id == updatedActivity.id ? updatedActivity : activity
+          )
+        );
+        dispatch(
+          updatePath({
+            activities: activities.map((activity) =>
+              activity.id == updatedActivity.id ? updatedActivity : activity
+            ),
+          })
+        );
       })
-    );
-    setEditingActivity("");
+      .catch((err) => {
+        
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setEditingActivity("");
+      });
   };
 
   const HandleAddActivity = (activity: Activity) => {
-    setActivities([...activities, activity]);
+    ApiCallAddActivity(activity)
+      .then(() => {
+        setActivities([...activities, activity]);
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      });
   };
 
   const handleCommentSubmit = (activityId: string, commentMessage: string) => {
@@ -188,6 +219,7 @@ const Path = () => {
     return (
       <>
         <Title
+          pathId={pathData.id}
           name={pathData.name}
           description={pathData.description}
           state={pathData.state}
@@ -215,14 +247,14 @@ const Path = () => {
           );
         })}
 
-        {pathData.state == "R" && (
+        {pathData.state == "R" && isMyPath && (
           <>
             <ActivityForm
               pathId={pathData.id}
               HandleAddActivity={HandleAddActivity}
               availableHours={availableHours}
             />
-            
+
             <AISuggestions
               pathId={pathData.id}
               pathName={pathData.name}

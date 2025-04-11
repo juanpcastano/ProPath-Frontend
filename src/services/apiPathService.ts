@@ -142,9 +142,10 @@ export const ApiCallGetPath = async (id: string) => {
   }
 };
 
+// pablo, esto usa la cookie, no tienes que mandarle un body
 export const ApiCallGetUserPaths = async () => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    return 
+    return;
   }
 
   try {
@@ -176,7 +177,6 @@ export const ApiCallAddPath = async (path: {
     });
     console.log(result.data);
     return result.data;
-    
   } catch (err) {
     console.error("Error:", err);
     throw err;
@@ -189,21 +189,96 @@ export const ApiCallUpdatePath = async (path: {
   description: string;
 }) => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+    return {};
   }
 
   try {
-    const result = await Api.put("/path-management/paths/"+path.id, path, {
+    const result = await Api.put("/path-management/paths/" + path.id, path, {
       headers: {
         "Content-Type": "application/json",
       },
-
     });
     console.log(result.data);
     return result.data;
-    
   } catch (err) {
     console.error("Error:", err);
     throw err;
   }
-}
+};
+
+export const ApiCallAddActivity = async (activity: {
+  name: string;
+  description: string;
+  hours: number;
+  initialDate: Date;
+  finalDate: Date;
+  budget: number;
+}) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+    return {};
+  }
+
+  try {
+    const result = await Api.post("/path-management/activity/", activity, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(result.data);
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export const ApiCallDeleteActivity = async (id: string) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+    return {};
+  }
+
+  try {
+    const result = await Api.delete("/path-management/activity/" + id, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(result.data);
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export const ApiCallEditActivity = async (
+  id: string,
+  body: {
+    name?: string;
+    description?: string;
+    hours?: number;
+    initialDate?: Date;
+    finalDate?: Date;
+    budget?: number;
+  }
+) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+    return {};
+  }
+
+  try {
+    const result = await Api.put("/path-management/activity/" + id, body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(result.data);
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
