@@ -110,17 +110,8 @@
   width: 100%;
 }
 
-.acceptButton {
-  background-color: #4caf50;
-}
-
-.acceptButton:hover:not(:disabled) {
-  background-color: #388e3c;
-}
-
 .acceptButton:disabled {
-  background-color: #c8e6c9;
-  color: #7cb342;
+  background-color: var(--button-inactive);
   cursor: not-allowed;
 }
 

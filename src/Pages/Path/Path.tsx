@@ -19,7 +19,6 @@ import {
   ApiCallEditActivity,
   ApiCallGetPath,
   ApiCallGetUserPaths,
-  ApiCallUpdatePath,
 } from "../../services/apiPathService";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
@@ -132,13 +131,6 @@ const Path = () => {
             activity.id == updatedActivity.id ? updatedActivity : activity
           )
         );
-        dispatch(
-          updatePath({
-            activities: activities.map((activity) =>
-              activity.id == updatedActivity.id ? updatedActivity : activity
-            ),
-          })
-        );
       })
       .catch((err) => {
         
@@ -193,7 +185,6 @@ const Path = () => {
     setTotalBudget(
       activities.reduce((sum, activity) => sum + activity.budget, 0)
     );
-    dispatch(updatePath({ activities: activities }));
   }, [activities]);
 
   useEffect(() => {
@@ -226,6 +217,7 @@ const Path = () => {
           maxHours={maxHours}
           totalBudget={totalBudget}
           totalHours={totalHours}
+          isMyPath={isMyPath}
           handleSendPath={HandleSendPath}
           handleUnsendPath={HandleUnsendPath}
           actionable={isMyPath && pathData.state == "R"}

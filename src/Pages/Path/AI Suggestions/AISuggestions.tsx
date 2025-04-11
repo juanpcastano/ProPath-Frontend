@@ -168,7 +168,11 @@ const AISuggestions = ({
                     <div className={styles.activityActions}>
                       <button
                         onClick={() => handleAcceptSuggestion(activity)}
-                        className={`${styles.acceptButton} dark-gradient-primary`}
+                        className={`${styles.acceptButton} ${
+                          availableHours < activity.hours
+                            ? "inactive"
+                            : "dark-gradient-primary"
+                        }`}
                         disabled={availableHours < activity.hours}
                         title={
                           availableHours < activity.hours

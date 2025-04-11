@@ -12,6 +12,7 @@ interface TitleProps {
   totalHours: number;
   maxHours: number;
   totalBudget: number;
+  isMyPath: boolean;
   handleSendPath: () => void;
   handleUnsendPath: () => void;
   actionable: boolean;
@@ -25,6 +26,7 @@ const Title = ({
   totalHours,
   maxHours,
   totalBudget,
+  isMyPath,
   handleSendPath,
   handleUnsendPath,
   actionable,
@@ -65,12 +67,6 @@ const Title = ({
               onSubmit={(e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
-                dispatch(
-                  updatePath({
-                    name: formData.get("name") as string,
-                    description: formData.get("description") as string,
-                  })
-                );
                 const path = {
                   id: pathId,
                   name: formData.get("name") as string,
@@ -79,6 +75,12 @@ const Title = ({
                 setEditing(false);
                 ApiCallUpdatePath(path)
                   .then((res) => {
+                    dispatch(
+                      updatePath({
+                        name: formData.get("name") as string,
+                        description: formData.get("description") as string,
+                      })
+                    );
                     console.log(res);
                   })
                   .catch((err) => {
@@ -133,7 +135,7 @@ const Title = ({
         <p>Presupuesto Total: ${totalBudget}</p>
       </div>
 
-      {state == "R" && (
+      {state == "R" && isMyPath && (
         <button
           onClick={() => {
             setEditing(false);
