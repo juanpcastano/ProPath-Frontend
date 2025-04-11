@@ -1,11 +1,42 @@
 .addGroupButton {
-    width: max-content;
+  width: max-content;
 }
 
-.addGroupButtonContainer{
-    margin-top: 10px;
-    width: 100%;
-    display: flex;
-    align-items: start;
-    justify-content: center;
+.addGroupButtonContainer {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: center;
 }
+
+.groupsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.group {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  background-color: var(--content-bg);
+  box-shadow: 0px 0px 8px 2px var(--shadow);
+  border-left: 4px solid var(--primary-high);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.noMarginBot{
+    margin-bottom: 0px;
+}
+.noMarginTop{
+    margin-top: 0px;
+}
+
+.goToButton{
+    width: max-content;
+    margin-top: 0px;
+}
+

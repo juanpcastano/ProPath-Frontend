@@ -32,8 +32,8 @@ const Groups = () => {
   }, [groups]);
 
   if (loading) return <Loading />;
-  if (error) return <Error error="Ocurrió un error"/>;
-  if (!groups) return <Error error="No se encontraron grupos registrados"/>
+  if (error) return <Error error="Ocurrió un error" />;
+  if (!groups) return <Error error="No se encontraron grupos registrados" />;
   return (
     <>
       {groups.length >= 0 ? (
@@ -41,7 +41,19 @@ const Groups = () => {
           {groups.map((group, index) => {
             return (
               <div className={styles.group} key={index}>
-                {group.name}
+                <h4 className={`${styles.noMarginBot} ${styles.noMarginTop}`}>{group.name}</h4>
+                <button
+                  className={`${styles.goToButton} dark-gradient-primary`}
+                  onClick={() => {
+                    navigate(
+                      PrivateRoutes.common.MY_ORGANIZATION.route +
+                        "/group/" +
+                        group.id
+                    );
+                  }}
+                >
+                  Ir al grupo
+                </button>
               </div>
             );
           })}
@@ -55,7 +67,9 @@ const Groups = () => {
           <button
             className={`dark-gradient-primary ${styles.addGroupButton}`}
             onClick={() => {
-              navigate(PrivateRoutes.common.MY_ORGANIZATION.route + "/addGroup");
+              navigate(
+                PrivateRoutes.common.MY_ORGANIZATION.route + "/addGroup"
+              );
             }}
           >
             Añadir un grupo
