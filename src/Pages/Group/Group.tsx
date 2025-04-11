@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Group.module.css";
 import { ApiCallGroup } from "../../services/apiGroupsService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
 import { useSelector } from "react-redux";
@@ -21,6 +21,7 @@ interface groupInfo {
 }
 
 const Group = () => {
+  const navigate = useNavigate()
   const userData = useSelector((store: AppStore) => store.user);
   const [groupData, setGroupData] = useState<groupInfo>({
     name: "",
@@ -55,7 +56,9 @@ const Group = () => {
       <p className={styles.description}>{groupData.description}</p>
       <hr />
       <div className={styles.membersHeader}>
-        <h2 className={styles.noMarginTop}>Miembros: </h2>
+        <h2 className={`${styles.noMarginTop} ${styles.noMarginBottom}`}>
+          Miembros:{" "}
+        </h2>
         {userData.role == "A" && (
           <>
             <link
@@ -73,10 +76,15 @@ const Group = () => {
           </>
         )}
       </div>
+      {groupData.userGroups.length == 0 && (
+        <Error error="No hay usuarios registrados aún"></Error>
+      )}
       {groupData.userGroups.map((member, index) => {
         return (
           <div className={styles.member} key={index}>
             <h3>{member.user.name}</h3>
+            <p className={styles.description}>Rol: {member.role}</p>
+            <button className={`dark-gradient-primary ${styles.goTo}`} onClick={()=>{navigate("")}}></button>
           </div>
         );
       })}

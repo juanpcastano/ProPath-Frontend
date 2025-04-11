@@ -12,6 +12,12 @@
   margin-bottom: 0px;
 }
 
+.member{
+  background-color: var(--content-bg);
+  border-radius: 20px;
+  padding: 20px;
+}
+
 .membersHeader{
   width: 100%;
   display: flex;
@@ -22,6 +28,10 @@
 
 .noMarginTop{
   margin-top: 0px;
+}
+
+.noMarginBottom{
+  margin-bottom: 0px;
 }
 
 span.button{
