@@ -7,6 +7,9 @@ import Error from "../Error/Error";
 import { useSelector } from "react-redux";
 import { AppStore } from "../../Redux/store";
 import { UserInfo } from "../../models/user.model";
+import { PrivateRoutes } from "../../models/routes";
+import { ApiCallUsers } from "../../services/apiUsersService ";
+import { ApiCallUser } from "../../services/apiUserService";
 
 interface userGroups {
   id: string;
@@ -21,7 +24,7 @@ interface groupInfo {
 }
 
 const Group = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const userData = useSelector((store: AppStore) => store.user);
   const [groupData, setGroupData] = useState<groupInfo>({
     name: "",
@@ -31,6 +34,7 @@ const Group = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
+  const [availableUsers, setAvailableUsers] = useState<any[]>([])
   const { id } = useParams();
   useEffect(() => {
     if (id) {
@@ -38,6 +42,9 @@ const Group = () => {
         .then((resp) => {
           setGroupData(resp);
           console.log(resp);
+          ApiCallUsers().then((res)=>{
+            setAvailableUsers(res)
+          })
         })
         .catch((err) => {
           setError(err.response?.data.message);
@@ -84,10 +91,90 @@ const Group = () => {
           <div className={styles.member} key={index}>
             <h3>{member.user.name}</h3>
             <p className={styles.description}>Rol: {member.role}</p>
-            <button className={`dark-gradient-primary ${styles.goTo}`} onClick={()=>{navigate("")}}></button>
+            <button
+              className={`dark-gradient-primary ${styles.goTo}`}
+              onClick={() => {
+                navigate(
+                  PrivateRoutes.common.MY_ORGANIZATION.route +
+                    "/user/" +
+                    member.id
+                );
+              }}
+            >
+              Ir al perfil
+            </button>
           </div>
         );
       })}
+      {editing && (
+        <div className={styles.addMember}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget)
+
+              const memberInfo = {
+                id: "asdasdass",
+                user: {...userData, name: formData.get("userId") as string},
+                role: formData.get("role") as string,
+              };
+              console.log("New member info:", memberInfo);
+              setGroupData({...groupData, userGroups: [...groupData.userGroups, memberInfo]})
+              e.currentTarget.reset();
+            }}
+          >
+            <div className={styles.mainContainer}>
+              <h3>Añadir Nuevo Miembro</h3>
+              <div className={styles.formContainer}>
+                <div className={styles.formLayout}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="userId">
+                      Usuario
+                    </label>
+                    <select
+                      className={styles.input}
+                      id="userId"
+                      name="userId"
+                      required
+                    >
+                      <option value="">Seleccione un usuario</option>
+                      {availableUsers.map((user) => (
+                        <option key={user.id} value={user.name}>
+                          {user.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="role">
+                      Rol
+                    </label>
+                    <select
+                      className={styles.input}
+                      id="role"
+                      name="role"
+                      required
+                    >
+                      <option value="">Seleccione un rol</option>
+                      <option value="M">M</option>
+                      <option value="P">P</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.buttonContainer}>
+                <button
+                  type="submit"
+                  className={`${styles.button} dark-gradient-primary `}
+                >
+                  <p className={styles.text}>Añadir Miembro</p>
+                </button>
+              </div>
+              <Error error={error} />
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
