@@ -167,7 +167,7 @@ export default function ProfileSettings({
                 <input
                   className={styles.input}
                   id="id"
-                  defaultValue={userData.id}
+                  defaultValue={userData.documentId}
                 />
                 <select
                   className={`${styles.select} ${styles.idTypeSelect}`}

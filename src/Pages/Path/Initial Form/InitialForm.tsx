@@ -4,9 +4,12 @@ import { useDispatch } from "react-redux";
 import { updateUser } from "../../../Redux/States/user";
 import { updatePath } from "../../../Redux/States/path";
 import { ApiCallAddPath } from "../../../services/apiPathService";
+import Error from "../../Error/Error";
+import { useState } from "react";
 
 const InitialForm = () => {
   const dispatch = useDispatch();
+  const [error, setError] = useState("");
   return (
     <>
       <div className={`${styles.mainContainer} `}>
@@ -26,7 +29,15 @@ const InitialForm = () => {
             ApiCallAddPath({
               name: formData.get("name") as string,
               description: formData.get("description") as string,
-            });
+            })
+              .then((res) => {
+                updatePath({
+                  id: res.pathID,
+                });
+              })
+              .catch((err) => {
+                setError(err.response?.data.message);
+              });
             e.currentTarget.reset();
           }}
         >
@@ -59,6 +70,7 @@ const InitialForm = () => {
               >
                 <p className={styles.text}>Crear Path</p>
               </button>
+              <Error error={error} />
             </div>
           </div>
         </form>
