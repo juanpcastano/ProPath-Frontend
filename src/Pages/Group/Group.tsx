@@ -33,7 +33,7 @@ const Group = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
-  const [availableUsers, setAvailableUsers] = useState<any[]>([])
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const { id } = useParams();
   useEffect(() => {
     if (id) {
@@ -41,9 +41,9 @@ const Group = () => {
         .then((resp) => {
           setGroupData(resp);
           console.log(resp);
-          ApiCallUsers().then((res)=>{
-            setAvailableUsers(res)
-          })
+          ApiCallUsers().then((res) => {
+            setAvailableUsers(res);
+          });
         })
         .catch((err) => {
           setError(err.response?.data.message);
@@ -57,73 +57,78 @@ const Group = () => {
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
   return (
-    <div className={styles.mainContainer}>
-      <h1>{groupData.name}</h1>
-      <p className={styles.description}>{groupData.description}</p>
-      <hr />
-      <div className={styles.membersHeader}>
-        <h2 className={`${styles.noMarginTop} ${styles.noMarginBottom}`}>
-          Miembros:{" "}
-        </h2>
-        {userData.role == "A" && (
-          <>
-            <link
-              rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-            />
-            <span
-              className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
-              onClick={() => {
-                setEditing(true);
-              }}
-            >
-              edit
-            </span>
-          </>
-        )}
+    <>
+      <div className={styles.mainContainer}>
+        <h1 className={styles.noMarginTop}>{groupData.name}</h1>
+        <p className={styles.description}>{groupData.description}</p>
       </div>
-      {groupData.userGroups.length == 0 && (
-        <Error error="No hay usuarios registrados aún"></Error>
-      )}
-      {groupData.userGroups.map((member, index) => {
-        return (
-          <div className={styles.member} key={index}>
-            <h3>{member.user.name}</h3>
-            <p className={styles.description}>Rol: {member.role}</p>
-            <button
-              className={`dark-gradient-primary ${styles.goTo}`}
-              onClick={() => {
-                navigate(
-                  PrivateRoutes.common.MY_ORGANIZATION.route +
-                    "/user/" +
-                    member.id
-                );
+
+      <div className={styles.mainContainer}>
+        <div className={styles.membersHeader}>
+          <h1 className={`${styles.noMarginTop} ${styles.noMarginBottom}`}>
+            Miembros
+          </h1>
+          {userData.role == "A" && !editing && (
+            <>
+              <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+              />
+              <span
+                className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
+                onClick={() => {
+                  setEditing(true);
+                }}
+              >
+                edit
+              </span>
+            </>
+          )}
+        </div>
+        {groupData.userGroups.length == 0 && (
+          <Error error="No hay usuarios registrados aún"></Error>
+        )}
+        {groupData.userGroups.map((member, index) => {
+          return (
+            <div className={styles.member} key={index}>
+              <h3>{member.user.name}</h3>
+              <p className={styles.description}>Rol: {member.role}</p>
+              <button
+                className={`dark-gradient-primary ${styles.goTo}`}
+                onClick={() => {
+                  navigate(
+                    PrivateRoutes.common.MY_ORGANIZATION.route +
+                      "/user/" +
+                      member.id 
+                  );
+                }}
+              >
+                Ir al perfil
+              </button>
+            </div>
+          );
+        })}
+        {editing && (
+          <div className={styles.addMember}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+
+                const memberInfo = {
+                  id: "asdasdass",
+                  user: { ...userData, name: formData.get("userId") as string },
+                  role: formData.get("role") as string,
+                };
+                console.log("New member info:", memberInfo);
+                setGroupData({
+                  ...groupData,
+                  userGroups: [...groupData.userGroups, memberInfo],
+                });
+                e.currentTarget.reset();
               }}
             >
-              Ir al perfil
-            </button>
-          </div>
-        );
-      })}
-      {editing && (
-        <div className={styles.addMember}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget)
-
-              const memberInfo = {
-                id: "asdasdass",
-                user: {...userData, name: formData.get("userId") as string},
-                role: formData.get("role") as string,
-              };
-              console.log("New member info:", memberInfo);
-              setGroupData({...groupData, userGroups: [...groupData.userGroups, memberInfo]})
-              e.currentTarget.reset();
-            }}
-          >
-            <div className={styles.mainContainer}>
-              <h3>Añadir Nuevo Miembro</h3>
+              <h2>Añadir Nuevo Miembro:</h2>
               <div className={styles.formContainer}>
                 <div className={styles.formLayout}>
                   <div className={styles.formGroup}>
@@ -155,8 +160,8 @@ const Group = () => {
                       required
                     >
                       <option value="">Seleccione un rol</option>
-                      <option value="M">M</option>
-                      <option value="P">P</option>
+                      <option value="M">Mentor</option>
+                      <option value="P">Profesional</option>
                     </select>
                   </div>
                 </div>
@@ -168,13 +173,19 @@ const Group = () => {
                 >
                   <p className={styles.text}>Añadir Miembro</p>
                 </button>
+                <button
+                  className={`${styles.button} dark-gradient-secondary `}
+                  onClick={()=>{setEditing(false)}}
+                >
+                  <p className={styles.text}>Cancelar</p>
+                </button>
               </div>
               <Error error={error} />
-            </div>
-          </form>
-        </div>
-      )}
-    </div>
+            </form>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 export default Group;

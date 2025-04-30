@@ -72,7 +72,7 @@
   }
 
   .formGroup {
-    margin-bottom: 0px;
+    margin-bottom: 8px;
   }
   .formLayout {
     grid-template-columns: 1fr;

@@ -3,7 +3,8 @@
   width: 100%;
   background-color: var(--content-bg);
   border-radius: 20px;
-  padding: 20px;
+  padding: 30px;
+  margin-bottom: 20px;
 }
 
 .description{
@@ -29,15 +30,70 @@
   gap: 1rem;
 }
 
-.noMarginTop{
-  margin-top: 0px;
+.formContainer {
+  flex: 1;
 }
 
-.noMarginBottom{
-  margin-bottom: 0px;
+.formGroup {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.input {
+  margin-top: 10px;
+}
+
+.select {
+  margin-top: 10px;
+}
+
+.text {
+  margin: 0;
+  color: white;
+  font-size: 1rem;
+}
+
+.error {
+  justify-self: center;
+  font-weight: bold;
+  color: crimson;
+}
+
+.button {
+  justify-self: center;
+  width: 20%;
+  min-width: fit-content;
+}
+.idTypeSelect {
+  min-width: 80px;
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.idContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.idContainer .input {
+  flex: 1;
+}
+
+.idContainer .select {
+  width: auto;
+}
+
+.label {
+  margin-bottom: 10px;
 }
 
 span.button{
+  width: min-content;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -58,6 +114,46 @@ span.button:active{
   color: transparent;
 }
 
+@media (max-width: 1000px) {
+  .avatarContainer {
+    align-self: center;
+    margin-bottom: -70px;
+  }
+
+  .formGroup {
+    margin-bottom: 8px;
+  }
+  .formLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .profileContainer {
+    flex-direction: column;
+  }
+
+  .buttonContainer {
+    margin-top: 10px;
+  }
+}
+
+
 .goTo{
   width: max-content;
+}
+
+.formContainer {
+  flex: 1;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.noMarginTop{
+  margin-top: 0px;
+}
+
+.noMarginBottom{
+  margin-bottom: 0px;
 }

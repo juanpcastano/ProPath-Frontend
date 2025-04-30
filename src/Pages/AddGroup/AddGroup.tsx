@@ -69,7 +69,7 @@ const AddGroup = () => {
             <p className={styles.text}>Añadir Grupo</p>
           </button>
         </div>
-        <Error error={error} />
+         <Error error={error} />
       </div>
     </form>
   );

@@ -150,8 +150,8 @@ const AddUser = () => {
           >
             <p className={styles.text}>Añadir Usuario</p>
           </button>
-          <Error error={error} />
         </div>
+         <Error error={error} />
       </div>
     </form>
   );

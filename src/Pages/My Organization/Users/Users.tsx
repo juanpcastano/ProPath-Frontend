@@ -47,7 +47,7 @@ const Users = () => {
                 );
               }}
             >
-              Añadir un usuarios
+              Añadir un usuario
             </button>
           </div>
         </>

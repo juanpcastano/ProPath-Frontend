@@ -106,7 +106,7 @@ const AISuggestions = ({
           </p>
           <button
             onClick={handleGetSuggestions}
-            className={`${styles.button} ${styles.noMarginTop} dark-gradient-primary`}
+            className={`${styles.button} ${styles.generateButton} ${styles.noMarginTop} dark-gradient-primary`}
             disabled={loading}
           >
             {loading ? "Generando..." : "Obtener Sugerencias"}
@@ -120,7 +120,7 @@ const AISuggestions = ({
         </div>
       )}
 
-      <Error error={error} />
+       <Error error={error} />
 
       {suggestions && !loading && (
         <div className={styles.suggestionsContainer}>

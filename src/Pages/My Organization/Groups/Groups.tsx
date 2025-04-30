@@ -41,7 +41,12 @@ const Groups = () => {
           {groups.map((group, index) => {
             return (
               <div className={styles.group} key={index}>
-                <h4 className={`${styles.noMarginBot} ${styles.noMarginTop}`}>{group.name}</h4>
+                <div className={styles.titleAndDescription}>
+                  <h2 className={`${styles.noMarginBot} ${styles.noMarginTop}`}>
+                    {group.name}
+                  </h2>
+                  <p className={`${styles.noMarginBot} ${styles.noMarginTop} ${styles.description}`}>{group.description}</p>
+                </div>
                 <button
                   className={`${styles.goToButton} dark-gradient-primary`}
                   onClick={() => {

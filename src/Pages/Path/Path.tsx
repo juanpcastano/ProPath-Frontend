@@ -11,7 +11,7 @@ import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
 import ActivityForm from "./Activity Form/ActivityForm";
-import AISuggestions from "./AI Suggestions/AISuggestions"; // Importamos el componente AISuggestions
+import AISuggestions from "./AI Suggestions/AISuggestions"; 
 import { useParams } from "react-router-dom";
 import {
   ApiCallAddActivity,
