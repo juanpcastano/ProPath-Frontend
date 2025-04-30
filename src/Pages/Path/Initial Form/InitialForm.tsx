@@ -31,9 +31,11 @@ const InitialForm = () => {
               description: formData.get("description") as string,
             })
               .then((res) => {
-                updatePath({
-                  id: res.pathID,
-                });
+                dispatch(
+                  updatePath({
+                    id: res.id,
+                  })
+                );
               })
               .catch((err) => {
                 setError(err.response?.data.message);
