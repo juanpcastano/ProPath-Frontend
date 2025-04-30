@@ -43,6 +43,11 @@ const Group = () => {
           console.log(resp);
           ApiCallUsers().then((res) => {
             setAvailableUsers(res);
+          }).catch((err) => {
+            setError(err.response?.data.message);
+          })
+          .finally(() => {
+            setLoading(false);
           });
         })
         .catch((err) => {
@@ -116,7 +121,7 @@ const Group = () => {
                 const formData = new FormData(e.currentTarget);
 
                 const memberInfo = {
-                  id: "asdasdass",
+                  id: formData.get("userId") as string,
                   user: { ...userData, name: formData.get("userId") as string },
                   role: formData.get("role") as string,
                 };
@@ -143,7 +148,7 @@ const Group = () => {
                     >
                       <option value="">Seleccione un usuario</option>
                       {availableUsers.map((user) => (
-                        <option key={user.id} value={user.name}>
+                        <option key={user.id} value={user.id}>
                           {user.name}
                         </option>
                       ))}

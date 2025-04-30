@@ -1,28 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./AddGroup.module.css";
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes } from "../../models/routes";
-import { ApiCallAddGroup } from "../../services/apiGroupsService";
+import {
+  ApiCallAddGroup,
+  ApiCallAddUserGroup,
+} from "../../services/apiGroupsService";
 import Error from "../Error/Error";
+import { ApiCallUsers } from "../../services/apiUsersService ";
 
 const AddGroup = () => {
   const [error, setError] = useState("");
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    ApiCallUsers()
+      .then((res) => {
+        setAvailableUsers(res);
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      });
+  }, []);
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-
         const groupInfo = {
           name: formData.get("name") as string,
           description: formData.get("description") as string,
         };
         ApiCallAddGroup(groupInfo)
           .then((res) => {
-            navigate(
-              PrivateRoutes.common.MY_ORGANIZATION.route + "/group/" + res.id
-            );
+            ApiCallAddUserGroup({
+              userId: formData.get("coachId") as string,
+              groupId: res.id,
+              role: "M",
+            })
+              .then(() => {
+                navigate(
+                  PrivateRoutes.common.MY_ORGANIZATION.route +
+                    "/group/" +
+                    res.id
+                );
+              })
+              .catch((err) => {
+                setError(err.response?.data.message);
+              });
             console.log(res);
           })
           .catch((err) => {
@@ -59,6 +86,24 @@ const AddGroup = () => {
                 required
               />
             </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="description">
+                Mentor
+              </label>
+              <select
+                className={styles.input}
+                id="coachId"
+                name="coachId"
+                required
+              >
+                <option value="">Seleccione un usuario</option>
+                {availableUsers.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         <div className={styles.buttonContainer}>
@@ -69,7 +114,7 @@ const AddGroup = () => {
             <p className={styles.text}>Añadir Grupo</p>
           </button>
         </div>
-         <Error error={error} />
+        <Error error={error} />
       </div>
     </form>
   );
