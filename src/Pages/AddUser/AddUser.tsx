@@ -4,6 +4,7 @@ import styles from "./AddUser.module.css";
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes } from "../../models/routes";
 import { registerInfo } from "../../models/registerInfo";
+import Error from "../Error/Error";
 
 const AddUser = () => {
   const [error, setError] = useState();
@@ -149,7 +150,7 @@ const AddUser = () => {
           >
             <p className={styles.text}>Añadir Usuario</p>
           </button>
-          {error && <p className={`${styles.text} ${styles.error}`}>{error}</p>}
+          <Error error={error} />
         </div>
       </div>
     </form>

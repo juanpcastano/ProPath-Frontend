@@ -5,9 +5,9 @@ import { createUser } from "../../Redux/States/user";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "./Login&register.module.css";
-import { AxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { PrivateRoutes } from "../../models/routes";
-
+import Error from "../Error/Error";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -16,27 +16,40 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [Error, setError] = useState("");
+  const [error, setError] = useState("");
   const login = async (credentials: credentials) => {
+    setError(""); // Limpiar errores previos
 
-      try {
-        const result = await ApiCallLogin(credentials);
-  
-        if (result.status >= 300) {
-          const Message = result.message;
-          setError(Message);
-          if (result.status == 401) {
-            setError("Credenciales Incorrectas");
+    try {
+      const result = await ApiCallLogin(credentials);
+      dispatch(createUser(result.user));
+      navigate(PrivateRoutes.common.HOME.route);
+    } catch (error) {
+      console.error("Error en login:", error);
+
+      if (isAxiosError(error)) {
+        if (error.response) {
+          const statusCode = error.response.status;
+
+          if (statusCode === 401) {
+            setError("Credenciales incorrectas");
+          } else {
+            const errorMessage =
+              error.response.data?.message ||
+              `Error ${statusCode}: ${error.message}`;
+            setError(errorMessage);
           }
-          return;
+        } else if (error.request) {
+          setError(
+            "No se recibió respuesta del servidor. Por favor intente nuevamente."
+          );
+        } else {
+          setError(`Error de configuración: ${error.message}`);
         }
-        dispatch(createUser(result.user));
-        navigate(PrivateRoutes.common.HOME.route);
-      } catch (error) {
-        let AxiosErr = error as AxiosError;
-        setError((AxiosErr.response?.data as { message: string }).message);
+      } else {
+        setError("Ocurrió un error inesperado. Por favor intente nuevamente.");
       }
-
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -108,7 +121,7 @@ const Login = () => {
             {/* <Link to="/register" className={styles.link}>
               Aún no tengo cuenta
             </Link> */}
-            {Error && <p className={styles.error}>{Error}</p>}
+            <Error error={error} />
           </div>
         </form>
       </div>

@@ -9,7 +9,6 @@ import { AppStore } from "../../Redux/store";
 import { UserInfo } from "../../models/user.model";
 import { PrivateRoutes } from "../../models/routes";
 import { ApiCallUsers } from "../../services/apiUsersService ";
-import { ApiCallUser } from "../../services/apiUserService";
 
 interface userGroups {
   id: string;

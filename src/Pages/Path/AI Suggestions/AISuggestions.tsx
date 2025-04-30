@@ -120,7 +120,7 @@ const AISuggestions = ({
         </div>
       )}
 
-      {error && <Error error={error} />}
+      <Error error={error} />
 
       {suggestions && !loading && (
         <div className={styles.suggestionsContainer}>

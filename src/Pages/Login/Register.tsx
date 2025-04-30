@@ -6,11 +6,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "./Login&register.module.css";
 import { AxiosError } from "axios";
+import Error from "../Error/Error";
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [Error, setError] = useState("")
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     id: 0,
     idType: "",
@@ -22,7 +23,7 @@ const Register = () => {
     country: "",
     city: "",
     birthDate: "",
-    profilePictureUrl: ""
+    profilePictureUrl: "",
   });
 
   const idTypes = [
@@ -33,16 +34,15 @@ const Register = () => {
   const register = async (registerInfo: registerInfo) => {
     try {
       const result = await ApiCallRegister(registerInfo);
-      if(result.status >= 300){
-        throw result
+      if (result.status >= 300) {
+        throw result;
       }
       dispatch(createUser(result.user));
       navigate("/history");
     } catch (error) {
-      
       let AxiosErr = error as AxiosError;
       console.log((AxiosErr.response?.data as { message: string }).message);
-      setError((AxiosErr.response?.data as { message: string }).message)
+      setError((AxiosErr.response?.data as { message: string }).message);
     }
   };
   const handleSubmit = (e: React.FormEvent) => {
@@ -93,7 +93,7 @@ const Register = () => {
             />
           </div>
           <div className={styles.formRow}>
-          <div className={styles.formGroup}>
+            <div className={styles.formGroup}>
               <label htmlFor="tipoIdentificacion">Tipo de documento</label>
               <select
                 id="tipoIdentificacion"
@@ -110,7 +110,6 @@ const Register = () => {
                 ))}
               </select>
             </div>
-            
 
             <div className={styles.formGroup}>
               <label htmlFor="identificacion">Número de documento</label>
@@ -120,18 +119,23 @@ const Register = () => {
                 step="1"
                 onKeyDown={(e) => {
                   // Prevenir la e/E
-                  if (e.key === 'e' || e.key === 'E') {
+                  if (e.key === "e" || e.key === "E") {
                     e.preventDefault();
                   }
                   // Prevenir el punto decimal y el signo negativo
-                  if (e.key === '.' || e.key === '-') {
+                  if (e.key === "." || e.key === "-") {
                     e.preventDefault();
                   }
                 }}
                 onPaste={(e) => {
-                  const text = e.clipboardData.getData('text');
+                  const text = e.clipboardData.getData("text");
                   // Prevenir pegar texto que contenga e, E, . o -
-                  if (text.includes('e') || text.includes('E') || text.includes('.') || text.includes('-')) {
+                  if (
+                    text.includes("e") ||
+                    text.includes("E") ||
+                    text.includes(".") ||
+                    text.includes("-")
+                  ) {
                     e.preventDefault();
                   }
                 }}
@@ -197,7 +201,7 @@ const Register = () => {
                 required
               />
             </div>
-          </div>  
+          </div>
           <div className={styles.formGroup}>
             <label htmlFor="fecha_nacimiento">Fecha de nacimiento</label>
             <input
@@ -211,7 +215,6 @@ const Register = () => {
             />
           </div>
 
-
           <button type="submit" className="dark-gradient-primary">
             Registrarme
           </button>
@@ -219,7 +222,7 @@ const Register = () => {
             <Link to="/login" className={styles.link}>
               Ya tengo cuenta
             </Link>
-            {Error && <p className={styles.error}>{Error}</p>}
+            <Error error={error} />
           </div>
         </form>
       </div>
