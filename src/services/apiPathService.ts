@@ -1,4 +1,5 @@
 import Api from "../api/Api";
+import { Path } from "../models/path.model";
 
 export const ApiCallGetPath = async (id: string) => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
@@ -282,3 +283,102 @@ export const ApiCallEditActivity = async (
     throw err;
   }
 };
+
+export const ApiCallGetSendedPaths = async (coachId: string) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup"|| true) {
+    const paths: Path[] = [
+      {id: 'c5b6c8ed-4dc7-48e1-89d1-b72fa9b24b34',
+        name: 'Path de aprendizaje de liderazgo',
+        description: 'En este path quiero aprender habilidades de liderazgo',
+        totalHours: 32,
+        totalBudget: 50000,
+        state: 'R',
+        activities: [
+          {
+            id: '0729cee4-3853-43a7-a202-3f0cff08f512',
+            name: 'Lectura y Aplicación de \'Los 7 hábitos de la gente altamente efectiva\'',
+            description: 'Leer el libro \'Los 7 hábitos de la gente altamente efectiva\' de Stephen Covey y aplicar sus principios en el entorno laboral.',
+            hours: 8,
+            initialDate: new Date("2024-03-10"),
+            finalDate: new Date("2024-03-10"),
+            budget: 0,
+            state: 'E',
+            pathId: 'c5b6c8ed-4dc7-48e1-89d1-b72fa9b24b34',
+            comments: []
+          },
+          {
+            id: '60535384-f9c5-480f-84ca-705a8edcb927',
+            name: 'Taller de Liderazgo Transformacional',
+            description: 'Participar en un taller de liderazgo transformacional para desarrollar habilidades de inspiración y motivación de equipos.',
+            hours: 8,
+            initialDate: new Date("2024-03-10"),
+            finalDate: new Date("2024-03-10"),
+            budget: 50000,
+            state: 'E',
+            pathId: 'c5b6c8ed-4dc7-48e1-89d1-b72fa9b24b34',
+            comments: []
+          },
+          {
+            id: '6c1c762b-92b1-42b6-89bc-036e68c7c3f6',
+            name: 'Curso Online de Comunicación Efectiva',
+            description: 'Realizar un curso online sobre comunicación efectiva y persuasión para mejorar las habilidades de comunicación interpersonal.',
+            hours: 8,
+            initialDate: new Date("2024-03-10"),
+            finalDate: new Date("2024-03-10"),
+            budget: 25000,
+            state: 'E',
+            pathId: 'c5b6c8ed-4dc7-48e1-89d1-b72fa9b24b34',
+            comments: []
+          },
+          {
+            id: '995bf708-4231-4e73-8112-b5d0c5e6c0ac',
+            name: 'Práctica de Delegación de Tareas',
+            description: 'Practicar la delegación de tareas y responsabilidades en el equipo de trabajo, brindando autonomía y apoyo a los miembros.',
+            hours: 8,
+            initialDate: new Date("2024-03-10"),
+            finalDate: new Date("2024-03-10"),
+            budget: 0,
+            state: 'E',
+            pathId: 'c5b6c8ed-4dc7-48e1-89d1-b72fa9b24b34',
+            comments: []
+          }
+        ],
+      },
+      {
+        id: "2",
+        name: "Path 2",
+        description: "Este es otro path diferente",
+        state: "A",
+        totalBudget: 5000,
+        totalHours: 100,
+        activities: [
+          {
+            id: "1",
+            name: "Desarrollo del Backend",
+            description: "Implementar la API y base de datos",
+            hours: 50,
+            initialDate: new Date("2024-03-10"),
+            finalDate: new Date("2024-04-05"),
+            budget: 2000,
+            state: "En progreso",
+            pathId: "1",
+          },
+        ],
+      },
+    ];
+    return paths;
+  }
+
+  try {
+    const result = await Api.get(`/path-management/paths/${coachId}/paths-in-review`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+

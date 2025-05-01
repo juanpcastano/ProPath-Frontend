@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import TabLayout, { tab } from "../../Components/TabLayout/TabLayout";
-import styles from "./MyGroups.module.css";
 import { ApiCallUser } from "../../services/apiUserService";
 import { useSelector } from "react-redux";
 import { AppStore } from "../../Redux/store";
@@ -34,22 +33,23 @@ const MyGroups = () => {
   useEffect(() => {
     setTabs(
       groups.map((group): tab => {
+        const tabs = [
+          {
+            name: "Miembros",
+            content: <Group groupId={group.group.id} />,
+          },
+          {
+            name: "Paths enviados",
+            content: <SendedPaths />,
+          },
+        ];
         return {
           name: group.group.name,
           content: (
             <TabLayout
-              tabs={[
-                {
-                  name: "Miembros",
-                  content: <Group groupId={group.group.id} />,
-                },
-                {
-                  name: "Paths enviados",
-                  content: <SendedPaths/>,
-                },
-              ]}
+              tabs={tabs}
               initialActiveTab="Miembros"
-              mainContainer= {false}
+              mainContainer={false}
             />
           ),
         };

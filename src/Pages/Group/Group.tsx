@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import styles from "./Group.module.css";
-import { ApiCallGroup } from "../../services/apiGroupsService";
+import {
+  ApiCallAddUserGroup,
+  ApiCallGroup,
+} from "../../services/apiGroupsService";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
@@ -22,7 +25,7 @@ interface groupInfo {
   userGroups: userGroups[];
 }
 
-const Group = ({groupId}:{groupId?: string}) => {
+const Group = ({ groupId }: { groupId?: string }) => {
   const navigate = useNavigate();
   const userData = useSelector((store: AppStore) => store.user);
   const [groupData, setGroupData] = useState<groupInfo>({
@@ -34,24 +37,23 @@ const Group = ({groupId}:{groupId?: string}) => {
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
-  let { id } = useParams();
-  if (groupData){
-    id = groupId
-  }
+  const { id } = groupId ? { id: groupId } : useParams();
   useEffect(() => {
     if (id) {
       ApiCallGroup(id)
         .then((resp) => {
           setGroupData(resp);
           console.log(resp);
-          ApiCallUsers().then((res) => {
-            setAvailableUsers(res);
-          }).catch((err) => {
-            setError(err.response?.data.message);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
+          ApiCallUsers()
+            .then((res) => {
+              setAvailableUsers(res);
+            })
+            .catch((err) => {
+              setError(err.response?.data.message);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
         })
         .catch((err) => {
           setError(err.response?.data.message);
@@ -64,6 +66,7 @@ const Group = ({groupId}:{groupId?: string}) => {
 
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
+  if (!id) return <Error error="No se proporcionó una id" />;
   return (
     <>
       <div className={styles.mainContainer}>
@@ -107,7 +110,7 @@ const Group = ({groupId}:{groupId?: string}) => {
                   navigate(
                     PrivateRoutes.common.MY_ORGANIZATION.route +
                       "/user/" +
-                      member.id 
+                      member.id
                   );
                 }}
               >
@@ -133,6 +136,18 @@ const Group = ({groupId}:{groupId?: string}) => {
                   ...groupData,
                   userGroups: [...groupData.userGroups, memberInfo],
                 });
+                setLoading(true);
+                ApiCallAddUserGroup({
+                  userId: formData.get("userId") as string,
+                  groupId: id,
+                  role: "M",
+                })
+                  .catch((err) => {
+                    setError(err.responde?.data.message);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
                 e.currentTarget.reset();
               }}
             >
@@ -183,7 +198,9 @@ const Group = ({groupId}:{groupId?: string}) => {
                 </button>
                 <button
                   className={`${styles.button} dark-gradient-secondary `}
-                  onClick={()=>{setEditing(false)}}
+                  onClick={() => {
+                    setEditing(false);
+                  }}
                 >
                   <p className={styles.text}>Cancelar</p>
                 </button>
