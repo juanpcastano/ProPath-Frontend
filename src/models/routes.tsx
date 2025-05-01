@@ -9,6 +9,7 @@ export const PrivateRoutes = {
     HOME: { icon: "home", label: "Panel Principal", route: "/home" },
     MY_PATH: { icon: "road", label: "Mi Path", route: "/mypath" },
     MY_ORGANIZATION: { icon: "corporate_fare", label: "Mi Organización", route: "/myorganization" },
+    MY_TEAM: { icon: "groups", label: "Mis Grupos", route: "/mygroups" },
   },
 
   P: {

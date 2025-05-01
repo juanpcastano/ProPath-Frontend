@@ -10,12 +10,13 @@ interface TabLayoutProps {
   tabs: tab[];
   initialActiveTab: string;
   footer?: ReactElement
+  mainContainer?: boolean
 }
 
-const TabLayout = ({ tabs, initialActiveTab, footer }: TabLayoutProps) => {
+const TabLayout = ({ tabs, initialActiveTab, footer, mainContainer = true }: TabLayoutProps) => {
   const [activeTab, setActiveTab] = useState(initialActiveTab);
   return (
-    <div className={styles.mainContainer}>
+    <div className={`${mainContainer && styles.mainContainer}`}>
       <div className={styles.container}>
         <div className={styles.tabList}>
           {tabs.map((tab, index) => {

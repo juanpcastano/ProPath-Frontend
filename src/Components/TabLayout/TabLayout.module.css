@@ -17,6 +17,7 @@
 
   .tabList {
     display: flex;
+    align-items: flex-end;
     border-bottom: 1px solid var(--hr-color);
     margin-bottom: 24px;
     gap: 30px;

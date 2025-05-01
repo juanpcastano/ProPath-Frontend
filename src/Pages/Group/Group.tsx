@@ -22,7 +22,7 @@ interface groupInfo {
   userGroups: userGroups[];
 }
 
-const Group = () => {
+const Group = ({groupId}:{groupId?: string}) => {
   const navigate = useNavigate();
   const userData = useSelector((store: AppStore) => store.user);
   const [groupData, setGroupData] = useState<groupInfo>({
@@ -34,7 +34,10 @@ const Group = () => {
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
-  const { id } = useParams();
+  let { id } = useParams();
+  if (groupData){
+    id = groupId
+  }
   useEffect(() => {
     if (id) {
       ApiCallGroup(id)
