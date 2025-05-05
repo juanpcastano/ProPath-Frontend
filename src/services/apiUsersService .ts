@@ -3,11 +3,11 @@
 import Api from "../api/Api";
 import { UserInfo } from "../models/user.model";
 
-export const ApiCallUsers = async () => {
+export const ApiCallUsers = async ():Promise<UserInfo[]> => {
 
   
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    const users = [
+    /* const users = [
       {
         id: 1,
         name: "Ana García Rodríguez",
@@ -78,7 +78,7 @@ export const ApiCallUsers = async () => {
 
       }
     ];
-    return users
+    return users */
   }
 
   try {

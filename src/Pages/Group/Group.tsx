@@ -12,6 +12,7 @@ import { AppStore } from "../../Redux/store";
 import { UserInfo } from "../../models/user.model";
 import { PrivateRoutes } from "../../models/routes";
 import { ApiCallUsers } from "../../services/apiUsersService ";
+import Table from "../../Components/Table/Table";
 
 interface userGroups {
   id: string;
@@ -37,6 +38,9 @@ const Group = ({ groupId }: { groupId?: string }) => {
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
+  const [coach, setCoach] = useState<UserInfo>();
+  const [users, setUsers] = useState<UserInfo[]>();
+
   const { id } = groupId ? { id: groupId } : useParams();
   useEffect(() => {
     if (id) {
@@ -44,16 +48,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
         .then((resp) => {
           setGroupData(resp);
           console.log(resp);
-          ApiCallUsers()
-            .then((res) => {
-              setAvailableUsers(res);
-            })
-            .catch((err) => {
-              setError(err.response?.data.message);
-            })
-            .finally(() => {
-              setLoading(false);
-            });
         })
         .catch((err) => {
           setError(err.response?.data.message);
@@ -64,6 +58,42 @@ const Group = ({ groupId }: { groupId?: string }) => {
     }
   }, [id]);
 
+  useEffect(() => {
+    setUsers(
+      groupData.userGroups
+        .map((user) => {
+          return user.user;
+        })
+        .filter((user) => {
+          user.id != coach?.id;
+        })
+    );
+  }, [coach]);
+
+  useEffect(() => {
+    setCoach(
+      groupData.userGroups.find((usergroup) => usergroup.role == "M")?.user
+    );
+    ApiCallUsers()
+      .then((res) => {
+        setAvailableUsers(
+          res.filter((user) => {
+            return !groupData.userGroups
+              .map((user) => {
+                return user.user.id;
+              })
+              .includes(user.id);
+          })
+        );
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [groupData]);
+
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
   if (!id) return <Error error="No se proporcionó una id" />;
@@ -73,12 +103,39 @@ const Group = ({ groupId }: { groupId?: string }) => {
         <h1 className={styles.noMarginTop}>{groupData.name}</h1>
         <p className={styles.description}>{groupData.description}</p>
       </div>
-
+      <div className={`${styles.mainContainer}`}>
+        {coach ? (
+          <>
+            <h2 className={`${styles.noMarginTop}`}>Coach</h2>
+            <div className={styles.group}>
+              <div className={styles.titleAndDescription}>
+                <h2
+                  className={`${styles.noMarginBottom} ${styles.noMarginTop}`}
+                >
+                  {coach.name}
+                </h2>
+              </div>
+              <button
+                className={`${styles.goTo} dark-gradient-primary`}
+                onClick={() => {
+                  navigate(
+                    PrivateRoutes.common.MY_ORGANIZATION.route +
+                      "/user/" +
+                      coach.id
+                  );
+                }}
+              >
+                Ir al perfl
+              </button>
+            </div>
+          </>
+        ) : (
+          <Error error="Este grupo no tiene un coach" />
+        )}
+      </div>
       <div className={styles.mainContainer}>
         <div className={styles.membersHeader}>
-          <h1 className={`${styles.noMarginTop} ${styles.noMarginBottom}`}>
-            Miembros
-          </h1>
+          <h2 className={`${styles.noMarginTop}`}>Miembros</h2>
           {userData.role == "A" && !editing && (
             <>
               <link
@@ -99,26 +156,16 @@ const Group = ({ groupId }: { groupId?: string }) => {
         {groupData.userGroups.length == 0 && (
           <Error error="No hay usuarios registrados aún"></Error>
         )}
-        {groupData.userGroups.map((member, index) => {
-          return (
-            <div className={styles.member} key={index}>
-              <h3>{member.user.name}</h3>
-              <p className={styles.description}>Rol: {member.role}</p>
-              <button
-                className={`dark-gradient-primary ${styles.goTo}`}
-                onClick={() => {
-                  navigate(
-                    PrivateRoutes.common.MY_ORGANIZATION.route +
-                      "/user/" +
-                      member.id
-                  );
-                }}
-              >
-                Ir al perfil
-              </button>
-            </div>
-          );
-        })}
+        {users?.length ? (
+          <Table
+            headers={["Nombre"]}
+            keys={["name"]}
+            pathLink={PrivateRoutes.common.MY_ORGANIZATION.route + "/user"}
+            data={users}
+          />
+        ) : (
+          <Error error="No hay miembros aún" />
+        )}
         {editing && (
           <div className={styles.addMember}>
             <form

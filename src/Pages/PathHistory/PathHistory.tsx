@@ -37,6 +37,7 @@ const PathHistory = () => {
   ]
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
+  if (paths.length == 0) return <Error error="Aún no tienes paths registrados"/>
   return <div><Table headers={headers} keys={keys} data={paths} pathLink={PrivateRoutes.common.MY_ORGANIZATION.route + "/path"}/></div>;
 };
 export default PathHistory;
