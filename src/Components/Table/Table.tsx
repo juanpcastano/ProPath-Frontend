@@ -2,12 +2,16 @@ import { Link } from "react-router-dom";
 import styles from "./Table.module.css";
 
 const Table = ({
+  containerClassname,
+  tableClassname,
   data,
   headers,
   keys,
   pathLink,
   handleDelete,
 }: {
+  containerClassname? : string,
+  tableClassname? : string,
   data: any[];
   headers: string[];
   keys: string[];
@@ -15,8 +19,8 @@ const Table = ({
   handleDelete?: (id: string) => void;
 }) => {
   return (
-    <div className={styles.mainContainer}>
-      <table className={styles.table}>
+    <div className={`${styles.mainContainer} ${containerClassname}`}>
+      <table className={`${styles.table} ${tableClassname}`}>
         <thead>
           <tr>
             {headers.map((header, index) => {

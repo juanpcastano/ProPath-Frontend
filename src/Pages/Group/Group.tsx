@@ -45,21 +45,23 @@ const Group = ({ groupId }: { groupId?: string }) => {
     useState(false);
   const [editingCoach, setEditingCoach] = useState(false);
   const [editingmembers, setEditingMembers] = useState(false);
-  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
+  const [availableMembers, setAvailableMembers] = useState<any[]>([]);
+  const [availableCoachs, setAvailableCoachs] = useState<any[]>([]);
   const [coach, setCoach] = useState<UserInfo>();
   const [users, setUsers] = useState<UserInfo[]>();
 
   const { id } = groupId ? { id: groupId } : useParams();
+  if (!id) return <Error error="No se proporcionó una id" />;
 
-  const handleDeleteUserGroup = (userId: string) => {
-    ApiCallUser(userId)
-      .then((res) => {
-        const usergroupId = res.userGroups?.find((userGroup) => {
-          return userGroup.group.id == id;
-        })?.id;
-        if (usergroupId) {
-          ApiCallDeleteUserGroup(usergroupId).then(() => {
-            if (id)
+  const deleteUser = (userId: string | undefined) => {
+    if (userId)
+      ApiCallUser(userId)
+        .then((res) => {
+          const usergroupId = res.userGroups?.find((userGroup) => {
+            return userGroup.group.id == id;
+          })?.id;
+          if (usergroupId) {
+            ApiCallDeleteUserGroup(usergroupId).then(() => {
               ApiCallGroup(id)
                 .then((resp) => {
                   setGroupData(resp);
@@ -71,26 +73,69 @@ const Group = ({ groupId }: { groupId?: string }) => {
                 .finally(() => {
                   setLoading(false);
                 });
-          });
-        }
-      })
-      .catch((err) => {
-        setError(err);
-      });
-  };
-  useEffect(() => {
-    if (id)
-      ApiCallGroup(id)
-        .then((resp) => {
-          setGroupData(resp);
-          console.log(resp);
+            });
+          }
         })
         .catch((err) => {
-          setError(err.response?.data.message);
-        })
-        .finally(() => {
-          setLoading(false);
+          setError(err);
         });
+  };
+
+  const handleUpdateCoach = async (
+    coachId: string | undefined,
+    userId: string
+  ) => {
+    try {
+      setLoading(true);
+      if (coachId) {
+        const coachData = await ApiCallUser(coachId);
+        const coachUserGroupId = coachData.userGroups?.find(
+          (userGroup) => userGroup.group.id === id
+        )?.id;
+        if (coachUserGroupId) {
+          await ApiCallDeleteUserGroup(coachUserGroupId);
+        }
+      }
+
+      const memberData = await ApiCallUser(userId);
+      const memberUserGroupId = memberData.userGroups?.find(
+        (userGroup) => userGroup.group.id === id
+      )?.id;
+      if (memberUserGroupId) {
+        await ApiCallDeleteUserGroup(memberUserGroupId);
+      }
+
+      await ApiCallAddUserGroup({
+        groupId: id,
+        userId: userId,
+        role: "M",
+      });
+
+      const updatedGroupData = await ApiCallGroup(id);
+      setGroupData(updatedGroupData);
+      setEditingCoach(false);
+    } catch (error: any) {
+      setError(error.response?.data.message || "Error desconocido");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteUserGroup = (userId: string) => {
+    if (userId) deleteUser(userId);
+  };
+  useEffect(() => {
+    ApiCallGroup(id)
+      .then((resp) => {
+        setGroupData(resp);
+        console.log(resp);
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [id]);
 
   useEffect(() => {
@@ -104,6 +149,20 @@ const Group = ({ groupId }: { groupId?: string }) => {
           return user.id != coach?.id;
         })
     );
+    ApiCallUsers()
+      .then((res) => {
+        setAvailableCoachs(
+          res.filter((user) => {
+            return user.id != coach?.id;
+          })
+        );
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [coach, groupData]);
 
   useEffect(() => {
@@ -112,7 +171,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
     );
     ApiCallUsers()
       .then((res) => {
-        setAvailableUsers(
+        setAvailableMembers(
           res.filter((user) => {
             return !groupData.userGroups
               .map((user) => {
@@ -132,7 +191,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
 
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
-  if (!id) return <Error error="No se proporcionó una id" />;
   return (
     <>
       <div className={styles.mainContainer}>
@@ -225,10 +283,30 @@ const Group = ({ groupId }: { groupId?: string }) => {
         )}
       </div>
       <div className={`${styles.mainContainer}`}>
-        {coach ? (
+        <div className={styles.membersHeader}>
+          <h2 className={`${styles.noMarginTop} ${styles.noMarginBottom}`}>
+            Coach
+          </h2>
+          {userData.role == "A" && !editingCoach && (
+            <>
+              <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+              />
+              <span
+                className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
+                onClick={() => {
+                  setEditingCoach(true);
+                }}
+              >
+                edit
+              </span>
+            </>
+          )}
+        </div>
+        {coach && !editingCoach ? (
           <>
-            <h2 className={`${styles.noMarginTop}`}>Coach</h2>
-            <div className={styles.group}>
+            <div className={styles.coach}>
               <div className={styles.titleAndDescription}>
                 <h2
                   className={`${styles.noMarginBottom} ${styles.noMarginTop}`}
@@ -250,6 +328,54 @@ const Group = ({ groupId }: { groupId?: string }) => {
               </button>
             </div>
           </>
+        ) : editingCoach ? (
+          <div className={styles.changeCoach}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                handleUpdateCoach(coach?.id, formData.get("userId") as string);
+                e.currentTarget.reset();
+              }}
+            >
+              <div className={styles.formContainer}>
+                <div className={styles.formGroup}>
+                  <select
+                    className={`${styles.usersInput}`}
+                    id="userId"
+                    name="userId"
+                    required
+                  >
+                    <option value="">Seleccione un usuario</option>
+                    {availableCoachs.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div
+                className={`${styles.buttonContainer} ${styles.noMarginTop}`}
+              >
+                <button
+                  type="submit"
+                  className={`${styles.button} ${styles.noMarginTop} dark-gradient-primary `}
+                >
+                  <p className={styles.text}>Cambiar Coach</p>
+                </button>
+                <button
+                  className={`${styles.button} ${styles.noMarginTop} dark-gradient-secondary `}
+                  onClick={() => {
+                    setEditingCoach(false);
+                  }}
+                >
+                  <p className={styles.text}>Cancelar</p>
+                </button>
+              </div>
+              <Error error={error} />
+            </form>
+          </div>
         ) : (
           <Error error="Este grupo no tiene un coach" />
         )}
@@ -283,6 +409,8 @@ const Group = ({ groupId }: { groupId?: string }) => {
             pathLink={PrivateRoutes.common.MY_ORGANIZATION.route + "/user"}
             data={users}
             handleDelete={editingmembers ? handleDeleteUserGroup : undefined}
+            containerClassname={styles.membersTableContainer}
+            tableClassname={styles.membersTable}
           />
         ) : (
           <Error error="No hay miembros aún" />
@@ -323,36 +451,33 @@ const Group = ({ groupId }: { groupId?: string }) => {
             >
               <h2 className={styles.noMarginTop}>Añadir Nuevo Miembro:</h2>
               <div className={styles.formContainer}>
-                <div className={styles.formLayout}>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label} htmlFor="userId">
-                      Usuario
-                    </label>
-                    <select
-                      className={styles.input}
-                      id="userId"
-                      name="userId"
-                      required
-                    >
-                      <option value="">Seleccione un usuario</option>
-                      {availableUsers.map((user) => (
-                        <option key={user.id} value={user.id}>
-                          {user.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                <div className={styles.formGroup}>
+                  <select
+                    className={`${styles.usersInput}`}
+                    id="userId"
+                    name="userId"
+                    required
+                  >
+                    <option value="">Seleccione un usuario</option>
+                    {availableMembers.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-              <div className={styles.buttonContainer}>
+              <div
+                className={`${styles.buttonContainer} ${styles.noMarginTop} `}
+              >
                 <button
                   type="submit"
-                  className={`${styles.button} dark-gradient-primary `}
+                  className={`${styles.button} ${styles.noMarginTop} dark-gradient-primary `}
                 >
                   <p className={styles.text}>Añadir Miembro</p>
                 </button>
                 <button
-                  className={`${styles.button} dark-gradient-secondary `}
+                  className={`${styles.button} ${styles.noMarginTop} dark-gradient-secondary `}
                   onClick={() => {
                     setEditingMembers(false);
                   }}
