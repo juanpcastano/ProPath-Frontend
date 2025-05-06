@@ -2,6 +2,7 @@ export interface UserGroup{
     group: Group
     id: string
     name: string
+    role?:string
 }
 export interface Group{
     id: string

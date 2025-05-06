@@ -31,28 +31,37 @@ const MyGroups = () => {
   }, []);
 
   useEffect(() => {
+    console.log(groups);
+
     setTabs(
-      groups.map((group): tab => {
+      groups.map((UserGroup): tab => {
         const tabs = [
           {
             name: "Miembros",
-            content: <Group groupId={group.group.id} />,
+            content: <Group groupId={UserGroup.group.id} />,
           },
           {
             name: "Paths enviados",
             content: <SendedPaths />,
           },
         ];
-        return {
-          name: group.group.name,
-          content: (
-            <TabLayout
-              tabs={tabs}
-              initialActiveTab="Miembros"
-              mainContainer={false}
-            />
-          ),
-        };
+        if (UserGroup.role == "M")
+          return {
+            name: UserGroup.group.name,
+            content: (
+              <TabLayout
+                tabs={tabs}
+                initialActiveTab="Miembros"
+                mainContainer={false}
+              />
+            ),
+          };
+          else return {
+            name: UserGroup.group.name,
+            content: (
+              <Group groupId={UserGroup.group.id} />
+            ),
+          };
       })
     );
   }, [groups]);
