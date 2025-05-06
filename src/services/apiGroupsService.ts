@@ -29,13 +29,13 @@ export interface groupMember {
 
 export interface group {
   name: string;
-  description: string
+  description: string;
 }
 
 export interface userGroup {
-    groupId : string
-    userId : string
-    role : string
+  groupId: string;
+  userId: string;
+  role: string;
 }
 
 export const ApiCallAddGroup = async (group: group) => {
@@ -58,11 +58,17 @@ export const ApiCallAddGroup = async (group: group) => {
   }
 };
 
-export const ApiCallGroup = async (id : string) => {
+export const ApiCallGroup = async (id: string) => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
     // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
 
-    return [{ id: "1", name: "chambeadores", description: "Descripción de chambeadores" }];
+    return [
+      {
+        id: "1",
+        name: "chambeadores",
+        description: "Descripción de chambeadores",
+      },
+    ];
   }
 
   try {
@@ -84,11 +90,36 @@ export const ApiCallAddUserGroup = async (userGroup: userGroup) => {
   }
 
   try {
-    const result = await Api.post("/users-management/groups/add-user", userGroup, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const result = await Api.post(
+      "/users-management/groups/add-user",
+      userGroup,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export const ApiCallDeleteUserGroup = async (id: string) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+  }
+
+  try {
+    const result = await Api.delete(
+      "/users-management/groups/remove-user/" + id,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return result.data;
   } catch (err) {
     console.error("Error:", err);

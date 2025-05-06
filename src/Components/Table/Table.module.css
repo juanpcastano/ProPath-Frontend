@@ -43,6 +43,19 @@
   background: none;
   color: var(--primary-high);
   cursor: pointer;
+  width: max-content;
+  margin-left: 1rem;
+}
+
+.deleteButton {
+  padding: 5px 10px;
+  border: 1px solid var(--primary-high);
+  border-radius: 15px;
+  background: none;
+  color: var(--primary-high);
+  cursor: pointer;
+  width: max-content;
+  margin-left: 1rem;
 }
 
 .detailsButton {

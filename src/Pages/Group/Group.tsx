@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./Group.module.css";
 import {
   ApiCallAddUserGroup,
+  ApiCallDeleteUserGroup,
   ApiCallGroup,
 } from "../../services/apiGroupsService";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,6 +14,7 @@ import { UserInfo } from "../../models/user.model";
 import { PrivateRoutes } from "../../models/routes";
 import { ApiCallUsers } from "../../services/apiUsersService ";
 import Table from "../../Components/Table/Table";
+import { ApiCallUser } from "../../services/apiUserService";
 
 interface userGroups {
   id: string;
@@ -42,8 +44,36 @@ const Group = ({ groupId }: { groupId?: string }) => {
   const [users, setUsers] = useState<UserInfo[]>();
 
   const { id } = groupId ? { id: groupId } : useParams();
+
+  const handleDeleteUserGroup = (userId: string) => {
+    ApiCallUser(userId)
+      .then((res) => {
+        const usergroupId = res.userGroups?.find((userGroup) => {
+          return userGroup.group.id == id;
+        })?.id;
+        if (usergroupId) {
+          ApiCallDeleteUserGroup(usergroupId).then(() => {
+            if (id)
+              ApiCallGroup(id)
+                .then((resp) => {
+                  setGroupData(resp);
+                  console.log(resp);
+                })
+                .catch((err) => {
+                  setError(err.response?.data.message);
+                })
+                .finally(() => {
+                  setLoading(false);
+                });
+          });
+        }
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  };
   useEffect(() => {
-    if (id) {
+    if (id)
       ApiCallGroup(id)
         .then((resp) => {
           setGroupData(resp);
@@ -55,7 +85,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
         .finally(() => {
           setLoading(false);
         });
-    }
   }, [id]);
 
   useEffect(() => {
@@ -65,10 +94,10 @@ const Group = ({ groupId }: { groupId?: string }) => {
           return user.user;
         })
         .filter((user) => {
-          user.id != coach?.id;
+          return user.id != coach?.id;
         })
     );
-  }, [coach]);
+  }, [coach, groupData]);
 
   useEffect(() => {
     setCoach(
@@ -133,7 +162,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
           <Error error="Este grupo no tiene un coach" />
         )}
       </div>
-      <div className={styles.mainContainer}>
+      <div className={`${styles.mainContainer} ${styles.noMarginBottom}`}>
         <div className={styles.membersHeader}>
           <h2 className={`${styles.noMarginTop}`}>Miembros</h2>
           {userData.role == "A" && !editing && (
@@ -153,15 +182,13 @@ const Group = ({ groupId }: { groupId?: string }) => {
             </>
           )}
         </div>
-        {groupData.userGroups.length == 0 && (
-          <Error error="No hay usuarios registrados aún"></Error>
-        )}
         {users?.length ? (
           <Table
             headers={["Nombre"]}
             keys={["name"]}
             pathLink={PrivateRoutes.common.MY_ORGANIZATION.route + "/user"}
             data={users}
+            handleDelete={editing ? handleDeleteUserGroup : undefined}
           />
         ) : (
           <Error error="No hay miembros aún" />
@@ -172,23 +199,25 @@ const Group = ({ groupId }: { groupId?: string }) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
-
-                const memberInfo = {
-                  id: formData.get("userId") as string,
-                  user: { ...userData, name: formData.get("userId") as string },
-                  role: formData.get("role") as string,
-                };
-                console.log("New member info:", memberInfo);
-                setGroupData({
-                  ...groupData,
-                  userGroups: [...groupData.userGroups, memberInfo],
-                });
                 setLoading(true);
                 ApiCallAddUserGroup({
                   userId: formData.get("userId") as string,
                   groupId: id,
-                  role: "M",
+                  role: "P",
                 })
+                  .then(() => {
+                    ApiCallGroup(id)
+                      .then((resp) => {
+                        setGroupData(resp);
+                        console.log(resp);
+                      })
+                      .catch((err) => {
+                        setError(err.response?.data.message);
+                      })
+                      .finally(() => {
+                        setLoading(false);
+                      });
+                  })
                   .catch((err) => {
                     setError(err.responde?.data.message);
                   })
@@ -217,21 +246,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
                           {user.name}
                         </option>
                       ))}
-                    </select>
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label} htmlFor="role">
-                      Rol
-                    </label>
-                    <select
-                      className={styles.input}
-                      id="role"
-                      name="role"
-                      required
-                    >
-                      <option value="">Seleccione un rol</option>
-                      <option value="M">Mentor</option>
-                      <option value="P">Profesional</option>
                     </select>
                   </div>
                 </div>

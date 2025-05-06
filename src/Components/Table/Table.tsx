@@ -6,11 +6,13 @@ const Table = ({
   headers,
   keys,
   pathLink,
+  handleDelete,
 }: {
   data: any[];
   headers: string[];
   keys: string[];
   pathLink?: string;
+  handleDelete?: (id: string) => void;
 }) => {
   return (
     <div className={styles.mainContainer}>
@@ -31,11 +33,18 @@ const Table = ({
               })}
               {item.id && !!pathLink && (
                 <td className={styles.actions}>
-                  <Link to={pathLink + "/" + item.id}>
-                    <button className={styles.detailsButton}>
-                      Ver Detalles
+                  {pathLink && (
+                    <Link to={pathLink + "/" + item.id}>
+                      <button className={styles.detailsButton}>
+                        Ver Detalles
+                      </button>
+                    </Link>
+                  )}
+                  {handleDelete && (
+                    <button className={styles.deleteButton} onClick={()=>{handleDelete(item.id)}}>
+                      Eliminar
                     </button>
-                  </Link>
+                  )}
                 </td>
               )}
             </tr>
