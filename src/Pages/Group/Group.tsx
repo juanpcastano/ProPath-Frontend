@@ -86,7 +86,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
     userId: string
   ) => {
     try {
-      setLoading(true);
       if (coachId) {
         const coachData = await ApiCallUser(coachId);
         const coachUserGroupId = coachData.userGroups?.find(
@@ -116,9 +115,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
       setEditingCoach(false);
     } catch (error: any) {
       setError(error.response?.data.message || "Error desconocido");
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   const handleDeleteUserGroup = (userId: string) => {
