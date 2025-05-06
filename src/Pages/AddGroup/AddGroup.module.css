@@ -28,12 +28,6 @@
   font-size: 1rem;
 }
 
-.error {
-  justify-self: center;
-  font-weight: bold;
-  color: crimson;
-}
-
 .button {
   justify-self: center;
   width: 20%;

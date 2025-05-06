@@ -142,12 +142,6 @@
     flex: 1;
   }
   
-  .error{
-    color: rgb(247, 36, 117);
-    font-weight: 500;
-  }
-  
-  
   input[type="date"].input {
     padding: 0.4rem 0.8rem;
   }

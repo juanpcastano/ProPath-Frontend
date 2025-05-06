@@ -4,6 +4,8 @@ import {
   ApiCallAddUserGroup,
   ApiCallDeleteUserGroup,
   ApiCallGroup,
+  ApiCallUpdateGroup,
+  group,
 } from "../../services/apiGroupsService";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
@@ -36,9 +38,13 @@ const Group = ({ groupId }: { groupId?: string }) => {
     description: "",
     userGroups: [],
   });
+  const [areYouCoachOfThisGroup, setAreYouCoachOfThisGroup] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [editing, setEditing] = useState(false);
+  const [editingTitleAndDescription, setEditingTitleAndDescription] =
+    useState(false);
+  const [editingCoach, setEditingCoach] = useState(false);
+  const [editingmembers, setEditingMembers] = useState(false);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const [coach, setCoach] = useState<UserInfo>();
   const [users, setUsers] = useState<UserInfo[]>();
@@ -88,6 +94,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
   }, [id]);
 
   useEffect(() => {
+    setAreYouCoachOfThisGroup(userData.id == coach?.id);
     setUsers(
       groupData.userGroups
         .map((user) => {
@@ -129,8 +136,93 @@ const Group = ({ groupId }: { groupId?: string }) => {
   return (
     <>
       <div className={styles.mainContainer}>
-        <h1 className={styles.noMarginTop}>{groupData.name}</h1>
-        <p className={styles.description}>{groupData.description}</p>
+        {!editingTitleAndDescription ? (
+          <>
+            <div className={styles.membersHeader}>
+              <h1 className={`${styles.noMarginTop} ${styles.noMarginBottom}`}>
+                {groupData.name}
+              </h1>
+              {userData.role == "A" && !editingTitleAndDescription && (
+                <>
+                  <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+                  />
+                  {(userData.role == "A" || areYouCoachOfThisGroup) && (
+                    <span
+                      className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
+                      onClick={() => {
+                        setEditingTitleAndDescription(true);
+                      }}
+                    >
+                      edit
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+            <p className={styles.description}>{groupData.description}</p>
+          </>
+        ) : (
+          <>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const userGroup: group = {
+                  name: formData.get("name") as string,
+                  description: formData.get("description") as string,
+                };
+                setEditingTitleAndDescription(false);
+                ApiCallUpdateGroup(id, userGroup)
+                  .then((res) => {
+                    setGroupData(res);
+                  })
+                  .catch((err) => {
+                    setError(err.response?.data.message);
+                  });
+                e.currentTarget.reset();
+              }}
+            >
+              <div className={styles.formContainer}>
+                <input
+                  type="text"
+                  placeholder="Nombre del grupo"
+                  defaultValue={groupData.name}
+                  className={styles.titleInput}
+                  id="name"
+                  name="name"
+                  required
+                  autoComplete="off"
+                ></input>
+                <textarea
+                  name="description"
+                  id="description"
+                  placeholder="Descripción del grupo"
+                  defaultValue={groupData.description}
+                  rows={4}
+                  required
+                ></textarea>
+                <div className={styles.buttonsContainer}>
+                  <button
+                    type="submit"
+                    className={`${styles.button} dark-gradient-primary `}
+                  >
+                    <p className={styles.text}>Guardar</p>
+                  </button>
+                  <button
+                    className={`${styles.button} dark-gradient-secondary`}
+                    onClick={() => {
+                      setEditingTitleAndDescription(false);
+                    }}
+                  >
+                    <p className={styles.text}>Cancelar</p>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </>
+        )}
       </div>
       <div className={`${styles.mainContainer}`}>
         {coach ? (
@@ -145,7 +237,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
                 </h2>
               </div>
               <button
-                className={`${styles.goTo} dark-gradient-primary`}
+                className={`${styles.goTo} ${styles.noMarginTop} dark-gradient-primary`}
                 onClick={() => {
                   navigate(
                     PrivateRoutes.common.MY_ORGANIZATION.route +
@@ -164,8 +256,10 @@ const Group = ({ groupId }: { groupId?: string }) => {
       </div>
       <div className={`${styles.mainContainer} ${styles.noMarginBottom}`}>
         <div className={styles.membersHeader}>
-          <h2 className={`${styles.noMarginTop}`}>Miembros</h2>
-          {userData.role == "A" && !editing && (
+          <h2 className={`${styles.noMarginTop} ${styles.noMarginBottom}`}>
+            Miembros
+          </h2>
+          {userData.role == "A" && !editingmembers && (
             <>
               <link
                 rel="stylesheet"
@@ -174,7 +268,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
               <span
                 className={`material-symbols-outlined ${styles.editButton} ${styles.button}`}
                 onClick={() => {
-                  setEditing(true);
+                  setEditingMembers(true);
                 }}
               >
                 edit
@@ -188,12 +282,12 @@ const Group = ({ groupId }: { groupId?: string }) => {
             keys={["name"]}
             pathLink={PrivateRoutes.common.MY_ORGANIZATION.route + "/user"}
             data={users}
-            handleDelete={editing ? handleDeleteUserGroup : undefined}
+            handleDelete={editingmembers ? handleDeleteUserGroup : undefined}
           />
         ) : (
           <Error error="No hay miembros aún" />
         )}
-        {editing && (
+        {editingmembers && (
           <div className={styles.addMember}>
             <form
               onSubmit={(e) => {
@@ -227,7 +321,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
                 e.currentTarget.reset();
               }}
             >
-              <h2>Añadir Nuevo Miembro:</h2>
+              <h2 className={styles.noMarginTop}>Añadir Nuevo Miembro:</h2>
               <div className={styles.formContainer}>
                 <div className={styles.formLayout}>
                   <div className={styles.formGroup}>
@@ -260,7 +354,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
                 <button
                   className={`${styles.button} dark-gradient-secondary `}
                   onClick={() => {
-                    setEditing(false);
+                    setEditingMembers(false);
                   }}
                 >
                   <p className={styles.text}>Cancelar</p>

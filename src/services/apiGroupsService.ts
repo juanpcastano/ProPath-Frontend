@@ -106,6 +106,24 @@ export const ApiCallAddUserGroup = async (userGroup: userGroup) => {
   }
 };
 
+export const ApiCallUpdateGroup = async (id: string, group: group) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+  }
+
+  try {
+    const result = await Api.put("/users-management/groups/" + id, group, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
 export const ApiCallDeleteUserGroup = async (id: string) => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
     // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}

@@ -92,7 +92,7 @@ const Title = ({
               <div className={styles.formContainer}>
                 <input
                   type="text"
-                  placeholder="Nombre De tu path"
+                  placeholder="Nombre de tu path"
                   defaultValue={name}
                   className={styles.titleInput}
                   id="name"
@@ -103,7 +103,7 @@ const Title = ({
                 <textarea
                   name="description"
                   id="description"
-                  placeholder="Descripción de tu nuevo path"
+                  placeholder="Descripción de tu Path"
                   defaultValue={description}
                   rows={4}
                   required

@@ -18,6 +18,7 @@
   box-shadow: 0px 0px 8px 2px var(--shadow);
   border-left: 4px solid var(--primary-high);
   display: flex;
+  gap: 1rem;
   justify-content: space-between;
   align-items: center;
 }
@@ -26,7 +27,6 @@
   display: flex;
   align-items: baseline;
   gap: 1rem;
-  width: min;
 }
 
 .description{
@@ -75,16 +75,9 @@
   font-size: 1rem;
 }
 
-.error {
-  justify-self: center;
-  font-weight: bold;
-  color: crimson;
-}
-
 .button {
   justify-self: center;
-  width: 20%;
-  min-width: fit-content;
+  width: max-content;
 }
 .idTypeSelect {
   min-width: 80px;
@@ -108,6 +101,18 @@
 
 .idContainer .select {
   width: auto;
+}
+
+.formContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.buttonsContainer{
+  display: flex;
+  gap: 10px;
 }
 
 .label {
