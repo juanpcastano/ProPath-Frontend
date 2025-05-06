@@ -53,7 +53,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
   const { id } = groupId ? { id: groupId } : useParams();
   if (!id) return <Error error="No se proporcionó una id" />;
 
-  const deleteUser = (userId: string | undefined) => {
+  const deleteUser = (userId: string) => {
     if (userId)
       ApiCallUser(userId)
         .then((res) => {
@@ -65,7 +65,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
               ApiCallGroup(id)
                 .then((resp) => {
                   setGroupData(resp);
-                  console.log(resp);
+                  if (userId == userData.id) localStorage.setItem("needsReload", "true");
                 })
                 .catch((err) => {
                   setError(err.response?.data.message);
@@ -94,6 +94,11 @@ const Group = ({ groupId }: { groupId?: string }) => {
         if (coachUserGroupId) {
           await ApiCallDeleteUserGroup(coachUserGroupId);
         }
+        const isCurrentUser = coachId === userData.id;
+
+        if (isCurrentUser) {
+          localStorage.setItem("needsReload", "true");
+        }
       }
 
       const memberData = await ApiCallUser(userId);
@@ -113,14 +118,20 @@ const Group = ({ groupId }: { groupId?: string }) => {
       const updatedGroupData = await ApiCallGroup(id);
       setGroupData(updatedGroupData);
       setEditingCoach(false);
+
+      if (
+        localStorage.getItem("needsReload") === "true" ||
+        userId === userData.id
+      ) {
+        localStorage.removeItem("needsReload");
+        window.location.reload();
+      }
     } catch (error: any) {
       setError(error.response?.data.message || "Error desconocido");
-    } 
+    }
   };
 
-  const handleDeleteUserGroup = (userId: string) => {
-    if (userId) deleteUser(userId);
-  };
+
   useEffect(() => {
     ApiCallGroup(id)
       .then((resp) => {
@@ -163,6 +174,12 @@ const Group = ({ groupId }: { groupId?: string }) => {
   }, [coach, groupData]);
 
   useEffect(() => {
+    if (
+      localStorage.getItem("needsReload") === "true"
+    ) {
+      localStorage.removeItem("needsReload");
+      window.location.reload();
+    }
     setCoach(
       groupData.userGroups.find((usergroup) => usergroup.role == "M")?.user
     );
@@ -405,7 +422,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
             keys={["name"]}
             pathLink={PrivateRoutes.common.MY_ORGANIZATION.route + "/user"}
             data={users}
-            handleDelete={editingmembers ? handleDeleteUserGroup : undefined}
+            handleDelete={editingmembers ? deleteUser : undefined}
             containerClassname={styles.membersTableContainer}
             tableClassname={styles.membersTable}
           />
