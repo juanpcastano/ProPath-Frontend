@@ -5,6 +5,7 @@ import { PrivateRoutes } from "../../models/routes";
 import {
   ApiCallAddGroup,
   ApiCallAddUserGroup,
+  group,
 } from "../../services/apiGroupsService";
 import Error from "../Error/Error";
 import { ApiCallUsers } from "../../services/apiUsersService ";
@@ -29,7 +30,7 @@ const AddGroup = () => {
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const groupInfo = {
+        const groupInfo: group = {
           name: formData.get("name") as string,
           description: formData.get("description") as string,
         };

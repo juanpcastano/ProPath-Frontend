@@ -11,7 +11,7 @@ import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
 import ActivityForm from "./Activity Form/ActivityForm";
-import AISuggestions from "./AI Suggestions/AISuggestions"; 
+import AISuggestions from "./AI Suggestions/AISuggestions";
 import { useParams } from "react-router-dom";
 import {
   ApiCallAddActivity,
@@ -19,9 +19,13 @@ import {
   ApiCallEditActivity,
   ApiCallGetPath,
   ApiCallGetUserPaths,
+  ApiCallSendPath,
 } from "../../services/apiPathService";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
+import { ApiCallGroup } from "../../services/apiGroupsService";
+import { ApiCallUser } from "../../services/apiUserService";
+import { updateUser } from "../../Redux/States/user";
 
 const Path = () => {
   const dispatch = useDispatch();
@@ -29,7 +33,10 @@ const Path = () => {
   const pathState = useSelector((store: AppStore) => store.path);
   const userData = useSelector((store: AppStore) => store.user);
 
+  const [coachId, setCoachid] = useState<string | undefined>(undefined);
+
   const [loading, setLoading] = useState(true);
+  const [sendLoading, setSendLoading] = useState(false);
   const [error, setError] = useState("");
   const [isMyPath, setIsMyPath] = useState<boolean>(!id);
   const [pathData, setPathData] = useState(
@@ -75,6 +82,30 @@ const Path = () => {
     }
   }, [pathState, id]);
 
+  useEffect(() => {
+    const groupWithProRoleId = userData.userGroups?.find((userGroup) => {
+      return userGroup.role == "P";
+    })?.group.id;
+
+    if (groupWithProRoleId)
+      ApiCallGroup(groupWithProRoleId).then((res) => {
+        setCoachid(
+          res.userGroups?.find((userGroup) => {
+            return userGroup.role == "M";
+          })?.user.id
+        );
+      });
+  }, [userData]);
+
+  useEffect(() => {
+    console.log(coachId);
+    ApiCallUser(userData.id)
+      .then((res) => {
+        dispatch(updateUser(res));
+      })
+      .catch((err) => setError(err.response?.data.message));
+  }, []);
+
   const [activities, setActivities] = useState<Activity[]>(pathData.activities);
 
   useEffect(() => {
@@ -90,6 +121,17 @@ const Path = () => {
   const [editingActivity, setEditingActivity] = useState("");
 
   const HandleSendPath = () => {
+    setSendLoading(true);
+    ApiCallSendPath(pathData.id, "send")
+      .then((res) => {
+        setPathData(res);
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setSendLoading(false);
+      });
     dispatch(
       updatePath({
         state: "M",
@@ -97,12 +139,27 @@ const Path = () => {
     );
   };
   const HandleUnsendPath = () => {
+    setSendLoading(true);
+    ApiCallSendPath(pathData.id, "reject")
+      .then((res) => {
+        setPathData(res);
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setSendLoading(false);
+      });
     dispatch(
       updatePath({
         state: "R",
       })
     );
   };
+
+  useEffect(() => {
+    console.log(sendLoading);
+  }, [sendLoading]);
 
   const handleDeleteActivity = (id: string) => {
     ApiCallDeleteActivity(id)
@@ -133,7 +190,6 @@ const Path = () => {
         );
       })
       .catch((err) => {
-        
         setError(err.response?.data.message);
       })
       .finally(() => {
@@ -215,6 +271,8 @@ const Path = () => {
           description={pathData.description}
           state={pathData.state}
           maxHours={maxHours}
+          coachId={coachId}
+          loading={sendLoading}
           totalBudget={totalBudget}
           totalHours={totalHours}
           isMyPath={isMyPath}

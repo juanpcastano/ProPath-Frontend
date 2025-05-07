@@ -17,6 +17,8 @@ import { PrivateRoutes } from "../../models/routes";
 import { ApiCallUsers } from "../../services/apiUsersService ";
 import Table from "../../Components/Table/Table";
 import { ApiCallUser } from "../../services/apiUserService";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../Redux/States/user";
 
 interface userGroups {
   id: string;
@@ -27,11 +29,12 @@ interface userGroups {
 interface groupInfo {
   name: string;
   description: string;
-  userGroups: userGroups[];
+  userGroups?: userGroups[];
 }
 
 const Group = ({ groupId }: { groupId?: string }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const userData = useSelector((store: AppStore) => store.user);
   const [groupData, setGroupData] = useState<groupInfo>({
     name: "",
@@ -65,7 +68,8 @@ const Group = ({ groupId }: { groupId?: string }) => {
               ApiCallGroup(id)
                 .then((resp) => {
                   setGroupData(resp);
-                  if (userId == userData.id) localStorage.setItem("needsReload", "true");
+                  if (userId == userData.id)
+                    localStorage.setItem("needsReload", "true");
                 })
                 .catch((err) => {
                   setError(err.response?.data.message);
@@ -124,13 +128,18 @@ const Group = ({ groupId }: { groupId?: string }) => {
         userId === userData.id
       ) {
         localStorage.removeItem("needsReload");
-        window.location.reload();
+        setLoading(true);
+        ApiCallUser(userData.id)
+        .then((res) => {
+          dispatch(updateUser(res));
+          window.location.reload();
+        })
+        .catch((err) => setError(err.response?.data.message));
       }
     } catch (error: any) {
       setError(error.response?.data.message || "Error desconocido");
     }
   };
-
 
   useEffect(() => {
     ApiCallGroup(id)
@@ -150,7 +159,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
     setAreYouCoachOfThisGroup(userData.id == coach?.id);
     setUsers(
       groupData.userGroups
-        .map((user) => {
+        ?.map((user) => {
           return user.user;
         })
         .filter((user) => {
@@ -174,21 +183,25 @@ const Group = ({ groupId }: { groupId?: string }) => {
   }, [coach, groupData]);
 
   useEffect(() => {
-    if (
-      localStorage.getItem("needsReload") === "true"
-    ) {
+    if (localStorage.getItem("needsReload") === "true") {
       localStorage.removeItem("needsReload");
-      window.location.reload();
+      setLoading(true);
+      ApiCallUser(userData.id)
+        .then((res) => {
+          dispatch(updateUser(res));
+          window.location.reload();
+        })
+        .catch((err) => setError(err.response?.data.message));
     }
     setCoach(
-      groupData.userGroups.find((usergroup) => usergroup.role == "M")?.user
+      groupData.userGroups?.find((usergroup) => usergroup.role == "M")?.user
     );
     ApiCallUsers()
       .then((res) => {
         setAvailableMembers(
           res.filter((user) => {
             return !groupData.userGroups
-              .map((user) => {
+              ?.map((user) => {
                 return user.user.id;
               })
               .includes(user.id);
@@ -244,6 +257,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
                 const userGroup: group = {
                   name: formData.get("name") as string,
                   description: formData.get("description") as string,
+                  userGroups: groupData.userGroups,
                 };
                 setEditingTitleAndDescription(false);
                 ApiCallUpdateGroup(id, userGroup)

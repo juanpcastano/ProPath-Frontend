@@ -1,6 +1,7 @@
 //ejemplo pa hacer llamadas a la api
 
 import Api from "../api/Api";
+import { UserInfo } from "../models/user.model";
 
 export const ApiCallGroups = async () => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
@@ -30,6 +31,8 @@ export interface groupMember {
 export interface group {
   name: string;
   description: string;
+  userGroups?: {id: string, role: string, user: UserInfo
+  }[]
 }
 
 export interface userGroup {
@@ -58,17 +61,9 @@ export const ApiCallAddGroup = async (group: group) => {
   }
 };
 
-export const ApiCallGroup = async (id: string) => {
+export const ApiCallGroup = async (id: string): Promise<group> => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
     // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
-
-    return [
-      {
-        id: "1",
-        name: "chambeadores",
-        description: "Descripción de chambeadores",
-      },
-    ];
   }
 
   try {

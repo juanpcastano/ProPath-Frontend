@@ -11,6 +11,8 @@ interface TitleProps {
   state: string;
   totalHours: number;
   maxHours: number;
+  coachId?: string;
+  loading?: boolean;
   totalBudget: number;
   isMyPath: boolean;
   handleSendPath: () => void;
@@ -25,6 +27,8 @@ const Title = ({
   state,
   totalHours,
   maxHours,
+  coachId,
+  loading,
   totalBudget,
   isMyPath,
   handleSendPath,
@@ -141,15 +145,21 @@ const Title = ({
             setEditing(false);
             handleSendPath();
           }}
-          disabled={totalHours < maxHours}
+          disabled={loading || !coachId || totalHours < maxHours}
           className={`${styles.button} ${
-            totalHours >= maxHours ? "dark-gradient-primary" : styles.inactive
+            coachId && totalHours >= maxHours
+              ? "dark-gradient-primary"
+              : styles.inactive
           }`}
         >
           <p className={styles.text}>
-            {totalHours >= maxHours
-              ? "Enviar path a mi coach"
-              : "Completa las horas necesarias"}
+            {!loading
+              ? coachId
+                ? totalHours >= maxHours
+                  ? "Enviar path a mi coach"
+                  : "Completa las horas necesarias"
+                : "Aún no tienes un coach asignado"
+              : "Cargando..."}
           </p>
         </button>
       )}
@@ -161,7 +171,9 @@ const Title = ({
           }}
           className={`${styles.button} ${"dark-gradient-secondary"}`}
         >
-          <p className={styles.text}>Cancelar Envío</p>
+          <p className={styles.text}>{!loading
+              ? "Cancelar Envío"
+              : "Cargando..."}</p>
         </button>
       )}
     </div>

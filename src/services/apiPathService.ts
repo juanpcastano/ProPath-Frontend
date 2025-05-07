@@ -382,3 +382,22 @@ export const ApiCallGetSendedPaths = async (coachId: string) => {
   }
 };
 
+export const ApiCallSendPath = async (id: string, action: string) => {
+  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
+    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
+    return {};
+  }
+
+  try {
+    const result = await Api.put("/path-management/paths/"+ id +"/" + action , {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(result.data);
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
