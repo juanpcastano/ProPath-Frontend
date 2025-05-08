@@ -41,7 +41,6 @@ const Register = () => {
       navigate("/history");
     } catch (error) {
       let AxiosErr = error as AxiosError;
-      console.log((AxiosErr.response?.data as { message: string }).message);
       setError((AxiosErr.response?.data as { message: string }).message);
     }
   };

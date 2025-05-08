@@ -15,6 +15,7 @@ interface TitleProps {
   loading?: boolean;
   totalBudget: number;
   isMyPath: boolean;
+  amICoachOfThisPath: boolean;
   handleSendPath: () => void;
   handleUnsendPath: () => void;
   actionable: boolean;
@@ -31,13 +32,13 @@ const Title = ({
   loading,
   totalBudget,
   isMyPath,
+  amICoachOfThisPath,
   handleSendPath,
   handleUnsendPath,
   actionable,
 }: TitleProps) => {
   const [editing, setEditing] = useState(false);
   const dispatch = useDispatch();
-
   return (
     <div className={styles.mainContainer}>
       <div className={styles.title}>
@@ -78,14 +79,13 @@ const Title = ({
                 };
                 setEditing(false);
                 ApiCallUpdatePath(path)
-                  .then((res) => {
+                  .then(() => {
                     dispatch(
                       updatePath({
                         name: formData.get("name") as string,
                         description: formData.get("description") as string,
                       })
                     );
-                    console.log(res);
                   })
                   .catch((err) => {
                     console.error("Err: ", err.response?.data.message);
@@ -163,17 +163,27 @@ const Title = ({
           </p>
         </button>
       )}
+      {amICoachOfThisPath && (
+        <>
+          <button className={`${styles.button} ${"dark-gradient-primary"}`}>
+            Aceptar Propuesta
+          </button>
+          <button className={`${styles.button} ${"dark-gradient-secondary"}`}>
+            Rechazar Propuesta
+          </button>
+        </>
+      )}
 
-      {state == "M" && (
+      {state == "M" && isMyPath && (
         <button
           onClick={() => {
             handleUnsendPath();
           }}
           className={`${styles.button} ${"dark-gradient-secondary"}`}
         >
-          <p className={styles.text}>{!loading
-              ? "Cancelar Envío"
-              : "Cargando..."}</p>
+          <p className={styles.text}>
+            {!loading ? "Cancelar Envío" : "Cargando..."}
+          </p>
         </button>
       )}
     </div>

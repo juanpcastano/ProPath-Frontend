@@ -31,7 +31,6 @@ const MyGroups = () => {
   }, []);
 
   useEffect(() => {
-    console.log(groups);
 
     setTabs(
       groups.map((UserGroup): tab => {

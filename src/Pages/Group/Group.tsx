@@ -129,12 +129,7 @@ const Group = ({ groupId }: { groupId?: string }) => {
       ) {
         localStorage.removeItem("needsReload");
         setLoading(true);
-        ApiCallUser(userData.id)
-        .then((res) => {
-          dispatch(updateUser(res));
-          window.location.reload();
-        })
-        .catch((err) => setError(err.response?.data.message));
+        window.location.reload();
       }
     } catch (error: any) {
       setError(error.response?.data.message || "Error desconocido");
@@ -145,7 +140,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
     ApiCallGroup(id)
       .then((resp) => {
         setGroupData(resp);
-        console.log(resp);
       })
       .catch((err) => {
         setError(err.response?.data.message);
@@ -459,7 +453,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
                     ApiCallGroup(id)
                       .then((resp) => {
                         setGroupData(resp);
-                        console.log(resp);
                       })
                       .catch((err) => {
                         setError(err.response?.data.message);

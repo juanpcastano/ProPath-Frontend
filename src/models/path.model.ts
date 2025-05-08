@@ -19,6 +19,7 @@ export interface Path{
     totalHours: number;
     totalBudget: number;
     activities: Activity[];
+    userId?: string
 }
 
 export interface Comment{

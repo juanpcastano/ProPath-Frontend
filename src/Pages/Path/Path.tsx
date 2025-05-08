@@ -25,7 +25,8 @@ import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
 import { ApiCallGroup } from "../../services/apiGroupsService";
 import { ApiCallUser } from "../../services/apiUserService";
-import { updateUser } from "../../Redux/States/user";
+import { EmptyUserState, updateUser } from "../../Redux/States/user";
+import { UserInfo } from "../../models/user.model";
 
 const Path = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,9 @@ const Path = () => {
   const userData = useSelector((store: AppStore) => store.user);
 
   const [coachId, setCoachid] = useState<string | undefined>(undefined);
+  const [authorData, setAuthorData] = useState<UserInfo>(EmptyUserState);
+
+  const [amICoachOfThisPath, setAmICoachOfThisPath] = useState<boolean|undefined>(false);
 
   const [loading, setLoading] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
@@ -83,7 +87,40 @@ const Path = () => {
   }, [pathState, id]);
 
   useEffect(() => {
-    const groupWithProRoleId = userData.userGroups?.find((userGroup) => {
+    console.log(authorData);
+    setAmICoachOfThisPath(
+      authorData.userGroups?.some(async (userGroup) => {
+        try {
+          const res = await ApiCallGroup(userGroup.group.id);
+          res.userGroups?.some((ug => { ug.role == "M"; }));
+        } catch (err:any) {
+          return setError(err.response?.data.message);
+        }
+      })
+    );
+  }, [authorData]);
+
+  useEffect(() => {
+    console.log("asdas",amICoachOfThisPath);
+    
+  }, [amICoachOfThisPath]);
+
+
+
+  useEffect(() => {
+    if (isMyPath) {
+      setAuthorData(userData);
+    } else {
+      if (pathData.userId)
+        ApiCallUser(pathData.userId)
+          .then((res) => {
+            setAuthorData(res);
+          })
+          .catch((err) => {
+            setError(err.response?.data.message);
+          });
+    }
+    const groupWithProRoleId = authorData?.userGroups?.find((userGroup) => {
       return userGroup.role == "P";
     })?.group.id;
 
@@ -98,7 +135,6 @@ const Path = () => {
   }, [userData]);
 
   useEffect(() => {
-    console.log(coachId);
     ApiCallUser(userData.id)
       .then((res) => {
         dispatch(updateUser(res));
@@ -157,9 +193,6 @@ const Path = () => {
     );
   };
 
-  useEffect(() => {
-    console.log(sendLoading);
-  }, [sendLoading]);
 
   const handleDeleteActivity = (id: string) => {
     ApiCallDeleteActivity(id)
@@ -246,7 +279,6 @@ const Path = () => {
   useEffect(() => {
     setAvailableHours(maxHours - totalHours);
   }, [totalHours]);
-
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
   if (JSON.stringify(pathData) === JSON.stringify(emptyPathState)) {
@@ -274,6 +306,7 @@ const Path = () => {
           coachId={coachId}
           loading={sendLoading}
           totalBudget={totalBudget}
+          amICoachOfThisPath={true}
           totalHours={totalHours}
           isMyPath={isMyPath}
           handleSendPath={HandleSendPath}

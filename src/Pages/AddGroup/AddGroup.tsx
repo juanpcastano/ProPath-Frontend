@@ -51,7 +51,6 @@ const AddGroup = () => {
               .catch((err) => {
                 setError(err.response?.data.message);
               });
-            console.log(res);
           })
           .catch((err) => {
             setError(err.response?.data.message);
