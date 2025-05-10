@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./Title.module.css";
 import { useDispatch } from "react-redux";
 import { updatePath } from "../../../Redux/States/path";
-import { ApiCallUpdatePath } from "../../../services/apiPathService";
+import {ApiCallUpdatePath } from "../../../services/apiPathService";
 
 interface TitleProps {
   pathId: string;
@@ -11,6 +11,7 @@ interface TitleProps {
   state: string;
   totalHours: number;
   maxHours: number;
+  pathState: string;
   coachId?: string;
   loading?: boolean;
   totalBudget: number;
@@ -18,6 +19,8 @@ interface TitleProps {
   amICoachOfThisPath: boolean;
   handleSendPath: () => void;
   handleUnsendPath: () => void;
+  handleApprovePath: () => void;
+  handleRejectPath: () => void;
   actionable: boolean;
 }
 
@@ -28,6 +31,7 @@ const Title = ({
   state,
   totalHours,
   maxHours,
+  pathState,
   coachId,
   loading,
   totalBudget,
@@ -35,6 +39,8 @@ const Title = ({
   amICoachOfThisPath,
   handleSendPath,
   handleUnsendPath,
+  handleApprovePath,
+  handleRejectPath,
   actionable,
 }: TitleProps) => {
   const [editing, setEditing] = useState(false);
@@ -163,12 +169,14 @@ const Title = ({
           </p>
         </button>
       )}
-      {amICoachOfThisPath && (
+      {amICoachOfThisPath && !isMyPath && pathState == "M" && (
         <>
-          <button className={`${styles.button} ${"dark-gradient-primary"}`}>
+          <button className={`${styles.button} ${"dark-gradient-primary"}`}
+          onClick={()=>{handleApprovePath()}}>
             Aceptar Propuesta
           </button>
-          <button className={`${styles.button} ${"dark-gradient-secondary"}`}>
+          <button className={`${styles.button} ${"dark-gradient-secondary"}`}
+          onClick={()=>{handleRejectPath()}}>
             Rechazar Propuesta
           </button>
         </>

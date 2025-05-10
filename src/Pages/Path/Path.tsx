@@ -174,6 +174,25 @@ const Path = () => {
       })
     );
   };
+  const HandleApprovePath = () => {
+    setSendLoading(true);
+    ApiCallSendPath(pathData.id, "approve")
+      .then((res) => {
+        setPathData(res);
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setSendLoading(false);
+      });
+    dispatch(
+      updatePath({
+        state: "A",
+      })
+    );
+  };
+
   const HandleUnsendPath = () => {
     setSendLoading(true);
     ApiCallSendPath(pathData.id, "reject")
@@ -303,6 +322,7 @@ const Path = () => {
           description={pathData.description}
           state={pathData.state}
           maxHours={maxHours}
+          pathState={pathData.state}
           coachId={coachId}
           loading={sendLoading}
           totalBudget={totalBudget}
@@ -311,6 +331,8 @@ const Path = () => {
           isMyPath={isMyPath}
           handleSendPath={HandleSendPath}
           handleUnsendPath={HandleUnsendPath}
+          handleApprovePath={HandleApprovePath}
+          handleRejectPath={HandleUnsendPath}
           actionable={isMyPath && pathData.state == "R"}
         />
 
