@@ -1,3 +1,8 @@
+export interface quartile{
+    quartile: string,
+    year: number
+}
+
 export interface Activity{
     id: string;
     name: string;
@@ -20,6 +25,8 @@ export interface Path{
     totalBudget: number;
     activities: Activity[];
     userId?: string
+    quartile?: quartile;
+    quartileString?: string;
 }
 
 export interface Comment{

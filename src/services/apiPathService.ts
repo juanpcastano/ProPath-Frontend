@@ -17,10 +17,7 @@ export const ApiCallGetPath = async (id: string) => {
 };
 
 // pablo, esto usa la cookie, no tienes que mandarle un body
-export const ApiCallGetUserPaths = async () => {
-  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    return;
-  }
+export const ApiCallGetUserPaths = async ():Promise<Path[]> => {
 
   try {
     const result = await Api.get(`/path-management/user/paths`, {
@@ -28,7 +25,7 @@ export const ApiCallGetUserPaths = async () => {
         "Content-Type": "application/json",
       },
     });
-    return result.data;
+    return Object.values(result.data);
   } catch (err) {
     console.error("Error:", err);
     throw err;

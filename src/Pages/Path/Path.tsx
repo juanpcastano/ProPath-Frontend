@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import styles from "./Path.module.css";
 import { generateUUID } from "../../services/uuidGenerator";
 import { Activity, Comment } from "../../models/path.model";
-import { emptyPathState, updatePath } from "../../Redux/States/path";
+import { emptyPathState } from "../../Redux/States/path";
 import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
 import ActivityBlock from "./Activity Block/ActivityBlock";
@@ -20,6 +20,7 @@ import {
   ApiCallGetPath,
   ApiCallGetUserPaths,
   ApiCallSendPath,
+  ApiCallUpdatePath,
 } from "../../services/apiPathService";
 import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
@@ -27,25 +28,25 @@ import { ApiCallGroup } from "../../services/apiGroupsService";
 import { ApiCallUser } from "../../services/apiUserService";
 import { EmptyUserState, updateUser } from "../../Redux/States/user";
 import { UserInfo } from "../../models/user.model";
+import { getActualQuartile, parsePath } from "../../services/quartile";
 
 const Path = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const pathState = useSelector((store: AppStore) => store.path);
   const userData = useSelector((store: AppStore) => store.user);
 
   const [coachId, setCoachid] = useState<string | undefined>(undefined);
   const [authorData, setAuthorData] = useState<UserInfo>(EmptyUserState);
 
-  const [amICoachOfThisPath, setAmICoachOfThisPath] = useState<boolean|undefined>(false);
+  const [amICoachOfThisPath, setAmICoachOfThisPath] = useState<
+    boolean | undefined
+  >(false);
 
   const [loading, setLoading] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
   const [error, setError] = useState("");
   const [isMyPath, setIsMyPath] = useState<boolean>(!id);
-  const [pathData, setPathData] = useState(
-    isMyPath ? pathState : emptyPathState
-  );
+  const [pathData, setPathData] = useState(emptyPathState);
 
   useEffect(() => {
     if (id) {
@@ -65,7 +66,17 @@ const Path = () => {
     } else {
       ApiCallGetUserPaths()
         .then((resp) => {
-          if (resp[0]) dispatch(updatePath(resp[0]));
+          const parsedPaths = resp.map((p) => {
+            return parsePath(p);
+          });
+          const actualPath = parsedPaths.find((p) => {
+            return p.quartileString == getActualQuartile();
+          });
+          if (actualPath) {
+            setPathData(actualPath);
+          } else {
+            setPathData(emptyPathState);
+          }
         })
         .catch((err) => {
           if (err.response?.status === 400) {
@@ -81,31 +92,19 @@ const Path = () => {
   }, [id]);
 
   useEffect(() => {
-    if (!id) {
-      setPathData(pathState);
-    }
-  }, [pathState, id]);
-
-  useEffect(() => {
-    console.log(authorData);
     setAmICoachOfThisPath(
       authorData.userGroups?.some(async (userGroup) => {
         try {
           const res = await ApiCallGroup(userGroup.group.id);
-          res.userGroups?.some((ug => { ug.role == "M"; }));
-        } catch (err:any) {
+          res.userGroups?.some((ug) => {
+            ug.role == "M";
+          });
+        } catch (err: any) {
           return setError(err.response?.data.message);
         }
       })
     );
   }, [authorData]);
-
-  useEffect(() => {
-    console.log("asdas",amICoachOfThisPath);
-    
-  }, [amICoachOfThisPath]);
-
-
 
   useEffect(() => {
     if (isMyPath) {
@@ -168,11 +167,6 @@ const Path = () => {
       .finally(() => {
         setSendLoading(false);
       });
-    dispatch(
-      updatePath({
-        state: "M",
-      })
-    );
   };
   const HandleApprovePath = () => {
     setSendLoading(true);
@@ -186,11 +180,6 @@ const Path = () => {
       .finally(() => {
         setSendLoading(false);
       });
-    dispatch(
-      updatePath({
-        state: "A",
-      })
-    );
   };
 
   const HandleUnsendPath = () => {
@@ -205,23 +194,12 @@ const Path = () => {
       .finally(() => {
         setSendLoading(false);
       });
-    dispatch(
-      updatePath({
-        state: "R",
-      })
-    );
   };
-
 
   const handleDeleteActivity = (id: string) => {
     ApiCallDeleteActivity(id)
       .then(() => {
         setActivities(activities.filter((activity) => activity.id !== id));
-        dispatch(
-          updatePath({
-            activities: activities.filter((activity) => activity.id !== id),
-          })
-        );
       })
       .catch((err) => {
         setError(err.response?.data.message);
@@ -232,7 +210,21 @@ const Path = () => {
     setEditingActivity(id);
   };
 
-  const handleSaveEditActivity = (updatedActivity: Activity) => {
+  const HandleEditTitle = (path: {
+    id: string;
+    name: string;
+    description: string;
+  }) => {
+    ApiCallUpdatePath(path)
+      .then((res) => {
+        setPathData(res);
+      })
+      .catch((err) => {
+        console.error("Err: ", err.response?.data.message);
+      });
+  };
+
+  const HandleSaveEditActivity = (updatedActivity: Activity) => {
     ApiCallEditActivity(updatedActivity.id, updatedActivity)
       .then(() => {
         setActivities(
@@ -283,7 +275,6 @@ const Path = () => {
     });
 
     setActivities(updatedActivities);
-    dispatch(updatePath({ activities: updatedActivities }));
   };
 
   useEffect(() => {
@@ -333,6 +324,7 @@ const Path = () => {
           handleUnsendPath={HandleUnsendPath}
           handleApprovePath={HandleApprovePath}
           handleRejectPath={HandleUnsendPath}
+          handleEditTitle={HandleEditTitle}
           actionable={isMyPath && pathData.state == "R"}
         />
 
@@ -346,7 +338,7 @@ const Path = () => {
               handleDelete={handleDeleteActivity}
               handleCommentSubmit={handleCommentSubmit}
               handleSetEditingActivity={handleSetEditingActivity}
-              handleSaveEdit={handleSaveEditActivity}
+              handleSaveEdit={HandleSaveEditActivity}
               actionable={isMyPath && pathData.state == "R"}
             />
           );

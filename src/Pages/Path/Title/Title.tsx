@@ -1,8 +1,5 @@
 import { useState } from "react";
 import styles from "./Title.module.css";
-import { useDispatch } from "react-redux";
-import { updatePath } from "../../../Redux/States/path";
-import {ApiCallUpdatePath } from "../../../services/apiPathService";
 
 interface TitleProps {
   pathId: string;
@@ -21,6 +18,15 @@ interface TitleProps {
   handleUnsendPath: () => void;
   handleApprovePath: () => void;
   handleRejectPath: () => void;
+  handleEditTitle: ({
+    id,
+    name,
+    description,
+  }: {
+    id: string;
+    name: string;
+    description: string;
+  }) => void;
   actionable: boolean;
 }
 
@@ -41,10 +47,10 @@ const Title = ({
   handleUnsendPath,
   handleApprovePath,
   handleRejectPath,
+  handleEditTitle,
   actionable,
 }: TitleProps) => {
   const [editing, setEditing] = useState(false);
-  const dispatch = useDispatch();
   return (
     <div className={styles.mainContainer}>
       <div className={styles.title}>
@@ -84,19 +90,7 @@ const Title = ({
                   description: formData.get("description") as string,
                 };
                 setEditing(false);
-                ApiCallUpdatePath(path)
-                  .then(() => {
-                    dispatch(
-                      updatePath({
-                        name: formData.get("name") as string,
-                        description: formData.get("description") as string,
-                      })
-                    );
-                  })
-                  .catch((err) => {
-                    console.error("Err: ", err.response?.data.message);
-                  });
-                e.currentTarget.reset();
+                handleEditTitle(path);
               }}
             >
               <div className={styles.formContainer}>
@@ -171,12 +165,20 @@ const Title = ({
       )}
       {amICoachOfThisPath && !isMyPath && pathState == "M" && (
         <>
-          <button className={`${styles.button} ${"dark-gradient-primary"}`}
-          onClick={()=>{handleApprovePath()}}>
+          <button
+            className={`${styles.button} ${"dark-gradient-primary"}`}
+            onClick={() => {
+              handleApprovePath();
+            }}
+          >
             Aceptar Propuesta
           </button>
-          <button className={`${styles.button} ${"dark-gradient-secondary"}`}
-          onClick={()=>{handleRejectPath()}}>
+          <button
+            className={`${styles.button} ${"dark-gradient-secondary"}`}
+            onClick={() => {
+              handleRejectPath();
+            }}
+          >
             Rechazar Propuesta
           </button>
         </>
