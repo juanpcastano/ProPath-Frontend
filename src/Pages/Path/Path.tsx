@@ -44,12 +44,11 @@ const Path = () => {
   const [isEditingPage, setIsEditingPage] = useState(false);
   const [isMyPath, setIsMyPath] = useState<boolean>(!id);
 
-  
   const [loading, setLoading] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
   const [error, setError] = useState("");
   const [pathData, setPathData] = useState(emptyPathState);
-  
+
   useEffect(() => {
     setEditable(!id && isActual && pathData.state == "R");
     setAproving(
@@ -58,7 +57,6 @@ const Path = () => {
     setIsMyPath(!id || pathData.userId == userData.id);
     setIsEditingPage(!id && isActual);
   }, [amICoachOfThisPath, pathData]);
-  
 
   useEffect(() => {
     const fetchPathData = async () => {
@@ -307,7 +305,7 @@ const Path = () => {
           name={pathData.name}
           authorName={authorData.name}
           description={pathData.description}
-          state={isActual? pathData.state: "F"}
+          state={isActual ? pathData.state : "F"}
           maxHours={maxHours}
           pathState={pathData.state}
           coachId={coachId}

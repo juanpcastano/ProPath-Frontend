@@ -4,8 +4,6 @@ import { ApiCallGetSendedPaths } from "../../../services/apiPathService";
 import Error from "../../Error/Error";
 import Loading from "../../../Components/Loading/Loading";
 import { PrivateRoutes } from "../../../models/routes";
-import { useSelector } from "react-redux";
-import { AppStore } from "../../../Redux/store";
 import { Path } from "../../../models/path.model";
 import { getActualQuartile, parsePath } from "../../../services/quartile";
 
@@ -13,7 +11,6 @@ const SendedPaths = () => {
   const [Paths, setPaths] = useState<Path[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const userData = useSelector((store: AppStore) => store.user);
   function calcTotalHours(path: Path): number {
     return path.activities.reduce(
       (total, actividad) => total + actividad.hours,
@@ -28,7 +25,7 @@ const SendedPaths = () => {
     );
   }
   useEffect(() => {
-    ApiCallGetSendedPaths(userData.id)
+    ApiCallGetSendedPaths()
       .then((res) => {
         setPaths(
           res

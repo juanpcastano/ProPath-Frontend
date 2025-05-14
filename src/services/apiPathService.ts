@@ -1,8 +1,7 @@
 import Api from "../api/Api";
 import { Path } from "../models/path.model";
 
-export const ApiCallGetPath = async (id: string):Promise<Path> => {
-  
+export const ApiCallGetPath = async (id: string): Promise<Path> => {
   try {
     const result = await Api.get("/path-management/paths/" + id, {
       headers: {
@@ -17,8 +16,7 @@ export const ApiCallGetPath = async (id: string):Promise<Path> => {
 };
 
 // pablo, esto usa la cookie, no tienes que mandarle un body
-export const ApiCallGetUserPaths = async ():Promise<Path[]> => {
-
+export const ApiCallGetUserPaths = async (): Promise<Path[]> => {
   try {
     const result = await Api.get(`/path-management/user/paths`, {
       headers: {
@@ -154,18 +152,18 @@ export const ApiCallEditActivity = async (
   }
 };
 
-export const ApiCallGetSendedPaths = async (
-  coachId: string
-): Promise<Path[]> => {
+export const ApiCallGetSendedPaths = async (): Promise<Path[]> => {
   try {
     const result = await Api.get(
-      `/path-management/paths/${coachId}/paths-in-review`,
+      `/path-management/paths/paths-in-review/coach`,
       {
         headers: {
           "Content-Type": "application/json",
         },
       }
     );
+    console.log(result.data);
+    
     return result.data;
   } catch (err) {
     console.error("Error:", err);
@@ -173,9 +171,7 @@ export const ApiCallGetSendedPaths = async (
   }
 };
 
-
-export const ApiCallGetApprovedPaths = async (
-): Promise<Path[]> => {
+export const ApiCallGetApprovedPaths = async (): Promise<Path[]> => {
   try {
     const result = await Api.get(
       `/path-management/paths/paths-in-review/admin`,
