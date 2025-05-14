@@ -46,7 +46,7 @@ const InitialForm = () => {
           <div className={styles.initialForm}>
             <div className={styles.textLimiter}>
               <p className={styles.info}>
-                Parece que aún no tienes un path registrado
+                Parece que aún no tienes un path registrado en este periodo
               </p>
 
               <input

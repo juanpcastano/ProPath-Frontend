@@ -71,7 +71,6 @@ form .button{
 }
 
 p.info{
-    font-size: 1.24rem;
-    margin: 0;
+    margin: 0 1rem;
     text-align: center;
 }
