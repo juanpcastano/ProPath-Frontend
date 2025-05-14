@@ -41,7 +41,7 @@ const MyGroups = () => {
           },
           {
             name: "Paths enviados",
-            content: <SendedPaths />,
+            content: <SendedPaths role="coach" />,
           },
         ];
         if (UserGroup.role == "M")

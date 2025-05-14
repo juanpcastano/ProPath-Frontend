@@ -152,18 +152,16 @@ export const ApiCallEditActivity = async (
   }
 };
 
-export const ApiCallGetSendedPaths = async (): Promise<Path[]> => {
+export const ApiCallGetSendedPaths = async (role: string): Promise<Path[]> => {
   try {
     const result = await Api.get(
-      `/path-management/paths/paths-in-review/coach`,
+      `/path-management/paths/paths-in-review/${role}`,
       {
         headers: {
           "Content-Type": "application/json",
         },
       }
     );
-    console.log(result.data);
-    
     return result.data;
   } catch (err) {
     console.error("Error:", err);

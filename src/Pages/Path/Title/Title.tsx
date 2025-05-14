@@ -18,6 +18,7 @@ interface TitleProps {
   handleSendPath: () => void;
   handleUnsendPath: () => void;
   handleApprovePath: () => void;
+  handleActivatePath: () => void;
   handleRejectPath: () => void;
   handleEditTitle: ({
     id,
@@ -50,6 +51,7 @@ const Title = ({
   handleSendPath,
   handleUnsendPath,
   handleApprovePath,
+  handleActivatePath,
   handleRejectPath,
   handleEditTitle,
   isEditingPage,
@@ -187,10 +189,10 @@ const Title = ({
             <button
               className={`${styles.button} ${"dark-gradient-primary"}`}
               onClick={() => {
-                handleApprovePath();
+                state == "M" ? handleApprovePath() : handleActivatePath();
               }}
             >
-              Aceptar Propuesta
+              {state == "M" ? "Aprobar Propuesta" : "Activar Path"}
             </button>
             <button
               className={`${styles.button} ${"dark-gradient-secondary"}`}

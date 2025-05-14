@@ -7,7 +7,11 @@ import { PrivateRoutes } from "../../../models/routes";
 import { Path } from "../../../models/path.model";
 import { getActualQuartile, parsePath } from "../../../services/quartile";
 
-const SendedPaths = () => {
+interface SendedPathsProps {
+  role: string
+}
+
+const SendedPaths = ({role}:SendedPathsProps) => {
   const [Paths, setPaths] = useState<Path[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -25,7 +29,7 @@ const SendedPaths = () => {
     );
   }
   useEffect(() => {
-    ApiCallGetSendedPaths()
+    ApiCallGetSendedPaths(role)
       .then((res) => {
         setPaths(
           res

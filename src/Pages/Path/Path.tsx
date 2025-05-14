@@ -52,7 +52,7 @@ const Path = () => {
   useEffect(() => {
     setEditable(!id && isActual && pathData.state == "R");
     setAproving(
-      amICoachOfThisPath && isActual && !isMyPath && pathData.state == "M"
+      amICoachOfThisPath && isActual && !isMyPath && ["M","A"].includes(pathData.state)
     );
     setIsMyPath(!id || pathData.userId == userData.id);
     setIsEditingPage(!id && isActual);
@@ -161,9 +161,24 @@ const Path = () => {
         setSendLoading(false);
       });
   };
+
   const HandleApprovePath = () => {
     setSendLoading(true);
     ApiCallSendPath(pathData.id, "approve")
+      .then((res) => {
+        setPathData(res);
+      })
+      .catch((err) => {
+        setError(err.response?.data.message);
+      })
+      .finally(() => {
+        setSendLoading(false);
+      });
+  };
+
+  const HandleActivatePath = () => {
+    setSendLoading(true);
+    ApiCallSendPath(pathData.id, "activate")
       .then((res) => {
         setPathData(res);
       })
@@ -317,6 +332,7 @@ const Path = () => {
           handleSendPath={HandleSendPath}
           handleUnsendPath={HandleUnsendPath}
           handleApprovePath={HandleApprovePath}
+          handleActivatePath={HandleActivatePath}
           handleRejectPath={HandleUnsendPath}
           handleEditTitle={HandleEditTitle}
           isEditingPage={isEditingPage}
