@@ -6,7 +6,7 @@ interface ActivityProps {
   editingActivity: string;
   activity: Activity;
   pathId: string;
-  actionable: boolean;
+  editable: boolean;
   handleDelete: (id: string) => void;
   handleSetEditingActivity: (id: string) => void;
   handleCommentSubmit: (id: string, comment: string) => void;
@@ -17,7 +17,7 @@ const ActivityBlock = ({
   editingActivity,
   activity,
   pathId,
-  actionable,
+  editable,
   handleDelete,
   handleCommentSubmit,
   handleSetEditingActivity,
@@ -25,16 +25,16 @@ const ActivityBlock = ({
 }: ActivityProps) => {
   const today = new Date().toISOString().split("T")[0];
   const [editingInitialDate, setEditingInitialDate] = useState(today);
-  const [state, setState] = useState<string>(activity.state)
+  const [state, setState] = useState<string>(activity.state);
 
   if (state == "E") {
-    setState("En Curso")
+    setState("En Curso");
   }
   if (state == "P") {
-    setState("Pendiente")
+    setState("Pendiente");
   }
   if (state == "C") {
-    setState("En Curso")
+    setState("Completada");
   }
   if (editingActivity != activity.id) {
     return (
@@ -57,7 +57,7 @@ const ActivityBlock = ({
               <strong>{"Estado: " + state}</strong>
             </p>
           </div>
-          {actionable && (
+          {editable && (
             <div className={styles.buttonsContainer}>
               <link
                 rel="stylesheet"
@@ -82,16 +82,16 @@ const ActivityBlock = ({
         </div>
         {activity.comments && activity.comments.length > 0 && (
           <div className={styles.commentsContainer}>
-            {activity.comments.map((comment) => (
-              <>
+            {activity.comments.map((comment, index) => (
+              <div key={index}>
                 <hr className={`${styles.noMarginTop} ${styles.noMarginBot}`} />
-                <div key={comment.id} className={styles.comment}>
+                <div className={styles.comment}>
                   <p>
                     <strong>{comment.authorName}</strong>: {comment.message}
                   </p>
                   <small>{new Date(comment.date).toLocaleString()}</small>
                 </div>
-              </>
+              </div>
             ))}
           </div>
         )}

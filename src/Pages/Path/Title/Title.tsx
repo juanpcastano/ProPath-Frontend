@@ -27,7 +27,9 @@ interface TitleProps {
     name: string;
     description: string;
   }) => void;
-  actionable: boolean;
+  isEditingPage: boolean;
+  editable: boolean;
+  aproving: boolean;
 }
 
 const Title = ({
@@ -37,18 +39,18 @@ const Title = ({
   state,
   totalHours,
   maxHours,
-  pathState,
   coachId,
   loading,
   totalBudget,
   isMyPath,
-  amICoachOfThisPath,
   handleSendPath,
   handleUnsendPath,
   handleApprovePath,
   handleRejectPath,
   handleEditTitle,
-  actionable,
+  isEditingPage,
+  editable,
+  aproving,
 }: TitleProps) => {
   const [editing, setEditing] = useState(false);
   return (
@@ -61,7 +63,7 @@ const Title = ({
               <p className={styles.description}>{description}</p>
             </div>
 
-            {actionable && (
+            {editable && (
               <>
                 <link
                   rel="stylesheet"
@@ -139,7 +141,7 @@ const Title = ({
         <p>Presupuesto Total: ${totalBudget}</p>
       </div>
 
-      {state == "R" && isMyPath && (
+      {editable && isMyPath && (
         <button
           onClick={() => {
             setEditing(false);
@@ -163,8 +165,9 @@ const Title = ({
           </p>
         </button>
       )}
-      {amICoachOfThisPath && !isMyPath && pathState == "M" && (
+      {aproving && (
         <>
+        <div></div>
           <button
             className={`${styles.button} ${"dark-gradient-primary"}`}
             onClick={() => {
@@ -184,7 +187,7 @@ const Title = ({
         </>
       )}
 
-      {state == "M" && isMyPath && (
+      {isEditingPage && state == "M" && (
         <button
           onClick={() => {
             handleUnsendPath();

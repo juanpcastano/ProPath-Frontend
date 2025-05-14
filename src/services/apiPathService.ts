@@ -1,7 +1,7 @@
 import Api from "../api/Api";
 import { Path } from "../models/path.model";
 
-export const ApiCallGetPath = async (id: string) => {
+export const ApiCallGetPath = async (id: string):Promise<Path> => {
   
   try {
     const result = await Api.get("/path-management/paths/" + id, {
@@ -35,7 +35,7 @@ export const ApiCallGetUserPaths = async ():Promise<Path[]> => {
 export const ApiCallAddPath = async (path: {
   name: string;
   description: string;
-}) => {
+}): Promise<Path> => {
   if (import.meta.env.VITE_ENVIROMENT == "mockup") {
     // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
   }

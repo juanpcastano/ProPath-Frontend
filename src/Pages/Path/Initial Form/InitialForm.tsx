@@ -2,7 +2,6 @@ import { generateUUID } from "../../../services/uuidGenerator";
 import styles from "./InitialForm.module.css";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../../Redux/States/user";
-import { updatePath } from "../../../Redux/States/path";
 import { ApiCallAddPath } from "../../../services/apiPathService";
 import Error from "../../Error/Error";
 import { useState } from "react";
@@ -19,23 +18,12 @@ const InitialForm = () => {
             const formData = new FormData(e.currentTarget);
             let pathId = generateUUID();
             dispatch(updateUser({ pathId: pathId }));
-            dispatch(
-              updatePath({
-                name: formData.get("name") as string,
-                description: formData.get("description") as string,
-                state: "R",
-              })
-            );
             ApiCallAddPath({
               name: formData.get("name") as string,
               description: formData.get("description") as string,
             })
-              .then((res) => {
-                dispatch(
-                  updatePath({
-                    id: res.id,
-                  })
-                );
+              .then(() => {
+                window.location.reload();
               })
               .catch((err) => {
                 setError(err.response?.data.message);

@@ -7,6 +7,7 @@ import { PrivateRoutes } from "../../../models/routes";
 import { useSelector } from "react-redux";
 import { AppStore } from "../../../Redux/store";
 import { Path } from "../../../models/path.model";
+import { getActualQuartile, parsePath } from "../../../services/quartile";
 
 const SendedPaths = () => {
   const [Paths, setPaths] = useState<Path[]>([]);
@@ -35,6 +36,8 @@ const SendedPaths = () => {
               totalBudget: calcTotalBudget(path),
               totalHours: calcTotalHours(path)
              };
+          }).filter((path)=>{
+            return parsePath(path).quartileString == getActualQuartile()
           })
         );
       })

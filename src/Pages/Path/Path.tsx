@@ -38,57 +38,56 @@ const Path = () => {
   const [coachId, setCoachid] = useState<string | undefined>(undefined);
   const [authorData, setAuthorData] = useState<UserInfo>(EmptyUserState);
 
-  const [amICoachOfThisPath, setAmICoachOfThisPath] = useState<
-    boolean | undefined
-  >(false);
+  const [amICoachOfThisPath, setAmICoachOfThisPath] = useState<boolean>(false);
+
+  const [isActual, setIsActual] = useState(false);
+  const [editable, setEditable] = useState(false);
+  const [aproving, setAproving] = useState(false);
+  const [isEditingPage, setIsEditingPage] = useState(false);
+  const [isMyPath, setIsMyPath] = useState<boolean>(!id);
 
   const [loading, setLoading] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isMyPath, setIsMyPath] = useState<boolean>(!id);
   const [pathData, setPathData] = useState(emptyPathState);
 
   useEffect(() => {
-    if (id) {
+    setEditable(!id && isActual && pathData.state == "R");
+    setAproving(amICoachOfThisPath && !isMyPath && pathData.state == "M");
+    setIsMyPath(!id || pathData.userId == userData.id);
+    setIsEditingPage(!id && isActual);
+  }, [pathData]);
+
+  useEffect(() => {
+    const fetchPathData = async () => {
       setLoading(true);
-      setIsMyPath(false);
-      ApiCallGetPath(id)
-        .then((resp) => {
+      try {
+        if (id) {
+          const resp = await ApiCallGetPath(id);
+          setIsActual(parsePath(resp).quartileString == getActualQuartile());
           setPathData(resp);
-        })
-        .catch((err) => {
+        } else {
+          const resp = await ApiCallGetUserPaths();
+          const parsedPaths = resp.map(parsePath);
+          const actualPath = parsedPaths.find(
+            (p) => p.quartileString === getActualQuartile()
+          );
+          setIsActual(true);
+          setPathData(actualPath || emptyPathState);
+        }
+      } catch (err: any) {
+        if (!id && err.response?.status === 400) {
+          setPathData(emptyPathState);
+        } else {
           setError(err.response?.data.message);
           setPathData(emptyPathState);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      ApiCallGetUserPaths()
-        .then((resp) => {
-          const parsedPaths = resp.map((p) => {
-            return parsePath(p);
-          });
-          const actualPath = parsedPaths.find((p) => {
-            return p.quartileString == getActualQuartile();
-          });
-          if (actualPath) {
-            setPathData(actualPath);
-          } else {
-            setPathData(emptyPathState);
-          }
-        })
-        .catch((err) => {
-          if (err.response?.status === 400) {
-            setPathData(emptyPathState);
-          } else {
-            setError(err.response?.data.message);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPathData();
   }, [id]);
 
   useEffect(() => {
@@ -102,7 +101,7 @@ const Path = () => {
         } catch (err: any) {
           return setError(err.response?.data.message);
         }
-      })
+      }) || false
     );
   }, [authorData]);
 
@@ -317,7 +316,7 @@ const Path = () => {
           coachId={coachId}
           loading={sendLoading}
           totalBudget={totalBudget}
-          amICoachOfThisPath={true}
+          amICoachOfThisPath={amICoachOfThisPath}
           totalHours={totalHours}
           isMyPath={isMyPath}
           handleSendPath={HandleSendPath}
@@ -325,7 +324,9 @@ const Path = () => {
           handleApprovePath={HandleApprovePath}
           handleRejectPath={HandleUnsendPath}
           handleEditTitle={HandleEditTitle}
-          actionable={isMyPath && pathData.state == "R"}
+          isEditingPage={isEditingPage}
+          editable={editable}
+          aproving={aproving}
         />
 
         {activities.map((activity, key) => {
@@ -339,12 +340,12 @@ const Path = () => {
               handleCommentSubmit={handleCommentSubmit}
               handleSetEditingActivity={handleSetEditingActivity}
               handleSaveEdit={HandleSaveEditActivity}
-              actionable={isMyPath && pathData.state == "R"}
+              editable={editable}
             />
           );
         })}
 
-        {pathData.state == "R" && isMyPath && (
+        {editable && (
           <>
             <ActivityForm
               pathId={pathData.id}
