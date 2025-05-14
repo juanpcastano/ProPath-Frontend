@@ -31,14 +31,17 @@ const SendedPaths = () => {
     ApiCallGetSendedPaths(userData.id)
       .then((res) => {
         setPaths(
-          res.map((path) => {
-            return { ...path,
-              totalBudget: calcTotalBudget(path),
-              totalHours: calcTotalHours(path)
-             };
-          }).filter((path)=>{
-            return parsePath(path).quartileString == getActualQuartile()
-          })
+          res
+            .map((path) => {
+              return {
+                ...path,
+                totalBudget: calcTotalBudget(path),
+                totalHours: calcTotalHours(path),
+              };
+            })
+            .filter((path) => {
+              return parsePath(path).quartileString == getActualQuartile();
+            })
         );
       })
       .catch((err) => {
@@ -49,7 +52,12 @@ const SendedPaths = () => {
       });
   }, []);
 
-  const headers = ["Nombre", "Descripción", "Presupuesto Total", "Horas Totales"];
+  const headers = [
+    "Nombre",
+    "Descripción",
+    "Presupuesto Total",
+    "Horas Totales",
+  ];
   const keys = ["name", "description", "totalBudget", "totalHours"];
 
   if (loading) return <Loading />;

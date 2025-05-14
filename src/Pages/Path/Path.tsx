@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { AppStore } from "../../Redux/store";
 
-import { useDispatch } from "react-redux";
 import styles from "./Path.module.css";
 import { generateUUID } from "../../services/uuidGenerator";
 import { Activity, Comment } from "../../models/path.model";
@@ -26,12 +25,11 @@ import Loading from "../../Components/Loading/Loading";
 import Error from "../Error/Error";
 import { ApiCallGroup } from "../../services/apiGroupsService";
 import { ApiCallUser } from "../../services/apiUserService";
-import { EmptyUserState, updateUser } from "../../Redux/States/user";
+import { EmptyUserState } from "../../Redux/States/user";
 import { UserInfo } from "../../models/user.model";
 import { getActualQuartile, parsePath } from "../../services/quartile";
 
 const Path = () => {
-  const dispatch = useDispatch();
   const { id } = useParams();
   const userData = useSelector((store: AppStore) => store.user);
 
@@ -46,17 +44,21 @@ const Path = () => {
   const [isEditingPage, setIsEditingPage] = useState(false);
   const [isMyPath, setIsMyPath] = useState<boolean>(!id);
 
+  
   const [loading, setLoading] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
   const [error, setError] = useState("");
   const [pathData, setPathData] = useState(emptyPathState);
-
+  
   useEffect(() => {
     setEditable(!id && isActual && pathData.state == "R");
-    setAproving(amICoachOfThisPath && !isMyPath && pathData.state == "M");
+    setAproving(
+      amICoachOfThisPath && isActual && !isMyPath && pathData.state == "M"
+    );
     setIsMyPath(!id || pathData.userId == userData.id);
     setIsEditingPage(!id && isActual);
-  }, [pathData]);
+  }, [amICoachOfThisPath, pathData]);
+  
 
   useEffect(() => {
     const fetchPathData = async () => {
@@ -86,17 +88,19 @@ const Path = () => {
         setLoading(false);
       }
     };
-
     fetchPathData();
   }, [id]);
 
   useEffect(() => {
+    const groupsWhereAuthorIsPro = authorData.userGroups?.filter((ug) => {
+      return ug.role == "P";
+    });
     setAmICoachOfThisPath(
-      authorData.userGroups?.some(async (userGroup) => {
+      groupsWhereAuthorIsPro?.some(async (userGroup) => {
         try {
-          const res = await ApiCallGroup(userGroup.group.id);
-          res.userGroups?.some((ug) => {
-            ug.role == "M";
+          const groupData = await ApiCallGroup(userGroup.group.id);
+          groupData.userGroups?.some((ug) => {
+            return ug.role == "M" && ug.user.id == userData.id;
           });
         } catch (err: any) {
           return setError(err.response?.data.message);
@@ -130,15 +134,7 @@ const Path = () => {
           })?.user.id
         );
       });
-  }, [userData]);
-
-  useEffect(() => {
-    ApiCallUser(userData.id)
-      .then((res) => {
-        dispatch(updateUser(res));
-      })
-      .catch((err) => setError(err.response?.data.message));
-  }, []);
+  }, [pathData]);
 
   const [activities, setActivities] = useState<Activity[]>(pathData.activities);
 
@@ -309,8 +305,9 @@ const Path = () => {
         <Title
           pathId={pathData.id}
           name={pathData.name}
+          authorName={authorData.name}
           description={pathData.description}
-          state={pathData.state}
+          state={isActual? pathData.state: "F"}
           maxHours={maxHours}
           pathState={pathData.state}
           coachId={coachId}

@@ -166,8 +166,6 @@ export const ApiCallGetSendedPaths = async (
         },
       }
     );
-    console.log(result.data);
-
     return result.data;
   } catch (err) {
     console.error("Error:", err);

@@ -4,6 +4,7 @@ import styles from "./Title.module.css";
 interface TitleProps {
   pathId: string;
   name: string;
+  authorName: string;
   description: string;
   state: string;
   totalHours: number;
@@ -32,9 +33,12 @@ interface TitleProps {
   aproving: boolean;
 }
 
+type PathState = "R" | "M" | "A" | "E" | "F";
+
 const Title = ({
   pathId,
   name,
+  authorName,
   description,
   state,
   totalHours,
@@ -53,6 +57,13 @@ const Title = ({
   aproving,
 }: TitleProps) => {
   const [editing, setEditing] = useState(false);
+  const stateMap: Record<PathState, string> = {
+    R: "Propuesta en desarrollo",
+    M: "En espera de aprovación del coach",
+    A: "En espera de aprovación del administrador",
+    E: "En curso",
+    F: "Finalizado",
+  };
   return (
     <div className={styles.mainContainer}>
       <div className={styles.title}>
@@ -134,7 +145,12 @@ const Title = ({
             </form>
           </>
         )}
-
+        <p>
+          <strong>Nombre: {authorName}</strong>
+        </p>
+        <p>
+          <strong>Estado: {stateMap[state as PathState]}</strong>
+        </p>
         <p>
           Horas Totales: {totalHours}/{maxHours}
         </p>
@@ -167,23 +183,24 @@ const Title = ({
       )}
       {aproving && (
         <>
-        <div></div>
-          <button
-            className={`${styles.button} ${"dark-gradient-primary"}`}
-            onClick={() => {
-              handleApprovePath();
-            }}
-          >
-            Aceptar Propuesta
-          </button>
-          <button
-            className={`${styles.button} ${"dark-gradient-secondary"}`}
-            onClick={() => {
-              handleRejectPath();
-            }}
-          >
-            Rechazar Propuesta
-          </button>
+          <div className={styles.aprovingButtonsContainer}>
+            <button
+              className={`${styles.button} ${"dark-gradient-primary"}`}
+              onClick={() => {
+                handleApprovePath();
+              }}
+            >
+              Aceptar Propuesta
+            </button>
+            <button
+              className={`${styles.button} ${"dark-gradient-secondary"}`}
+              onClick={() => {
+                handleRejectPath();
+              }}
+            >
+              Rechazar Propuesta
+            </button>
+          </div>
         </>
       )}
 
