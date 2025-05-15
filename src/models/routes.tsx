@@ -5,20 +5,21 @@ export const PublicRoutes = {
 };
 
 export const PrivateRoutes = {
-
   common: {
     HOME: { icon: "home", label: "Panel Principal", route: "/home" },
     MY_PATH: { icon: "road", label: "Mi Path", route: "/mypath" },
-    MY_ORGANIZATION: { icon: "corporate_fare", label: "Mi Organización", route: "/myorganization" },
+    MY_ORGANIZATION: {
+      icon: "corporate_fare",
+      label: "Mi Organización",
+      route: "/myorganization",
+    },
     MY_TEAM: { icon: "groups", label: "Mis Grupos", route: "/mygroups" },
   },
 
-  P: {
-  },
-  A: {
-  },
+  P: {},
+  A: {},
 
-  commonDown:{
+  commonDown: {
     SETTINGS: { icon: "settings", label: "Configuración", route: "/settings" },
-  }
+  },
 };

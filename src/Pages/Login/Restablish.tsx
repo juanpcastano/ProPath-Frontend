@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import styles from "./Login&register.module.css";
 import Error from "../Error/Error";
@@ -9,7 +9,6 @@ import {
 import Loading from "../../Components/Loading/Loading";
 
 const Restablish = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCodeSended, setIsCodeSended] = useState(false);
@@ -79,68 +78,72 @@ const Restablish = () => {
               className={styles.form}
               autoComplete="off"
               onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              setLoading(true);
-              ApiCallUpdatePassword({
-                email: email,
-                code: Number(formData.get("code")),
-                newPassword: formData.get("password") as string,
-              })
-                .then(() => {
-                setMessage("Contraseña Cambiada Existosamente");
-                setIsCodeSended(false)
-                if (window && window.navigator && window.navigator.credentials) {
-                  window.navigator.credentials.preventSilentAccess?.();
-                }
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                setLoading(true);
+                ApiCallUpdatePassword({
+                  email: email,
+                  code: Number(formData.get("code")),
+                  newPassword: formData.get("password") as string,
                 })
-                .catch((err) => {
-                setError(err.response?.data.message);
-                })
-                .finally(() => {
-                setLoading(false);
-                });
-              e.currentTarget.reset();
+                  .then(() => {
+                    setMessage("Contraseña Cambiada Existosamente");
+                    setIsCodeSended(false);
+                    if (
+                      window &&
+                      window.navigator &&
+                      window.navigator.credentials
+                    ) {
+                      window.navigator.credentials.preventSilentAccess?.();
+                    }
+                  })
+                  .catch((err) => {
+                    setError(err.response?.data.message);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+                e.currentTarget.reset();
               }}
             >
               <div className={styles.formGroup}>
-              <label htmlFor="code">Código</label>
-              <input
-                type="text"
-                id="code"
-                name="code"
-                className={styles.input}
-                inputMode="numeric"
-                pattern="[0-9]*"
-                required
-                autoComplete="off"
-                onKeyDown={(e) => {
-                if (
-                  e.key === "e" ||
-                  e.key === "E" ||
-                  e.key === "+" ||
-                  e.key === "-"
-                ) {
-                  e.preventDefault();
-                }
-                }}
-              />
+                <label htmlFor="code">Código</label>
+                <input
+                  type="text"
+                  id="code"
+                  name="code"
+                  className={styles.input}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  required
+                  autoComplete="off"
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === "e" ||
+                      e.key === "E" ||
+                      e.key === "+" ||
+                      e.key === "-"
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
               </div>
 
               <div className={styles.formGroup}>
-              <label htmlFor="password">Nueva Contraseña</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                minLength={6}
-                className={styles.input}
-                required
-              />
+                <label htmlFor="password">Nueva Contraseña</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  minLength={6}
+                  className={styles.input}
+                  required
+                />
               </div>
 
               <button type="submit" className="dark-gradient-primary">
-              Actualizar Contraseña
+                Actualizar Contraseña
               </button>
             </form>
           )}
