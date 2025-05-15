@@ -17,6 +17,7 @@ import MyPaths from "./Pages/MyPaths/MyPaths";
 import AddGroup from "./Pages/AddGroup/AddGroup";
 import Group from "./Pages/Group/Group";
 import MyGroups from "./Pages/MyGroups/MyGroups";
+import Restablish from "./Pages/Login/Restablish";
 
 const NotFound = lazy(() => import("./Pages/Not found/NotFound"));
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
@@ -36,6 +37,7 @@ function App() {
                 element={<Navigate to={PrivateRoutes.common.HOME.route} />}
               />
               <Route path={PublicRoutes.LOGIN.route} element={<Login />} />
+              <Route path={PublicRoutes.RESTABLISH.route} element={<Restablish />} />
               <Route path={PublicRoutes.REGISTER.route} element={<Register />} />
               <Route path="*" element={<NotFound />} />
               <Route element={<AuthGuard />}>

@@ -217,13 +217,13 @@ const Register = () => {
           <button type="submit" className="dark-gradient-primary">
             Registrarme
           </button>
-          <div className={styles.smbtandforgotcontainer}>
-            <Link to="/login" className={styles.link}>
-              Ya tengo cuenta
-            </Link>
-            <Error error={error} />
-          </div>
         </form>
+        <div className={styles.smbtandforgotcontainer}>
+          <Link to="/login" className={styles.link}>
+            Ya tengo cuenta
+          </Link>
+          <Error error={error} />
+        </div>
       </div>
     </div>
   );

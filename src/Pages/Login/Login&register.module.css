@@ -109,6 +109,19 @@
     font-size: 1.5rem;
     font-weight: bold;
   }
+
+  .messageContainer{
+    display: flex;
+    justify-content: center;
+  }
+
+  .message{
+    margin: 0;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-light);
+  }
   
   .form {
     display: flex;
@@ -148,6 +161,7 @@
 
   .link {
     color: var(--text-link);
+    margin-top: 1rem;
     font-weight: 500;
     font-size: 0.875rem;
     transition: color 0.2s;

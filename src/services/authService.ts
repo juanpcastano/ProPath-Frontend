@@ -61,3 +61,53 @@ export const ApiCallLogout = async () => {
     return err;
   }
 };
+
+export const ApiCallSendCode = async (email: string) => {
+  try {
+    const result = await Api.post(
+      "/auth/request-password-reset",
+      { email: email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = result.data;
+    return data;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+export const ApiCallUpdatePassword = async ({
+  email,
+  code,
+  newPassword,
+}: {
+  email: string;
+  code: number;
+  newPassword: string;
+}) => {
+  try {
+    const result = await Api.post(
+      "/auth/reset-password",
+      {
+        email: email,
+        code: code,
+        newPassword: newPassword,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = result.data;
+    return data;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};

@@ -1,6 +1,7 @@
 export const PublicRoutes = {
   LOGIN: { route: "/login" },
   REGISTER: { route: "/register" },
+  RESTABLISH: { route: "/restablish" },
 };
 
 export const PrivateRoutes = {

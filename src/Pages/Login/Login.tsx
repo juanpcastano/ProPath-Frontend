@@ -18,7 +18,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const login = async (credentials: credentials) => {
-    setError(""); // Limpiar errores previos
+    setError("");
 
     try {
       const result = await ApiCallLogin(credentials);
@@ -114,16 +114,16 @@ const Login = () => {
           <button type="submit" className="dark-gradient-primary">
             Iniciar sesión
           </button>
-          <div className={styles.smbtandforgotcontainer}>
-            <Link to="" className={styles.link}>
-              Restablecer Contraseña
-            </Link>
-            {/* <Link to="/register" className={styles.link}>
+        </form>
+        <div className={styles.smbtandforgotcontainer}>
+          <Link to="/Restablish" className={styles.link}>
+            Restablecer Contraseña
+          </Link>
+          {/* <Link to="/register" className={styles.link}>
               Aún no tengo cuenta
             </Link> */}
-            <Error error={error} />
-          </div>
-        </form>
+          <Error error={error} />
+        </div>
       </div>
     </div>
   );
