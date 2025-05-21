@@ -8,6 +8,7 @@ import Loading from "../../../Components/Loading/Loading";
 import styles from "./Users.module.css"
 import { PrivateRoutes } from "../../../models/routes";
 import Error from "../../Error/Error";
+import { UserInfo } from "../../../models/user.model";
 
 const Users = () => {
   const headers = ["Nombre", "Email", "Rol"];
@@ -15,7 +16,7 @@ const Users = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<UserInfo[]>([]);
 
   const userData = useSelector((store: AppStore) => store.user);
   const navigate = useNavigate();
