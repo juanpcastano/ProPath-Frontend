@@ -61,8 +61,8 @@ const Title = ({
   const [editing, setEditing] = useState(false);
   const stateMap: Record<PathState, string> = {
     R: "Propuesta en desarrollo",
-    M: "En espera de aprovación del coach",
-    A: "En espera de aprovación del administrador",
+    M: "En espera de aprobación del coach",
+    A: "En espera de aprobación del administrador",
     E: "En curso",
     F: "Finalizado",
   };
@@ -148,7 +148,7 @@ const Title = ({
           </>
         )}
         <p>
-          <strong>Nombre: {authorName}</strong>
+          <strong>Autor: {authorName}</strong>
         </p>
         <p>
           <strong>Estado: {stateMap[state as PathState]}</strong>

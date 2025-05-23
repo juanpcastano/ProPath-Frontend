@@ -52,7 +52,8 @@ const Path = () => {
   useEffect(() => {
     setEditable(!id && isActual && pathData.state == "R");
     setAproving(
-      amICoachOfThisPath && isActual && !isMyPath && ["M","A"].includes(pathData.state)
+      (amICoachOfThisPath && isActual && !isMyPath && pathData.state == "M") ||
+        (pathData.state == "A" && userData.role == "A")
     );
     setIsMyPath(!id || pathData.userId == userData.id);
     setIsEditingPage(!id && isActual);
@@ -109,7 +110,9 @@ const Path = () => {
 
   useEffect(() => {
     if (isMyPath) {
-      setAuthorData(userData);
+      ApiCallUser(userData.id).then((res) => {
+        setAuthorData({ ...userData, userGroups: res.userGroups });
+      });
     } else {
       if (pathData.userId)
         ApiCallUser(pathData.userId)
