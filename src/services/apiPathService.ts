@@ -34,10 +34,6 @@ export const ApiCallAddPath = async (path: {
   name: string;
   description: string;
 }): Promise<Path> => {
-  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
-  }
-
   try {
     const result = await Api.post("/path-management/paths", path, {
       headers: {
@@ -57,10 +53,6 @@ export const ApiCallUpdatePath = async (path: {
   name: string;
   description: string;
 }) => {
-  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    return {};
-  }
-
   try {
     const result = await Api.put("/path-management/paths/" + path.id, path, {
       headers: {
@@ -83,11 +75,6 @@ export const ApiCallAddActivity = async (activity: {
   finalDate: Date;
   budget: number;
 }) => {
-  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
-    return {};
-  }
-
   try {
     const result = await Api.post("/path-management/activity/", activity, {
       headers: {
@@ -103,11 +90,6 @@ export const ApiCallAddActivity = async (activity: {
 };
 
 export const ApiCallDeleteActivity = async (id: string) => {
-  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
-    return {};
-  }
-
   try {
     const result = await Api.delete("/path-management/activity/" + id, {
       headers: {
@@ -133,11 +115,6 @@ export const ApiCallEditActivity = async (
     budget?: number;
   }
 ) => {
-  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
-    return {};
-  }
-
   try {
     const result = await Api.put("/path-management/activity/" + id, body, {
       headers: {
@@ -189,11 +166,6 @@ export const ApiCallGetApprovedPaths = async (): Promise<Path[]> => {
 };
 
 export const ApiCallSendPath = async (id: string, action: string) => {
-  if (import.meta.env.VITE_ENVIROMENT == "mockup") {
-    // implemtación de lógicas de modo mockup, retornar las cosas como se espera en la llamada, ejemplo, para el login {user: mockupuser}
-    return {};
-  }
-
   try {
     const result = await Api.put(
       "/path-management/paths/" + id + "/" + action,
