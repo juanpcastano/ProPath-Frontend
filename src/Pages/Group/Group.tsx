@@ -251,7 +251,6 @@ const Group = ({ groupId }: { groupId?: string }) => {
                 const userGroup: group = {
                   name: formData.get("name") as string,
                   description: formData.get("description") as string,
-                  userGroups: groupData.userGroups,
                 };
                 setEditingTitleAndDescription(false);
                 ApiCallUpdateGroup(id, userGroup)

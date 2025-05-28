@@ -24,7 +24,7 @@ export const ApiCallGetUserPaths = async (): Promise<Path[]> => {
       },
     });
     console.log(Object.values(result.data));
-    
+
     return Object.values(result.data);
   } catch (err) {
     console.error("Error:", err);
@@ -79,6 +79,26 @@ export const ApiCallAddActivity = async (activity: {
 }) => {
   try {
     const result = await Api.post("/path-management/activity/", activity, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(result.data);
+    return result.data;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
+};
+
+export const ApiCallAddComment = async (comment: {
+  authorId: string;
+  authorName: string;
+  message: string;
+  activityId: string;
+}) => {
+  try {
+    const result = await Api.post("/path-management/comments", comment, {
       headers: {
         "Content-Type": "application/json",
       },

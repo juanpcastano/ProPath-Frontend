@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { AppStore } from "../../Redux/store";
 
 import styles from "./Path.module.css";
-import { generateUUID } from "../../services/uuidGenerator";
-import { Activity, Comment } from "../../models/path.model";
+import { Activity } from "../../models/path.model";
 import { emptyPathState } from "../../Redux/States/path";
 import InitialForm from "./Initial Form/InitialForm";
 import Title from "./Title/Title";
@@ -14,6 +13,7 @@ import AISuggestions from "./AI Suggestions/AISuggestions";
 import { useParams } from "react-router-dom";
 import {
   ApiCallAddActivity,
+  ApiCallAddComment,
   ApiCallDeleteActivity,
   ApiCallEditActivity,
   ApiCallGetPath,
@@ -49,6 +49,34 @@ const Path = () => {
   const [error, setError] = useState("");
   const [pathData, setPathData] = useState(emptyPathState);
 
+  const fetchPathData = async (load: boolean) => {
+    if (load) setLoading(true);
+    try {
+      if (id) {
+        const resp = await ApiCallGetPath(id);
+        setIsActual(parsePath(resp).quartileString == getActualQuartile());
+        setPathData(resp);
+      } else {
+        const resp = await ApiCallGetUserPaths();
+        const parsedPaths = resp.map(parsePath);
+        const actualPath = parsedPaths.find(
+          (p) => p.quartileString === getActualQuartile()
+        );
+        setIsActual(true);
+        setPathData(actualPath || emptyPathState);
+      }
+    } catch (err: any) {
+      if (!id && err.response?.status === 400) {
+        setPathData(emptyPathState);
+      } else {
+        setError(err.response?.data.message);
+        setPathData(emptyPathState);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setEditable(!id && isActual && pathData.state == "R");
     setAproving(
@@ -60,34 +88,7 @@ const Path = () => {
   }, [amICoachOfThisPath, pathData]);
 
   useEffect(() => {
-    const fetchPathData = async () => {
-      setLoading(true);
-      try {
-        if (id) {
-          const resp = await ApiCallGetPath(id);
-          setIsActual(parsePath(resp).quartileString == getActualQuartile());
-          setPathData(resp);
-        } else {
-          const resp = await ApiCallGetUserPaths();
-          const parsedPaths = resp.map(parsePath);
-          const actualPath = parsedPaths.find(
-            (p) => p.quartileString === getActualQuartile()
-          );
-          setIsActual(true);
-          setPathData(actualPath || emptyPathState);
-        }
-      } catch (err: any) {
-        if (!id && err.response?.status === 400) {
-          setPathData(emptyPathState);
-        } else {
-          setError(err.response?.data.message);
-          setPathData(emptyPathState);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPathData();
+    fetchPathData(true);
   }, [id]);
 
   useEffect(() => {
@@ -262,30 +263,23 @@ const Path = () => {
       });
   };
 
-  const handleCommentSubmit = (activityId: string, commentMessage: string) => {
+  const handleCommentSubmit = async (
+    activityId: string,
+    commentMessage: string
+  ) => {
     if (!commentMessage.trim()) return;
 
-    const updatedActivities = activities.map((activity) => {
-      if (activity.id === activityId) {
-        const newComment: Comment = {
-          id: generateUUID(),
-          authorName: userData.name,
-          message: commentMessage,
-          date: new Date(),
-        };
-        const updatedComments = activity.comments
-          ? [...activity.comments, newComment]
-          : [newComment];
-
-        return {
-          ...activity,
-          comments: updatedComments,
-        };
-      }
-      return activity;
-    });
-
-    setActivities(updatedActivities);
+    try {
+      await ApiCallAddComment({
+        authorName: userData.name,
+        authorId: userData.id,
+        activityId: activityId,
+        message: commentMessage,
+      });
+      await fetchPathData(false);
+    } catch (err: any) {
+      setError(err);
+    }
   };
 
   useEffect(() => {
