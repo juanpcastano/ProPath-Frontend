@@ -23,6 +23,8 @@ export const ApiCallGetUserPaths = async (): Promise<Path[]> => {
         "Content-Type": "application/json",
       },
     });
+    console.log(Object.values(result.data));
+    
     return Object.values(result.data);
   } catch (err) {
     console.error("Error:", err);
