@@ -188,7 +188,7 @@ describe("MiPath - Añadir Actividad", () => {
             comments: [],
           },
         ],
-        comments: [],
+        comments: [],//xd
         quartile: {
           year: 2025,
           quartile: "Q2",
